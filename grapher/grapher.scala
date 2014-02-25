@@ -41,7 +41,7 @@ object Grapher extends App {
     )
     Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
 
-    // donation (or loan)
+    // donation
     val donationProperties = createProperties(
       "ecReference" -> entry("EC reference").string,
       "type" -> entry("Type of donation").string,
