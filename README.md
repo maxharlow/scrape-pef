@@ -19,7 +19,7 @@ Grapher
 
 Iterate through a donations CSV produced by PEF and create a [Neo4j] (http://www.neo4j.org/) graph database. Requires [SBT] (http://www.scala-sbt.org/) to be installed and Neo4j running.
 
-Note the format of PEF CSVs is pretty idiosyncratic: commas at the end of lines, Windows line-endings, and the last four characters of each file appears to be missing. You will only need to manually fix the latter for the Grapher to understand it.
+Note the format of PEF CSVs is pretty idiosyncratic: commas at the end of lines, Windows line-endings, and the last few characters at the end of each file are often missing. You will only need to manually fix the latter for the Grapher to understand it.
 
 Usage:
 
