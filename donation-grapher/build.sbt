@@ -1,4 +1,4 @@
-name := "party-funding-grapher"
+name := "party-funding-donation-grapher"
 
 scalaVersion := "2.10.3"
 
