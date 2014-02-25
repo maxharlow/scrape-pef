@@ -22,15 +22,15 @@ object Grapher extends App {
   val donations = CSVReader.open(new File(filename)).allWithHeaders
 
   donations foreach { entry =>
-    // donor
-    val donorName = entry("Donor name").string
-    val donorProperties = createProperties(
-      "name" -> donorName,
+    // benefactor
+    val benefactorName = entry("Donor name").string
+    val benefactorProperties = createProperties(
+      "name" -> benefactorName,
       "type" -> entry("Donor type").string,
       "companyRegistrationNumber" -> entry("Company reg. no.").string, // optional
       "postcode" -> entry("Postcode").string // optional
     )
-    Cypher(s"MERGE (:Donor {$donorProperties})").execute()
+    Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
 
     // recipient
     val recipientName = entry("Entity name").string
@@ -57,11 +57,11 @@ object Grapher extends App {
       "isSponsorship" -> entry("Is sponsorship").boolean,
       "complianceBreach" -> entry("Compliance breach").string
     )
-    val matchCypher = s"MATCH (d:Donor {name:$donorName}), (r:Recipient {name:$recipientName})"
-    val mergeCypher = s"MERGE (d)-[:DONATED_TO {$donationProperties}]->(r)"
+    val matchCypher = s"MATCH (b:Benefactor {name:$benefactorName}), (r:Recipient {name:$recipientName})"
+    val mergeCypher = s"MERGE (b)-[:DONATED_TO {$donationProperties}]->(r)"
     Cypher(s"$matchCypher $mergeCypher").execute()
 
-    println(s"Adding donation: $donorName -> $recipientName")
+    println(s"Adding donation: $benefactorName -> $recipientName")
   }
 
   def createProperties(properties: (String, String)*): String = {
