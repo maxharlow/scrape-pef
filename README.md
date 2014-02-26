@@ -14,12 +14,12 @@ Donations and loans over £500 must be declared to the [Electoral Commission] (h
 Note that the PEF database does not include payments to parties in Northern Ireland until the [Northern Ireland (Miscellaneous Provisions) Bill] (http://www.publications.parliament.uk/pa/bills/cbill/2013-2014/0009/2014009.pdf) is passed.
 
 
-Grapher
--------
+Graphers
+--------
 
-Iterate through a donations CSV produced by PEF and create a [Neo4j] (http://www.neo4j.org/) graph database. Requires [SBT] (http://www.scala-sbt.org/) to be installed and Neo4j running.
+Iterate through a CSV produced by PEF and create the appropriate nodes and relationships [Neo4j] (http://www.neo4j.org/) graph database. Requires [SBT] (http://www.scala-sbt.org/) to be installed and Neo4j running.
 
-Note the format of PEF CSVs is pretty idiosyncratic: commas at the end of lines, Windows line-endings, and the last few characters at the end of each file are often missing. You will only need to manually fix the latter for the Grapher to understand it.
+Note the format of PEF CSVs is pretty idiosyncratic: commas at the end of lines, Windows line-endings, and the last few characters at the end of each file are often missing. You will only need to manually fix the latter for the Graphers to understand it.
 
 Usage:
 
