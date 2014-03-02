@@ -14,7 +14,7 @@ object Grapher extends App {
     def date = {
       val format = DateTimeFormat.forPattern("dd/MM/yyyy")
       if (value.isEmpty) None
-      else Some((DateTime.parse(value, format).getMillis / 1000).toString)
+      else Some(DateTime.parse(value, format).toString("yyyyMMdd"))
     }
   }
 
