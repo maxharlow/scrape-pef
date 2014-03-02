@@ -7,7 +7,7 @@ import com.github.tototoshi.csv.CSVReader
 object Grapher extends App {
 
   implicit class CypherParameterValue(v: String) {
-    val value = v.trim.filter(_ >= ' ')
+    val value = v.trim.filter(_ >= ' ').replace("""\""", """\\""").replace("'", """\'""")
     def int = Option(value.replaceAll("[^0-9]", "").dropRight(2)).filter(_.nonEmpty) // inexplicably values here are given to four decimal places
     def string = if (value.isEmpty) None else Some("'" + value + "'")
     def boolean = Some((!value.isEmpty).toString)
@@ -24,13 +24,15 @@ object Grapher extends App {
   loans foreach { entry =>
     // benefactor
     val benefactorName = entry("Lender name").string
+    val benefactorCompanyNumber = entry("Company reg. no.").drop(1).string // optional
     val benefactorProperties = propertise(
       "name" -> benefactorName,
       "type" -> entry("Lender type").string,
-      "companyRegistrationNumber" -> entry("Company reg. no.").drop(1).string, // optional
+      "companyRegistrationNumber" -> benefactorCompanyNumber,
       "postcode" -> entry("Postcode").string // optional
     )
-    Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
+    val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
+    if (!benefactorResult) println(" => failed to add benefactor")
 
     // recipient
     val recipientName = entry("Entity name").string
@@ -38,7 +40,8 @@ object Grapher extends App {
       "name" -> recipientName,
       "type" -> entry("Entity type").string
     )
-    Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
+    val recipientResult = Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
+    if (!recipientResult) println(" => failed to add recipient")
 
     // loan
     val loanProperties = propertise(
@@ -58,9 +61,10 @@ object Grapher extends App {
       "recordedBy" -> entry("Rec'd by (AU)").string, // optional
       "complianceBreach" -> entry("Compliance breach").string
     )
-    val matchCypher = s"MATCH (b:Benefactor {name:$benefactorName}), (r:Recipient {name:$recipientName})"
+    val matchCypher = s"MATCH (b:Benefactor {name:${benefactorName.get}}), (r:Recipient {name:${recipientName.get}})"
     val mergeCypher = s"MERGE (b)-[:LOANED {$loanProperties}]->(r)"
-    Cypher(s"$matchCypher $mergeCypher").execute()
+    val loanResult = Cypher(s"$matchCypher $mergeCypher").execute()
+    if (!loanResult) println(" => failed to add loan")
 
     println(s"Adding loan: ${benefactorName.get} -> ${recipientName.get}")
   }
