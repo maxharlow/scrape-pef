@@ -24,7 +24,7 @@ object Grapher extends App {
   loans foreach { entry =>
     // benefactor
     val benefactorName = entry("Lender name").string
-    val benefactorCompanyNumber = entry("Company reg. no.").drop(1).string // optional
+    val benefactorCompanyNumber = entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "").string // optional
     val benefactorProperties = propertise(
       "name" -> benefactorName,
       "type" -> entry("Lender type").string,

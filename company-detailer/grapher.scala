@@ -24,9 +24,11 @@ object Grapher extends App {
   val companyNumbersQuery = Cypher("MATCH (n) WHERE has(n.companyRegistrationNumber) RETURN n.companyRegistrationNumber as number").apply()
   val companyNumbers = companyNumbersQuery.map(_[String]("number")).toList
 
+  val apiToken = ""
+
   companyNumbers foreach { number =>
     Try {
-      Http(s"http://api.opencorporates.com/companies/gb/$number")
+      Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
         .option(HttpOptions.connTimeout(2000))
         .option(HttpOptions.readTimeout(7000)).asString
     }
@@ -52,18 +54,17 @@ object Grapher extends App {
         // officers (directors et al)
         (company \ "officers").children foreach { o =>
           val officer = (o \ "officer")
-          val officerName = (officer \ "name").string.get
+          val officerName = (officer \ "name").string.get.init.tail // unquoted!
           val officerProperties = propertise()(
             "position" -> (officer \ "position").string,
             "startDate" -> (officer \ "start_date").date,
             "endDate" -> (officer \ "end_date").date
           )
-          val matchQuery = s"MATCH (o {name:$officerName}), (c {companyRegistrationNumber:'$number'})"
+          val matchQuery = s"MATCH (o), (c {companyRegistrationNumber:'$number'}) WHERE o.name =~ '(?i).*$officerName.*'"
           val mergeQuery = s"MERGE (o)-[:IS_AN_OFFICER_OF {$officerProperties}]->(c)"
           val officerResult = Cypher(s"$matchQuery $mergeQuery").execute()
           if (!officerResult) println(" => failed to add officer relationship")
         }
-
       }
     }
   }
