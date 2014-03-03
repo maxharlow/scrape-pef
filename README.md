@@ -1,5 +1,5 @@
-Party funding
-=============
+Plutolatry
+==========
 
 Political parties are mostly funded by membership subscriptions, state funding, and donations/loans. This mostly looks at the latter.
 
