@@ -2,6 +2,8 @@ name := "plutolatry"
 
 scalaVersion := "2.10.3"
 
+scalaSource in Compile := baseDirectory.value / "src"
+
 resolvers ++= Seq(
   "Anormcypher Repository" at "http://repo.anormcypher.org/"
 )

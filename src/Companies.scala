@@ -7,7 +7,7 @@ import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.Cypher
 
-object Grapher extends App {
+object Companies {
 
   implicit val formats = org.json4s.DefaultFormats
 
@@ -26,44 +26,46 @@ object Grapher extends App {
 
   val apiToken = ""
 
-  companyNumbers foreach { number =>
-    Try {
-      Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
-        .option(HttpOptions.connTimeout(2000))
-        .option(HttpOptions.readTimeout(7000)).asString
-    }
-    match {
-      case Failure(e) => println(s"Failed to get data for company $number (${e.getMessage.toLowerCase})")
-      case Success(response) => {
-        println(s"Updating data for company $number...")
+  def run() {
+    companyNumbers foreach { number =>
+      Try {
+        Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
+          .option(HttpOptions.connTimeout(2000))
+          .option(HttpOptions.readTimeout(7000)).asString
+      }
+        match {
+        case Failure(e) => println(s"Failed to get data for company $number (${e.getMessage.toLowerCase})")
+        case Success(response) => {
+          println(s"Updating data for company $number...")
 
-        // company details
-        val company = JsonMethods.parse(response) \\ "company"
-        val companyProperties = propertise("n.", "=")(
-          "companyName" -> (company \ "name").string,
-          "companyType" -> (company \ "company_type").string,
-          "companyRegisteredAddress" -> (company \ "registered_address_in_full").string,
-          "companyIncorporationDate" -> (company \ "incorporation_date").date,
-          "companyDissolutionDate" -> (company \ "dissolution_date").date,
-          "companyStatus" -> (company \ "current_status").string,
-          "companyInactive" -> (company \ "inactive").boolean
-        )
-        val companyDetailsResult = Cypher(s"MATCH (n {companyRegistrationNumber: '$number'}) SET $companyProperties").execute()
-        if (!companyDetailsResult) println(" => failed to add company details")
-
-        // officers (directors et al)
-        (company \ "officers").children foreach { o =>
-          val officer = (o \ "officer")
-          val officerName = (officer \ "name").string.get.init.tail // unquoted!
-          val officerProperties = propertise()(
-            "position" -> (officer \ "position").string,
-            "startDate" -> (officer \ "start_date").date,
-            "endDate" -> (officer \ "end_date").date
+          // company details
+          val company = JsonMethods.parse(response) \\ "company"
+          val companyProperties = propertise("n.", "=")(
+            "companyName" -> (company \ "name").string,
+            "companyType" -> (company \ "company_type").string,
+            "companyRegisteredAddress" -> (company \ "registered_address_in_full").string,
+            "companyIncorporationDate" -> (company \ "incorporation_date").date,
+            "companyDissolutionDate" -> (company \ "dissolution_date").date,
+            "companyStatus" -> (company \ "current_status").string,
+            "companyInactive" -> (company \ "inactive").boolean
           )
-          val matchQuery = s"MATCH (o), (c {companyRegistrationNumber:'$number'}) WHERE o.name =~ '(?i).*$officerName.*'"
-          val mergeQuery = s"MERGE (o)-[:IS_AN_OFFICER_OF {$officerProperties}]->(c)"
-          val officerResult = Cypher(s"$matchQuery $mergeQuery").execute()
-          if (!officerResult) println(" => failed to add officer relationship")
+          val companyDetailsResult = Cypher(s"MATCH (n {companyRegistrationNumber: '$number'}) SET $companyProperties").execute()
+          if (!companyDetailsResult) println(" => failed to add company details")
+
+          // officers (directors et al)
+          (company \ "officers").children foreach { o =>
+            val officer = (o \ "officer")
+            val officerName = (officer \ "name").string.get.init.tail // unquoted!
+            val officerProperties = propertise()(
+              "position" -> (officer \ "position").string,
+              "startDate" -> (officer \ "start_date").date,
+              "endDate" -> (officer \ "end_date").date
+            )
+            val matchQuery = s"MATCH (o), (c {companyRegistrationNumber:'$number'}) WHERE o.name =~ '(?i).*$officerName.*'"
+            val mergeQuery = s"MERGE (o)-[:IS_AN_OFFICER_OF {$officerProperties}]->(c)"
+            val officerResult = Cypher(s"$matchQuery $mergeQuery").execute()
+            if (!officerResult) println(" => failed to add officer relationship")
+          }
         }
       }
     }
