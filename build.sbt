@@ -9,6 +9,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
+  "com.typesafe" % "config" % "1.2.0",
   "com.github.tototoshi" %% "scala-csv" % "1.0.0",
   "org.scalaj" %% "scalaj-http" % "0.3.14",
   "org.json4s" %% "json4s-native" % "3.2.7",

@@ -24,10 +24,9 @@ object Companies {
   val companyNumbersQuery = Cypher("MATCH (n) WHERE has(n.companyRegistrationNumber) RETURN n.companyRegistrationNumber as number").apply()
   val companyNumbers = companyNumbersQuery.map(_[String]("number")).toList
 
-  val apiToken = ""
-
   def run() {
     companyNumbers foreach { number =>
+      val apiToken = Config.openCorporatesKey
       Try {
         Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
           .option(HttpOptions.connTimeout(2000))

@@ -18,8 +18,8 @@ object Donations {
     }
   }
 
-  def run(filename: String) {
-    val donations = CSVReader.open(new File(filename)).allWithHeaders
+  def run() {
+    val donations = CSVReader.open(new File(Config.donationsData)).allWithHeaders
     donations foreach { entry =>
       // benefactor
       val benefactorName = entry("Donor name").string
