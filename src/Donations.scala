@@ -31,7 +31,7 @@ object Donations {
         "postcode" -> entry("Postcode").string // optional
       )
       val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
-      if (!benefactorResult) {println(" => failed to add benefactor"); println(s"MERGE (:Benefactor {$benefactorProperties})") }
+      if (!benefactorResult) println(" => failed to add benefactor")
 
       // recipient
       val recipientName = entry("Entity name").string
@@ -41,7 +41,7 @@ object Donations {
         "regulatedType" -> entry("Regulated donee type").string // optional
       )
       val recipientResult = Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
-      if (!recipientResult) {println(" => failed to add recipient"); println(s"MERGE (:Recipient {$recipientProperties})") }
+      if (!recipientResult) println(" => failed to add recipient")
 
       // donation
       val donationProperties = propertise(
@@ -62,7 +62,7 @@ object Donations {
       val matchCypher = s"MATCH (b:Benefactor {name:${benefactorName.get}}), (r:Recipient {name:${recipientName.get}})"
       val mergeCypher = s"MERGE (b)-[:DONATED_TO {$donationProperties}]->(r)"
       val donationResult = Cypher(s"$matchCypher $mergeCypher").execute()
-      if (!donationResult) {println(" => failed to add donation"); println(matchCypher+" "+mergeCypher)}
+      if (!donationResult) println(" => failed to add donation")
 
       println(s"Adding donation: ${benefactorName.get} -> ${recipientName.get}")
     }
