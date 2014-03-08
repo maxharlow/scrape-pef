@@ -23,24 +23,26 @@ object Loans {
     val loans = CSVReader.open(new File(Config.loansData)).allWithHeaders
     loans foreach { entry =>
       // benefactor
-      val benefactorName = entry("Lender name").string
-      val benefactorCompanyNumber = entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "").string // optional
       val benefactor = Map(
-        "name" -> benefactorName,
+        "name" -> entry("Lender name").string,
         "type" -> entry("Lender type").string,
-        "companyNumber" -> benefactorCompanyNumber,
+        "companyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "").string, // optional
         "postcode" -> entry("Postcode").string // optional
       )
+      val benefactorName = benefactor("name")
+      val benefactorCompanyNumber = benefactor("companyNumber")
       val benefactorProperties = benefactor.propertise()
-      val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
-      if (!benefactorResult) println(" => failed to add benefactor")
+      if (benefactorCompanyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${benefactorCompanyNumber.get}}) RETURN c").apply().isEmpty) {
+        val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
+        if (!benefactorResult) println(" => failed to add benefactor")
+      }
 
       // recipient
-      val recipientName = entry("Entity name").string
       val recipient = Map(
-        "name" -> recipientName,
+        "name" -> entry("Entity name").string,
         "type" -> entry("Entity type").string
       )
+      val recipientName = recipient("name")
       val recipientProperties = recipient.propertise()
       val recipientResult = Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
       if (!recipientResult) println(" => failed to add recipient")

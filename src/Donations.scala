@@ -29,17 +29,13 @@ object Donations {
         "postcode" -> entry("Postcode").string, // optional
         "companyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "").string // optional
       )
+      val benefactorProperties = benefactor.propertise()
       val benefactorName = benefactor("name")
       val benefactorCompanyNumber = benefactor("companyNumber")
-      val benefactorResult = if (benefactorCompanyNumber.isEmpty) {
-        val benefactorProperties = benefactor.propertise()
-        Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
+      if (benefactorCompanyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${benefactorCompanyNumber.get}}) RETURN c").apply().isEmpty) {
+        val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
+        if (!benefactorResult) println(" => failed to add benefactor")
       }
-      else { // match on company number if we have it
-        val benefactorProperties = benefactor.propertise("c.", "=")
-        Cypher(s"MATCH (c {companyNumber:${benefactorCompanyNumber.get}}) SET $benefactorProperties").execute()
-      }
-      if (!benefactorResult) println(" => failed to add benefactor")
 
       // recipient
       val recipient = Map(
