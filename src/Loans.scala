@@ -3,6 +3,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.anormcypher.Cypher
 import com.github.tototoshi.csv.CSVReader
+import CypherTools._
 
 object Loans {
 
@@ -24,26 +25,28 @@ object Loans {
       // benefactor
       val benefactorName = entry("Lender name").string
       val benefactorCompanyNumber = entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "").string // optional
-      val benefactorProperties = propertise(
+      val benefactor = Map(
         "name" -> benefactorName,
         "type" -> entry("Lender type").string,
-        "companyRegistrationNumber" -> benefactorCompanyNumber,
+        "companyNumber" -> benefactorCompanyNumber,
         "postcode" -> entry("Postcode").string // optional
       )
+      val benefactorProperties = benefactor.propertise()
       val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
       if (!benefactorResult) println(" => failed to add benefactor")
 
       // recipient
       val recipientName = entry("Entity name").string
-      val recipientProperties = propertise(
+      val recipient = Map(
         "name" -> recipientName,
         "type" -> entry("Entity type").string
       )
+      val recipientProperties = recipient.propertise()
       val recipientResult = Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
       if (!recipientResult) println(" => failed to add recipient")
 
       // loan
-      val loanProperties = propertise(
+      val loan = Map(
         "ecReference" -> entry("EC reference").string,
         "type" -> entry("Type of borrowing").string,
         "value" -> entry("Total amount").int, // in pence
@@ -60,20 +63,14 @@ object Loans {
         "recordedBy" -> entry("Rec'd by (AU)").string, // optional
         "complianceBreach" -> entry("Compliance breach").string
       )
-      val matchCypher = s"MATCH (b:Benefactor {name:${benefactorName.get}}), (r:Recipient {name:${recipientName.get}})"
-      val mergeCypher = s"MERGE (b)-[:LOANED {$loanProperties}]->(r)"
-      val loanResult = Cypher(s"$matchCypher $mergeCypher").execute()
+      val loanProperties = loan.propertise()
+      val loanMatchCypher = s"MATCH (b:Benefactor {name:${benefactorName.get}}), (r:Recipient {name:${recipientName.get}})"
+      val loanCreateCypher = s"CREATE (b)-[:LOANED {$loanProperties}]->(r)"
+      val loanResult = Cypher(s"$loanMatchCypher $loanCreateCypher").execute()
       if (!loanResult) println(" => failed to add loan")
 
       println(s"Adding loan: ${benefactorName.get} -> ${recipientName.get}")
     }
-  }
-
-  def propertise(values: (String, Option[String])*): String = {
-    val properties = values collect {
-      case (key, Some(value)) => s"$key:$value"
-    }
-    properties mkString ","
   }
 
 }
