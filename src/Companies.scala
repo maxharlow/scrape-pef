@@ -56,17 +56,31 @@ object Companies {
           // officers (directors et al)
           (companyObject \ "officers").children foreach { o =>
             val officerObject = (o \ "officer")
-            val officerName = (officerObject \ "name").string.get.init.tail // unquoted!
             val officer = Map(
+              "name" ->  (officerObject \ "name").string
+            )
+            val officerName = officer("name").get.init.tail // unquoted!
+            val officerResult = if (Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' RETURN o").apply().isEmpty) {
+              val officerProperties = officer.propertise()
+              Cypher(s"CREATE (o:Benefactor {$officerProperties})").execute()
+            }
+            else { // officer already exists
+              val officerProperties = officer.propertise("o.", "=")
+              Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
+            }
+            if (!officerResult) println(" => failed to add officer")
+
+            // officership relations
+            val officership = Map(
               "position" -> (officerObject \ "position").string,
               "startDate" -> (officerObject \ "start_date").date,
               "endDate" -> (officerObject \ "end_date").date
             )
-            val officerProperties = officer.propertise()
-            val officerMatchCypher = s"MATCH (o), (c {companyNumber:'$number'}) WHERE o.name =~ '(?i).*$officerName.*'"
-            val officerMergeCypher = s"MERGE (o)-[:IS_AN_OFFICER_OF {$officerProperties}]->(c)"
-            val officerResult = Cypher(s"$officerMatchCypher $officerMergeCypher").execute()
-            if (!officerResult) println(" => failed to add officer")
+            val officershipProperties = officership.propertise()
+            val officershipMatchCypher = s"MATCH (o), (c {companyNumber:'$number'}) WHERE o.name =~ '(?i).*$officerName.*'"
+            val officershipMergeCypher = s"MERGE (o)-[:IS_AN_OFFICER_OF {$officershipProperties}]->(c)"
+            val officershipResult = Cypher(s"$officershipMatchCypher $officershipMergeCypher").execute()
+            if (!officershipResult) println(" => failed to add officership")
           }
         }
       }
