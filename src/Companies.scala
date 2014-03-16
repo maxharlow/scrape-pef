@@ -1,8 +1,7 @@
-import scala.util.{Try, Success, Failure}
 import java.io.File
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
+import scala.util.{Try, Success, Failure}
 import scalaj.http.{Http, HttpOptions}
+import org.json4s.DefaultFormats
 import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.Cypher
@@ -10,7 +9,7 @@ import CypherTools._
 
 object Companies {
 
-  implicit val formats = org.json4s.DefaultFormats
+  implicit val formats = DefaultFormats
 
   implicit class CypherParameterValue(value: JValue) {
     def int = Option(value.extract[Int]).map(_.toString)

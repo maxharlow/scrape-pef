@@ -42,9 +42,9 @@ object Donations {
       "ecReference" -> clean(entry("EC reference")).string,
       "type" -> clean(entry("Type of donation")).string,
       "value" -> clean(entry("Value")).int, // in pence
-      "acceptedDate" -> clean(entry("Accepted date")).date,
-      "receivedDate" -> clean(entry("Received date")).date, // optional
-      "reportedDate" -> clean(entry("Reported date")).date, // optional
+      "acceptedDate" -> clean(entry("Accepted date")).date("dd/MM/yyyy"),
+      "receivedDate" -> clean(entry("Received date")).date("dd/MM/yyyy"), // optional
+      "reportedDate" -> clean(entry("Reported date")).date("dd/MM/yyyy"), // optional
       "nature" -> clean(entry("Nature / Provision")).string, // optional
       "purpose" -> clean(entry("Purpose")).string, // optional
       "howDealtWith" -> clean(entry("How dealt with")).string, // optional

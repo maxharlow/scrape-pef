@@ -47,10 +47,10 @@ object Loans {
       "amountRepaid" -> clean(entry("Amount repaid")).dropRight(2).int,
       "amountConverted" -> clean(entry("Amount converted")).dropRight(2).int,
       "amountOutstanding" -> clean(entry("Amount outstanding")).dropRight(2).int,
-      "startDate" -> clean(entry("Start date")).date,
-      "endDate" -> clean(entry("End date")).date, // optional
-      "repaidDate" -> clean(entry("Date repaid")).date, // optional
-      "ecLastNotifiedDate" -> clean(entry("Date EC last notified")).date,
+      "startDate" -> clean(entry("Start date")).date("dd/MM/yyyy"),
+      "endDate" -> clean(entry("End date")).date("dd/MM/yyyy"), // optional
+      "repaidDate" -> clean(entry("Date repaid")).date("dd/MM/yyyy"), // optional
+      "ecLastNotifiedDate" -> clean(entry("Date EC last notified")).date("dd/MM/yyyy"),
       "recordedBy" -> clean(entry("Rec'd by (AU)")).string, // optional
       "complianceBreach" -> clean(entry("Compliance breach")).string
     )

@@ -7,10 +7,10 @@ object CypherTools {
     def int = Option(value.replaceAll("[^0-9]", "")).filter(_.nonEmpty)
     def string = if (value.isEmpty) None else Some("'" + value + "'")
     def boolean = Some((!value.isEmpty).toString)
-    def date = {
-      val format = DateTimeFormat.forPattern("dd/MM/yyyy")
+    def date(format: String) = {
+      val formatPattern = DateTimeFormat.forPattern(format)
       if (value.isEmpty) None
-      else Some(DateTime.parse(value, format).toString("yyyyMMdd"))
+      else Some(DateTime.parse(value, formatPattern).toString("yyyyMMdd"))
     }
   }
 
