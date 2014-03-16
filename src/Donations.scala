@@ -57,8 +57,8 @@ object Donations {
 
   def addBenefactor(benefactor: CypherObject): Unit = {
     val companyNumber = benefactor.values("companyNumber")
-    val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
+      val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
       val benefactorProperties = benefactor.toMatchString(nodeType, "c")
       val result = Cypher(s"MERGE $benefactorProperties").execute()
       if (!result) println(" => failed to add benefactor")
