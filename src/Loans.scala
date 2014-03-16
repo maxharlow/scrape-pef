@@ -61,7 +61,7 @@ object Loans {
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
       val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
       val benefactorProperties = benefactor.toMatchString(nodeType, "c")
-      val result = Cypher(s"MERGE $benefactorProperties").execute()
+      val result = Cypher(s"MERGE ($benefactorProperties)").execute()
       if (!result) println(" => failed to add benefactor")
     }
   }
@@ -69,7 +69,7 @@ object Loans {
   def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = "`" + recipient.values("recipientType").get.tail.init + "`"
     val recipientProperties = recipient.toMatchString(nodeType)
-    val result = Cypher(s"MERGE $recipientProperties").execute()
+    val result = Cypher(s"MERGE ($recipientProperties)").execute()
     if (!result) println(" => failed to add recipient")
   }
 
