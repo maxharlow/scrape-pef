@@ -36,8 +36,8 @@ object Donations {
 
   def getBenefactor(entry: Map[String, String]): Map[String, Option[String]] = {
     Map(
-      "name" -> entry("Donor name").replaceAll("(Ms)|(Mrs)|(Miss)|(Mr)|(Dr)|(Lord)|(Sir)|(Dame)|(The Hon)|(The Rt Hon)|(QC)|(MP)|(MSP)|(AM)", "").trim.string,
-      "type" -> entry("Donor type").string,
+      "name" -> stripTitles(entry("Donor name")).string,
+      "benefactorType" -> stripTitles(entry("Donor type")).string,
       "postcode" -> entry("Postcode").string, // optional
       "companyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "").string // optional
     )
@@ -45,9 +45,9 @@ object Donations {
 
   def getRecipient(entry: Map[String, String]): Map[String, Option[String]] = {
     Map(
-      "name" -> entry("Entity name").replaceAll("(Ms)|(Mrs)|(Miss)|(Mr)|(Dr)|(Lord)|(Sir)|(Dame)|(The Hon)|(The Rt Hon)|(QC)|(MP)|(MSP)|(AM)", "").trim.string,
-      "type" -> entry("Entity type").string,
-      "regulatedType" -> entry("Regulated donee type").string // optional
+      "name" -> stripTitles(entry("Entity name")).string,
+      "recipientType" -> entry("Entity type").string,
+      "recipientRegulatedType" -> entry("Regulated donee type").string // optional
     )
   }
 
@@ -70,26 +70,36 @@ object Donations {
   }
 
   def addBenefactor(benefactor: Map[String, Option[String]]): Unit = {
-    val benefactorProperties = benefactor.propertise()
-    val benefactorCompanyNumber = benefactor("companyNumber")
-    if (benefactorCompanyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${benefactorCompanyNumber.get}}) RETURN c").apply().isEmpty) {
-      val benefactorResult = Cypher(s"MERGE (:Benefactor {$benefactorProperties})").execute()
-      if (!benefactorResult) println(" => failed to add benefactor")
+    val properties = benefactor.propertise()
+    val companyNumber = benefactor("companyNumber")
+    val nodeType = if (benefactor("benefactorType").get contains "Individual") "Individual" else "Organisation"
+    if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
+      val result = Cypher(s"MERGE (:$nodeType {$properties})").execute()
+      if (!result) println(" => failed to add benefactor")
     }
   }
 
   def addRecipient(recipient: Map[String, Option[String]]): Unit = {
-    val recipientProperties = recipient.propertise()
-    val recipientResult = Cypher(s"MERGE (:Recipient {$recipientProperties})").execute()
-    if (!recipientResult) println(" => failed to add recipient")
+    val properties = recipient.propertise()
+    val nodeType = "`" + recipient("recipientType").get.tail.init + "`"
+    val result = Cypher(s"MERGE (:$nodeType {$properties})").execute()
+    if (!result) println(" => failed to add recipient")
   }
 
   def addDonation(donation: Map[String, Option[String]], benefactorName: String, recipientName: String): Unit = {
-    val donationProperties = donation.propertise()
-    val donationMatchCypher = s"MATCH (b {name:$benefactorName}), (r {name:$recipientName})"
-    val donationCreateCypher = s"CREATE (b)-[:DONATED_TO {$donationProperties}]->(r)"
-    val donationResult = Cypher(s"$donationMatchCypher $donationCreateCypher").execute()
-    if (!donationResult) println(" => failed to add donation")
+    val properties = donation.propertise()
+    val matchCypher = s"MATCH (b {name:$benefactorName}), (r {name:$recipientName})"
+    val createCypher = s"CREATE (b)-[:DONATED_TO {$properties}]->(r)"
+    val result = Cypher(s"$matchCypher $createCypher").execute()
+    if (!result) println(" => failed to add donation")
+  }
+
+
+  def stripTitles(name: String): String = {
+    val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Lord", "Baron", "Baroness", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
+    val suffixes = List("QC", "MP", "MSP", "AM")
+    val titlesRegex = (prefixes.map("(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
+    name.replaceAll(titlesRegex, "")
   }
 
 }
