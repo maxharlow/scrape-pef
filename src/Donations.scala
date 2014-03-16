@@ -1,31 +1,18 @@
 import java.io.File
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import org.anormcypher.Cypher
 import com.github.tototoshi.csv.CSVReader
 import CypherTools._
 
 object Donations {
 
-  implicit class CypherParameterValue(value: String) {
-    def int = Option(value.replaceAll("[^0-9]", "")).filter(_.nonEmpty)
-    def string = if (value.isEmpty) None else Some("'" + value + "'")
-    def boolean = Some((!value.isEmpty).toString)
-    def date = {
-      val format = DateTimeFormat.forPattern("dd/MM/yyyy")
-      if (value.isEmpty) None
-      else Some(DateTime.parse(value, format).toString("yyyyMMdd"))
-    }
-  }
-
   def run() {
     val donations = CSVReader.open(new File(Config.donationsData)).allWithHeaders
     donations foreach { entry =>
       val benefactor = getBenefactor(entry)
-      val benefactorName = benefactor("name").get
+      val benefactorName = benefactor.values("name").get
       addBenefactor(benefactor)
       val recipient = getRecipient(entry)
-      val recipientName = recipient("name").get
+      val recipientName = recipient.values("name").get
       addRecipient(recipient)
       val donation = getDonation(entry)
       addDonation(donation, benefactorName, recipientName)
@@ -33,8 +20,8 @@ object Donations {
     }
   }
 
-  def getBenefactor(entry: Map[String, String]): Map[String, Option[String]] = {
-    Map(
+  def getBenefactor(entry: Map[String, String]): CypherObject = {
+    new CypherObject(
       "name" -> stripTitles(clean(entry("Donor name"))).string,
       "benefactorType" -> clean(entry("Donor type")).string,
       "postcode" -> clean(entry("Postcode")).string, // optional
@@ -42,16 +29,16 @@ object Donations {
     )
   }
 
-  def getRecipient(entry: Map[String, String]): Map[String, Option[String]] = {
-    Map(
+  def getRecipient(entry: Map[String, String]): CypherObject = {
+    new CypherObject(
       "name" -> stripTitles(clean(entry("Entity name"))).string,
       "recipientType" -> clean(entry("Entity type")).string,
       "recipientRegulatedType" -> clean(entry("Regulated donee type")).string // optional
     )
   }
 
-  def getDonation(entry: Map[String, String]): Map[String, Option[String]] = {
-    Map(
+  def getDonation(entry: Map[String, String]): CypherObject = {
+    new CypherObject(
       "ecReference" -> clean(entry("EC reference")).string,
       "type" -> clean(entry("Type of donation")).string,
       "value" -> clean(entry("Value")).int, // in pence
@@ -68,27 +55,27 @@ object Donations {
     )
   }
 
-  def addBenefactor(benefactor: Map[String, Option[String]]): Unit = {
-    val properties = benefactor.propertise()
-    val companyNumber = benefactor("companyNumber")
-    val nodeType = if (benefactor("benefactorType").get contains "Individual") "Individual" else "Organisation"
+  def addBenefactor(benefactor: CypherObject): Unit = {
+    val companyNumber = benefactor.values("companyNumber")
+    val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
-      val result = Cypher(s"MERGE (:$nodeType {$properties})").execute()
+      val benefactorProperties = benefactor.toMatchString(nodeType, "c")
+      val result = Cypher(s"MERGE $benefactorProperties").execute()
       if (!result) println(" => failed to add benefactor")
     }
   }
 
-  def addRecipient(recipient: Map[String, Option[String]]): Unit = {
-    val properties = recipient.propertise()
-    val nodeType = "`" + recipient("recipientType").get.tail.init + "`"
-    val result = Cypher(s"MERGE (:$nodeType {$properties})").execute()
+  def addRecipient(recipient: CypherObject): Unit = {
+    val nodeType = "`" + recipient.values("recipientType").get.tail.init + "`"
+    val recipientProperties = recipient.toMatchString(nodeType)
+    val result = Cypher(s"MERGE $recipientProperties").execute()
     if (!result) println(" => failed to add recipient")
   }
 
-  def addDonation(donation: Map[String, Option[String]], benefactorName: String, recipientName: String): Unit = {
-    val properties = donation.propertise()
+  def addDonation(donation: CypherObject, benefactorName: String, recipientName: String): Unit = {
+    val donationProperties = donation.toMatchString("DONATED_TO")
     val matchCypher = s"MATCH (b {name:$benefactorName}), (r {name:$recipientName})"
-    val createCypher = s"CREATE (b)-[:DONATED_TO {$properties}]->(r)"
+    val createCypher = s"CREATE (b)-[$donationProperties]->(r)"
     val result = Cypher(s"$matchCypher $createCypher").execute()
     if (!result) println(" => failed to add donation")
   }
