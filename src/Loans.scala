@@ -88,7 +88,7 @@ object Loans {
   private def stripTitles(name: String): String = {
     val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Lord", "Baron", "Baroness", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
     val suffixes = List("QC", "MP", "MSP", "AM", "MEP")
-    val titlesRegex = (prefixes.map("(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
+    val titlesRegex = (prefixes.map("^(" + _ + " )") ++ suffixes.map("( " + _ + ")$")).mkString("|")
     name.replaceAll(titlesRegex, "")
   }
 
