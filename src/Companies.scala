@@ -13,7 +13,7 @@ object Companies {
 
   def run() {
     companyNumbers foreach { number =>
-      getCompany(number) match {
+      companyData(number) match {
         case Failure(e) => println(s"Failed to get data for company $number (${e.getMessage.toLowerCase})")
         case Success(companyJson) => {
           val company = getCompany(companyJson)
@@ -31,12 +31,12 @@ object Companies {
     }
   }
 
-  private private def companyNumbers: List[String] = {
+  private def companyNumbers: List[String] = {
     val companyNumbersQuery = Cypher("MATCH (n) WHERE has(n.companyNumber) RETURN n.companyNumber as number").apply()
     companyNumbersQuery.map(_[String]("number")).toList
   }
 
-  private private def getCompany(number: String): Try[JValue] = {
+  private def companyData(number: String): Try[JValue] = {
     val apiToken = Config.openCorporatesKey
     val openCorporatesResponse = Try {
       Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
