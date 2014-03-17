@@ -68,7 +68,7 @@ object Companies {
 
   private def getOfficer(officerJson: JValue): CypherObject = {
     new CypherObject(
-      "name" ->  extractString(officerJson, "name").split(" ").map(_.toLowerCase.capitalize).mkString(" ").string
+      "name" ->  titleCase(extractString(officerJson, "name")).string
     )
   }
 
@@ -107,6 +107,10 @@ object Companies {
 
   private def extractBoolean(json: JValue, key: String): String = {
     Option((json \ key).extract[Boolean]).map(_.toString).getOrElse("")
+  }
+
+  private def titleCase(text: String): String = {
+    text.split(" ").map(_.toLowerCase.capitalize).mkString(" ")
   }
 
 }

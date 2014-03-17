@@ -22,7 +22,7 @@ object Donations {
 
   private def getBenefactor(entry: Map[String, String]): CypherObject = {
     new CypherObject(
-      "name" -> stripTitles(clean(entry("Donor name"))).string,
+      "name" -> stripTitles(titleCase(clean(entry("Donor name")))).string,
       "benefactorType" -> clean(entry("Donor type")).string,
       "postcode" -> clean(entry("Postcode")).string, // optional
       "companyNumber" -> clean(entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "")).string // optional
@@ -31,7 +31,7 @@ object Donations {
 
   private def getRecipient(entry: Map[String, String]): CypherObject = {
     new CypherObject(
-      "name" -> stripTitles(clean(entry("Entity name"))).string,
+      "name" -> stripTitles(titleCase(clean(entry("Entity name")))).string,
       "recipientType" -> clean(entry("Entity type")).string,
       "recipientRegulatedType" -> clean(entry("Regulated donee type")).string // optional
     )
@@ -89,6 +89,10 @@ object Donations {
     val suffixes = List("QC", "MP", "MSP", "AM", "MEP")
     val titlesRegex = (prefixes.map("(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
     name.replaceAll(titlesRegex, "")
+  }
+
+  private def titleCase(text: String): String = {
+    text.split(" ").map(_.toLowerCase.capitalize).mkString(" ")
   }
 
 }
