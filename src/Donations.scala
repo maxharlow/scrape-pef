@@ -81,7 +81,7 @@ object Donations {
   }
 
   private def clean(text: String): String = {
-    text.filter(_ >= ' ').replace("""\""", """\\""").replace("'", """\'""").trim
+    text.filter(_ >= ' ').trim
   }
 
   private def stripTitles(name: String): String = {

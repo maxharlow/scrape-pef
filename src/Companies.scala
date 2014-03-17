@@ -14,7 +14,7 @@ object Companies {
   def run() {
     companyNumbers foreach { number =>
       companyData(number) match {
-        case Failure(e) => println(s"Failed to get data for company $number (${e.getMessage.toLowerCase})")
+        case Failure(e) => println(s" => failed to get data for company $number (${e.getMessage.toLowerCase})")
         case Success(companyJson) => {
           val company = getCompany(companyJson)
           addCompany(company, number)
