@@ -16,6 +16,7 @@ object Members {
       memberData(name) match {
         case Failure(e) => println(s" => failed to get data (${e.getMessage.toLowerCase})")
         case Success(memberJson) => {
+          if (memberJson.children.isEmpty) println(" => failed to find member")
           val member = getMember(memberJson)
           member.values("name").map(_.init.tail) map { memberName => // unquoted
             updateMember(member)
