@@ -16,7 +16,7 @@ object Donations {
       addRecipient(recipient)
       val donation = getDonation(entry)
       addDonation(donation, benefactorName, recipientName)
-      println(s"Adding donation: $benefactorName -> $recipientName")
+      println(s"Added donation: $benefactorName -> $recipientName")
     }
   }
 

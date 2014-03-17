@@ -13,8 +13,9 @@ object Companies {
 
   def run() {
     companyNumbers foreach { number =>
+      println(s"Updating data for company $number...")
       companyData(number) match {
-        case Failure(e) => println(s" => failed to get data for company $number (${e.getMessage.toLowerCase})")
+        case Failure(e) => println(s" => failed to get data (${e.getMessage.toLowerCase})")
         case Success(companyJson) => {
           val company = getCompany(companyJson)
           addCompany(company, number)
@@ -25,7 +26,6 @@ object Companies {
             val officership = getOfficership(officerJson)
             addOfficership(officership, number, officer.values("name").get)
           }
-          println(s"Updating data for company $number...")
         }
       }
     }
@@ -63,7 +63,7 @@ object Companies {
   private def addCompany(company: CypherObject, companyNumber: String): Unit = {
     val companyProperties = company.toUpdateString("n")
     val result = Cypher(s"MATCH (n {companyNumber: $companyNumber}) SET $companyProperties").execute()
-    if (!result) println(" => failed to add company details")
+    if (!result) println(" => failed to add details for company")
   }
 
   private def getOfficer(officerJson: JValue): CypherObject = {

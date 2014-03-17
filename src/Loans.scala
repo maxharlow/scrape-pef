@@ -16,7 +16,7 @@ object Loans {
       addRecipient(recipient)
       val loan = getLoan(entry)
       addLoan(loan, benefactorName, recipientName)
-      println(s"Adding loan: $benefactorName -> $recipientName")
+      println(s"Added loan: $benefactorName -> $recipientName")
     }
   }
 
