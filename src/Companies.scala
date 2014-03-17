@@ -103,11 +103,11 @@ object Companies {
   }
 
   private def extractString(json: JValue): String = {
-    json.toOption.map(_.extract[String]).getOrElse("")
+    json.noNulls.toOption.map(_.extract[String]).getOrElse("")
   }
 
   private def extractBoolean(json: JValue): String = {
-    json.toOption.map(_.extract[Boolean].toString).getOrElse("")
+    json.noNulls.toOption.map(_.extract[Boolean].toString).getOrElse("")
   }
 
   private def titleCase(text: String): String = {

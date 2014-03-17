@@ -82,7 +82,7 @@ object Members {
   }
 
   private def extractString(json: JValue): String = {
-    json.toOption.map(_.extract[String]).getOrElse("")
+    json.noNulls.toOption.map(_.extract[String]).getOrElse("")
   }
 
 }

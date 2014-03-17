@@ -68,7 +68,10 @@ object Loans {
   }
 
   private def addRecipient(recipient: CypherObject): Unit = {
-    val nodeType = "`" + recipient.values("recipientType").get.tail.init + "`"
+    val nodeType = {
+      if (recipient.values("recipientType") == Some("Political Party")) "PoliticalParty"
+      else "Individual"
+    }
     val recipientProperties = recipient.toMatchString(nodeType)
     val result = Cypher(s"MERGE ($recipientProperties)").execute()
     if (!result) println(" => failed to add recipient")
