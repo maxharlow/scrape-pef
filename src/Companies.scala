@@ -68,7 +68,7 @@ object Companies {
 
   private def getOfficer(officerJson: JValue): CypherObject = {
     new CypherObject(
-      "name" ->  extractString(officerJson, "name").string
+      "name" ->  extractString(officerJson, "name").split(" ").map(_.toLowerCase.capitalize).mkString(" ").string
     )
   }
 
@@ -80,7 +80,7 @@ object Companies {
     }
     else { // officer already exists
       val officerProperties = officer.toUpdateString("o")
-      Cypher(s"MATCH (o:Individual) WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
+      Cypher(s"MATCH (o) WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
     }
     if (!result) println(" => failed to add officer")
   }
