@@ -51,13 +51,13 @@ object Companies {
 
   private def getCompany(companyJson: JValue): CypherObject = {
     new CypherObject(
-      "companyName" -> extractString(companyJson, "name").string,
-      "companyType" -> extractString(companyJson, "company_type").string,
-      "companyRegisteredAddress" -> extractString(companyJson, "registered_address_in_full").string,
-      "companyIncorporationDate" -> extractString(companyJson, "incorporation_date").date("yyyy-MM-dd"),
-      "companyDissolutionDate" -> extractString(companyJson, "dissolution_date").date("yyyy-MM-dd"),
-      "companyStatus" -> extractString(companyJson, "current_status").string,
-      "companyInactive" -> extractBoolean(companyJson, "inactive").boolean
+      "companyName" -> extractString(companyJson \ "name").string,
+      "companyType" -> extractString(companyJson \ "company_type").string,
+      "companyRegisteredAddress" -> extractString(companyJson \ "registered_address_in_full").string,
+      "companyIncorporationDate" -> extractString(companyJson \ "incorporation_date").date("yyyy-MM-dd"),
+      "companyDissolutionDate" -> extractString(companyJson \ "dissolution_date").date("yyyy-MM-dd"),
+      "companyStatus" -> extractString(companyJson \ "current_status").string,
+      "companyInactive" -> extractBoolean(companyJson \ "inactive").boolean
     )
   }
 
@@ -69,7 +69,7 @@ object Companies {
 
   private def getOfficer(officerJson: JValue): CypherObject = {
     new CypherObject(
-      "name" ->  titleCase(extractString(officerJson, "name")).string
+      "name" ->  titleCase(extractString(officerJson \ "name")).string
     )
   }
 
@@ -88,9 +88,9 @@ object Companies {
 
   private def getOfficership(officerJson: JValue): CypherObject = {
     new CypherObject(
-      "position" -> extractString(officerJson, "position").string,
-      "startDate" -> extractString(officerJson, "start_date").date("yyyy-MM-dd"),
-      "endDate" -> extractString(officerJson, "end_date").date("yyyy-MM-dd")
+      "position" -> extractString(officerJson \ "position").string,
+      "startDate" -> extractString(officerJson \ "start_date").date("yyyy-MM-dd"),
+      "endDate" -> extractString(officerJson \ "end_date").date("yyyy-MM-dd")
     )
   }
 
@@ -102,12 +102,12 @@ object Companies {
     if (!result) println(" => failed to add officership")
   }
 
-  private def extractString(json: JValue, key: String): String = {
-    Option((json \ key).extract[String]).map(_.toString.trim).getOrElse("")
+  private def extractString(json: JValue): String = {
+    Option(json.extract[String]).map(_.toString.trim).getOrElse("")
   }
 
-  private def extractBoolean(json: JValue, key: String): String = {
-    Option((json \ key).extract[Boolean]).map(_.toString).getOrElse("")
+  private def extractBoolean(json: JValue): String = {
+    Option(json.extract[Boolean]).map(_.toString).getOrElse("")
   }
 
   private def titleCase(text: String): String = {
