@@ -20,7 +20,7 @@ object Loans {
     }
   }
 
-  def getBenefactor(entry: Map[String, String]): CypherObject = {
+  private def getBenefactor(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "name" -> stripTitles(clean(entry("Lender name"))).string,
       "type" -> clean(entry("Lender type")).string,
@@ -29,14 +29,14 @@ object Loans {
     )
   }
 
-  def getRecipient(entry: Map[String, String]): CypherObject = {
+  private def getRecipient(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "name" -> stripTitles(clean(entry("Entity name"))).string,
       "recipientType" -> clean(entry("Entity type")).string
     )
   }
 
-  def getLoan(entry: Map[String, String]): CypherObject = {
+  private def getLoan(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "ecReference" -> clean(entry("EC reference")).string,
       "type" -> clean(entry("Type of borrowing")).string,
@@ -56,7 +56,7 @@ object Loans {
     )
   }
 
-  def addBenefactor(benefactor: CypherObject): Unit = {
+  private def addBenefactor(benefactor: CypherObject): Unit = {
     val companyNumber = benefactor.values("companyNumber")
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
       val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
@@ -66,14 +66,14 @@ object Loans {
     }
   }
 
-  def addRecipient(recipient: CypherObject): Unit = {
+  private def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = "`" + recipient.values("recipientType").get.tail.init + "`"
     val recipientProperties = recipient.toMatchString(nodeType)
     val result = Cypher(s"MERGE ($recipientProperties)").execute()
     if (!result) println(" => failed to add recipient")
   }
 
-  def addLoan(loan: CypherObject, benefactorName: String, recipientName: String): Unit = {
+  private def addLoan(loan: CypherObject, benefactorName: String, recipientName: String): Unit = {
     val loanProperties = loan.toMatchString("LOANED")
     val matchCypher = s"MATCH (b {name:$benefactorName}), (r {name:$recipientName})"
     val createCypher = s"CREATE (b)-[$loanProperties]->(r)"
@@ -81,11 +81,11 @@ object Loans {
     if (!result) println(" => failed to add loan")
   }
 
-  def clean(text: String): String = {
+  private def clean(text: String): String = {
     text.filter(_ >= ' ').replace("""\""", """\\""").replace("'", """\'""").trim
   }
 
-  def stripTitles(name: String): String = {
+  private def stripTitles(name: String): String = {
     val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Lord", "Baron", "Baroness", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
     val suffixes = List("QC", "MP", "MSP", "AM")
     val titlesRegex = (prefixes.map("(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")

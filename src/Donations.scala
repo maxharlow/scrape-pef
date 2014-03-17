@@ -20,7 +20,7 @@ object Donations {
     }
   }
 
-  def getBenefactor(entry: Map[String, String]): CypherObject = {
+  private def getBenefactor(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "name" -> stripTitles(clean(entry("Donor name"))).string,
       "benefactorType" -> clean(entry("Donor type")).string,
@@ -29,7 +29,7 @@ object Donations {
     )
   }
 
-  def getRecipient(entry: Map[String, String]): CypherObject = {
+  private def getRecipient(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "name" -> stripTitles(clean(entry("Entity name"))).string,
       "recipientType" -> clean(entry("Entity type")).string,
@@ -37,7 +37,7 @@ object Donations {
     )
   }
 
-  def getDonation(entry: Map[String, String]): CypherObject = {
+  private def getDonation(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "ecReference" -> clean(entry("EC reference")).string,
       "type" -> clean(entry("Type of donation")).string,
@@ -55,7 +55,7 @@ object Donations {
     )
   }
 
-  def addBenefactor(benefactor: CypherObject): Unit = {
+  private def addBenefactor(benefactor: CypherObject): Unit = {
     val companyNumber = benefactor.values("companyNumber")
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
       val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
@@ -65,14 +65,14 @@ object Donations {
     }
   }
 
-  def addRecipient(recipient: CypherObject): Unit = {
+  private def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = "`" + recipient.values("recipientType").get.tail.init + "`"
     val recipientProperties = recipient.toMatchString(nodeType)
     val result = Cypher(s"MERGE ($recipientProperties)").execute()
     if (!result) println(" => failed to add recipient")
   }
 
-  def addDonation(donation: CypherObject, benefactorName: String, recipientName: String): Unit = {
+  private def addDonation(donation: CypherObject, benefactorName: String, recipientName: String): Unit = {
     val donationProperties = donation.toMatchString("DONATED_TO")
     val matchCypher = s"MATCH (b {name:$benefactorName}), (r {name:$recipientName})"
     val createCypher = s"CREATE (b)-[$donationProperties]->(r)"
@@ -80,11 +80,11 @@ object Donations {
     if (!result) println(" => failed to add donation")
   }
 
-  def clean(text: String): String = {
+  private def clean(text: String): String = {
     text.filter(_ >= ' ').replace("""\""", """\\""").replace("'", """\'""").trim
   }
 
-  def stripTitles(name: String): String = {
+  private def stripTitles(name: String): String = {
     val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Lord", "Baron", "Baroness", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
     val suffixes = List("QC", "MP", "MSP", "AM")
     val titlesRegex = (prefixes.map("(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")

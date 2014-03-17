@@ -36,14 +36,4 @@ object CypherTools {
 
   }
 
-  // deprecated
-  implicit class CypherPropertiesMap(v: Map[String, Option[String]]) {
-    def propertise(prefix: String = "", separator: String = ":", delimiter: String = ","): String = {
-      val properties = v collect {
-        case (key, Some(value)) => s"$prefix$key$separator$value"
-      }
-      properties mkString delimiter
-    }
-  }
-
 }

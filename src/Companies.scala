@@ -11,79 +11,102 @@ object Companies {
 
   implicit val formats = DefaultFormats
 
-  implicit class CypherParameterValue(value: JValue) {
-    def int = Option(value.extract[Int]).map(_.toString)
-    def string = Option(value.extract[String]).map("'" + _.trim.replace("""\""", """\\""").replace("'", """\'""") + "'")
-    def boolean = Option(value.extract[Boolean]).map(_.toString)
-    def date = Option(value.extract[String]) map { s =>
-      val format = DateTimeFormat.forPattern("yyyy-MM-dd")
-      DateTime.parse(s, format).toString("yyyyMMdd")
-    }
-  }
-
-  val companyNumbersQuery = Cypher("MATCH (n) WHERE has(n.companyNumber) RETURN n.companyNumber as number").apply()
-  val companyNumbers = companyNumbersQuery.map(_[String]("number")).toList
-
   def run() {
     companyNumbers foreach { number =>
-      val apiToken = Config.openCorporatesKey
-      Try {
-        Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
-          .option(HttpOptions.connTimeout(2000))
-          .option(HttpOptions.readTimeout(7000)).asString
-      }
-      match {
+      getCompany(number) match {
         case Failure(e) => println(s"Failed to get data for company $number (${e.getMessage.toLowerCase})")
-        case Success(response) => {
-          println(s"Updating data for company $number...")
-
-          // company details
-          val companyObject = JsonMethods.parse(response) \\ "company"
-          val company = Map(
-            "companyName" -> (companyObject \ "name").string,
-            "companyType" -> (companyObject \ "company_type").string,
-            "companyRegisteredAddress" -> (companyObject \ "registered_address_in_full").string,
-            "companyIncorporationDate" -> (companyObject \ "incorporation_date").date,
-            "companyDissolutionDate" -> (companyObject \ "dissolution_date").date,
-            "companyStatus" -> (companyObject \ "current_status").string,
-            "companyInactive" -> (companyObject \ "inactive").boolean
-          )
-          val companyProperties = company.propertise("n.", "=")
-          val companyDetailsResult = Cypher(s"MATCH (n {companyNumber: '$number'}) SET $companyProperties").execute()
-          if (!companyDetailsResult) println(" => failed to add company details")
-
-          // officers (directors et al)
-          (companyObject \ "officers").children foreach { o =>
-            val officerObject = (o \ "officer")
-            val officer = Map(
-              "name" ->  (officerObject \ "name").string
-            )
-            val officerName = officer("name").get.init.tail // unquoted!
-            val officerResult = if (Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' RETURN o").apply().isEmpty) {
-              val officerProperties = officer.propertise()
-              Cypher(s"CREATE (o:Benefactor {$officerProperties})").execute()
-            }
-            else { // officer already exists
-              val officerProperties = officer.propertise("o.", "=")
-              Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
-            }
-            if (!officerResult) println(" => failed to add officer")
-
-            // officership relations
-            val officership = Map(
-              "position" -> (officerObject \ "position").string,
-              "startDate" -> (officerObject \ "start_date").date,
-              "endDate" -> (officerObject \ "end_date").date
-            )
-            val officershipProperties = officership.propertise()
-            val officershipMatchCypher = s"MATCH (o), (c {companyNumber:'$number'}) WHERE o.name =~ '(?i).*$officerName.*'"
-            val officershipMergeCypher = s"MERGE (o)-[:IS_AN_OFFICER_OF {$officershipProperties}]->(c)"
-            val officershipResult = Cypher(s"$officershipMatchCypher $officershipMergeCypher").execute()
-            if (!officershipResult) println(" => failed to add officership")
+        case Success(companyJson) => {
+          val company = getCompany(companyJson)
+          addCompany(company, number)
+          (companyJson \ "officers").children map { officerObject =>
+            val officerJson = (officerObject \ "officer")
+            val officer = getOfficer(companyJson)
+            addOfficer(officer)
+            val officership = getOfficership(officerJson)
+            addOfficership(officership, number, officer.values("name").get)
           }
+          println(s"Updating data for company $number...")
         }
       }
     }
+  }
+
+  private private def companyNumbers: List[String] = {
+    val companyNumbersQuery = Cypher("MATCH (n) WHERE has(n.companyNumber) RETURN n.companyNumber as number").apply()
+    companyNumbersQuery.map(_[String]("number")).toList
+  }
+
+  private private def getCompany(number: String): Try[JValue] = {
+    val apiToken = Config.openCorporatesKey
+    val openCorporatesResponse = Try {
+      Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
+        .option(HttpOptions.connTimeout(2000))
+        .option(HttpOptions.readTimeout(7000)).asString
+    }
+    openCorporatesResponse map { response =>
+      JsonMethods.parse(response) \\ "company"
+    }
+  }
+
+  private def getCompany(companyJson: JValue): CypherObject = {
+    new CypherObject(
+      "companyName" -> extractString(companyJson, "name").string,
+      "companyType" -> extractString(companyJson, "company_type").string,
+      "companyRegisteredAddress" -> extractString(companyJson, "registered_address_in_full").string,
+      "companyIncorporationDate" -> extractString(companyJson, "incorporation_date").date("yyyy-MM-dd"),
+      "companyDissolutionDate" -> extractString(companyJson, "dissolution_date").date("yyyy-MM-dd"),
+      "companyStatus" -> extractString(companyJson, "current_status").string,
+      "companyInactive" -> extractBoolean(companyJson, "inactive").boolean
+    )
+  }
+
+  private def addCompany(company: CypherObject, companyNumber: String): Unit = {
+    val companyProperties = company.toUpdateString("n")
+    val result = Cypher(s"MATCH (n {companyNumber: $companyNumber}) SET $companyProperties").execute()
+    if (!result) println(" => failed to add company details")
+  }
+
+  private def getOfficer(officerJson: JValue): CypherObject = {
+    new CypherObject(
+      "name" ->  extractString(officerJson, "name").string
+    )
+  }
+
+  private def addOfficer(officer: CypherObject): Unit = {
+    val officerName = officer.values("name").get.init.tail // unquoted
+    val result = if (Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' RETURN o").apply().isEmpty) {
+      val officerProperties = officer.toMatchString("Individual", "o")
+      Cypher(s"CREATE ($officerProperties)").execute()
+    }
+    else { // officer already exists
+      val officerProperties = officer.toUpdateString("o")
+      Cypher(s"MATCH (o:Individual) WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
+    }
+    if (!result) println(" => failed to add officer")
+  }
+
+  private def getOfficership(officerJson: JValue): CypherObject = {
+    new CypherObject(
+      "position" -> extractString(officerJson, "position").string,
+      "startDate" -> extractString(officerJson, "start_date").date("yyyy-MM-dd"),
+      "endDate" -> extractString(officerJson, "end_date").date("yyyy-MM-dd")
+    )
+  }
+
+  private def addOfficership(officership: CypherObject, officerName: String, companyNumber: String): Unit = {
+    val officershipProperties = officership.toMatchString("IS_AN_OFFICER_OF")
+    val matchCypher = s"MATCH (o), (c:Organisation {companyNumber:$companyNumber}) WHERE o.name =~ '(?i).*$officerName.*'"
+    val mergeCypher = s"MERGE (o)-[$officershipProperties]->(c)"
+    val result = Cypher(s"$matchCypher $mergeCypher").execute()
+    if (!result) println(" => failed to add officership")
+  }
+
+  private def extractString(json: JValue, key: String): String = {
+    Option((json \ key).extract[String]).map(_.toString).getOrElse("")
+  }
+
+  private def extractBoolean(json: JValue, key: String): String = {
+    Option((json \ key).extract[Boolean]).map(_.toString).getOrElse("")
   }
 
 }
