@@ -21,10 +21,11 @@ object Companies {
           addCompany(company, number)
           (companyJson \ "officers").children map { officerObject =>
             val officerJson = (officerObject \ "officer")
-            val officer = getOfficer(companyJson)
+            val officer = getOfficer(officerJson)
+            val officerName = officer.values("name").get.init.tail // unquoted
             addOfficer(officer)
             val officership = getOfficership(officerJson)
-            addOfficership(officership, number, officer.values("name").get)
+            addOfficership(officership, officerName, number)
           }
         }
       }
@@ -62,7 +63,7 @@ object Companies {
 
   private def addCompany(company: CypherObject, companyNumber: String): Unit = {
     val companyProperties = company.toUpdateString("n")
-    val result = Cypher(s"MATCH (n {companyNumber: $companyNumber}) SET $companyProperties").execute()
+    val result = Cypher(s"MATCH (n {companyNumber:'$companyNumber'}) SET $companyProperties").execute()
     if (!result) println(" => failed to add details for company")
   }
 
@@ -80,7 +81,7 @@ object Companies {
     }
     else { // officer already exists
       val officerProperties = officer.toUpdateString("o")
-      Cypher(s"MATCH (o) WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
+      Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
     }
     if (!result) println(" => failed to add officer")
   }
@@ -95,14 +96,14 @@ object Companies {
 
   private def addOfficership(officership: CypherObject, officerName: String, companyNumber: String): Unit = {
     val officershipProperties = officership.toMatchString("IS_AN_OFFICER_OF")
-    val matchCypher = s"MATCH (o), (c:Organisation {companyNumber:$companyNumber}) WHERE o.name =~ '(?i).*$officerName.*'"
+    val matchCypher = s"MATCH (o), (c:Organisation {companyNumber:'$companyNumber'}) WHERE o.name =~ '(?i).*$officerName.*'"
     val mergeCypher = s"MERGE (o)-[$officershipProperties]->(c)"
     val result = Cypher(s"$matchCypher $mergeCypher").execute()
     if (!result) println(" => failed to add officership")
   }
 
   private def extractString(json: JValue, key: String): String = {
-    Option((json \ key).extract[String]).map(_.toString).getOrElse("")
+    Option((json \ key).extract[String]).map(_.toString.trim).getOrElse("")
   }
 
   private def extractBoolean(json: JValue, key: String): String = {
