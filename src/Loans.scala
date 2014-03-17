@@ -23,7 +23,7 @@ object Loans {
   private def getBenefactor(entry: Map[String, String]): CypherObject = {
     new CypherObject(
       "name" -> stripTitles(titleCase(clean(entry("Lender name")))).string,
-      "type" -> clean(entry("Lender type")).string,
+      "benefactorType" -> clean(entry("Lender type")).string,
       "companyNumber" -> clean(entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "")).string, // optional
       "postcode" -> clean(entry("Postcode")).string // optional
     )
