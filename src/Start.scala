@@ -10,8 +10,8 @@ object Start extends App {
     \_\/     \_____\/ \_____\/   \__\/    \_____\/ \_____\/ \__\/\__\/   \__\/    \_\/ \_\/  \__\/
   """)
 
-  Donations.run()
-  Loans.run()
+  Donations.run(Config.donationsData)
+  Loans.run(Config.loansData)
   Companies.run()
   Members.run()
 

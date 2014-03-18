@@ -5,8 +5,8 @@ import CypherTools._
 
 object Loans {
 
-  def run() {
-    val loans = CSVReader.open(new File(Config.loansData)).allWithHeaders
+  def run(dataLocation: String) {
+    val loans = CSVReader.open(new File(dataLocation)).allWithHeaders
     loans foreach { entry =>
       val benefactor = getBenefactor(entry)
       val benefactorName = benefactor.values("name").get
