@@ -76,7 +76,7 @@ object Members {
 
   private def addMembership(membership: CypherObject, memberName: String, partyName: String) = {
     val membershipProperties = membership.toMatchString("MEMBER_OF")
-    val matchCypher = s"MATCH (p:`Political Party`), (m {name:'$memberName'}) WHERE p.name =~ '(?i).*$partyName.*'"
+    val matchCypher = s"MATCH (p:PoliticalParty), (m {name:'$memberName'}) WHERE p.name =~ '(?i).*$partyName.*'"
     val mergeCypher = s"MERGE (m)-[$membershipProperties]->(p)"
     val result = Cypher(s"$matchCypher $mergeCypher").execute()
     if (!result) println(" => failed to add membership") 

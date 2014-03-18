@@ -11,8 +11,8 @@ object Start extends App {
   """)
 
   Donations.run(Config.donationsData)
-  Loans.run(Config.loansData)
-  Companies.run()
+  // Loans.run(Config.loansData)
+  // Companies.run()
   Members.run()
 
 }

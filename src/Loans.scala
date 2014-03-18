@@ -69,7 +69,7 @@ object Loans {
 
   private def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = {
-      if (recipient.values("recipientType") == Some("Political Party")) "PoliticalParty"
+      if (recipient.values("recipientType") == Some("'Political Party'")) "PoliticalParty"
       else "Individual"
     }
     val recipientProperties = recipient.toMatchString(nodeType)
