@@ -30,6 +30,12 @@ PEF data includes company registration numbers. [Companies House] (http://www.co
 
 This uses the OpenCorporates API to improve the information attached to benefactor companies and create officership relationships between companies and people already in the graph.
 
+### Members
+
+Names of members of parliament and peers sitting in the House of Lords are listed in the terrible but somewhat authoritative [Members' Names Data Platform] (http://data.parliament.uk/membersdataplatform/).
+
+This uses that API to look up members to add specific information to those nodes (house, constituency) and create relationships between people and parties.
+
 
 Running
 -------
