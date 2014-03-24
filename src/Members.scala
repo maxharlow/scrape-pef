@@ -1,12 +1,14 @@
 import scala.util.{Try, Success, Failure}
 import scalaj.http.{Http, HttpOptions}
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
 import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.Cypher
 import CypherTools._
 
-object Members {
+class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
 
   implicit val formats = DefaultFormats
 
@@ -19,10 +21,20 @@ object Members {
           if (memberJson.children.isEmpty) println(" => failed to find member")
           val member = getMember(memberJson)
           member.values("name").map(_.init.tail) map { memberName => // unquoted
-            updateMember(member)
             val partyName = getPartyName(memberJson)
             val membership = getMembership(memberJson)
-            addMembership(membership, memberName, partyName)
+            val membershipEndDate = membership.values("endDate") map { dateString =>
+              DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(dateString)
+            }
+            val validMembership = membershipEndDate match {
+              case Some(date) if (date isAfter periodStartDate) && (date isBefore periodEndDate) => true
+              case None => true
+              case _ => false
+            }
+            if (validMembership) {
+              updateMember(member)
+              addMembership(membership, memberName, partyName)
+            }
           }
         }
       }
@@ -37,7 +49,7 @@ object Members {
   private def memberData(name: String): Try[JValue] = {
     val nameValue = name.replaceAll(" ", "%20")
     val parliamentResponse = Try {
-      Http(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/")
+      Http(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/") // todo: add membership=all
         .header("Content-Type", "application/json")
         .option(HttpOptions.connTimeout(5000))
         .option(HttpOptions.readTimeout(7000)).asString

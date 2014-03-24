@@ -1,13 +1,15 @@
 import java.io.File
 import scala.util.{Try, Success, Failure}
 import scalaj.http.{Http, HttpOptions}
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
 import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.Cypher
 import CypherTools._
 
-object Companies {
+class Companies(periodStartDate: DateTime, periodEndDate: DateTime) {
 
   implicit val formats = DefaultFormats
 
@@ -23,9 +25,19 @@ object Companies {
             val officerJson = (officerObject \ "officer")
             val officer = getOfficer(officerJson)
             val officerName = officer.values("name").get.init.tail // unquoted
-            addOfficer(officer)
             val officership = getOfficership(officerJson)
-            addOfficership(officership, officerName, number)
+            val officershipEndDate = officership.values("endDate") map { dateString =>
+              DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(dateString)
+            }
+            val validOfficership = officershipEndDate match {
+              case Some(date) if (date isAfter periodStartDate) && (date isBefore periodEndDate) => true
+              case None => true
+              case _ => false
+            }
+            if (validOfficership) {
+              addOfficer(officer)
+              addOfficership(officership, officerName, number)
+            }
           }
         }
       }
