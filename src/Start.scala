@@ -19,10 +19,10 @@ object Start extends App {
   println("Enter an end date:")
   val periodEndDate = readDate
 
-  Donations.run(Config.donationsData)
-  Loans.run(Config.loansData)
+//  Donations.run(Config.donationsData)
+//  Loans.run(Config.loansData)
 
-  new Companies(periodStartDate, periodEndDate).run()
+//  new Companies(periodStartDate, periodEndDate).run()
   new Members(periodStartDate, periodEndDate).run()
 
   def readDate: DateTime = {

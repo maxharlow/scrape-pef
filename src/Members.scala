@@ -82,7 +82,8 @@ class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
 
   private def getMembership(member: JValue): CypherObject = {
     new CypherObject(
-      "startDate" -> extractString(member \ "HouseStartDate").dropRight(9).date("yyyy-MM-dd")
+      "startDate" -> extractString(member \ "HouseStartDate").dropRight(9).date("yyyy-MM-dd"),
+      "endDate" -> extractString(member \ "HouseEndDate").dropRight(9).date("yyyy-MM-dd")
     )
   }
 
@@ -95,7 +96,13 @@ class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
   }
 
   private def extractString(json: JValue): String = {
-    json.noNulls.toOption.map(_.extract[String]).getOrElse("")
+    Try {
+      json.noNulls.toOption.map(_.extract[String]).getOrElse("")
+    }
+    match {
+      case Failure(e) => ""
+      case Success(value) => value
+    }
   }
 
 }
