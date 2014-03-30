@@ -7,6 +7,7 @@ import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.Cypher
 import CypherTools._
+import Utils._
 
 class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
 
@@ -18,7 +19,6 @@ class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
       memberData(name) match {
         case Failure(e) => println(s" => failed to get data (${e.getMessage.toLowerCase})")
         case Success(memberJson) => {
-          if (memberJson.children.isEmpty) println(" => failed to find member")
           val member = getMember(memberJson)
           member.values("name").map(_.init.tail) map { memberName => // unquoted
             val partyName = getPartyName(memberJson)
@@ -47,16 +47,20 @@ class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
   }
 
   private def memberData(name: String): Try[JValue] = {
-    val nameValue = name.replaceAll(" ", "%20")
-    val parliamentResponse = Try {
-      Http(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/") // todo: add membership=all
-        .header("Content-Type", "application/json")
-        .option(HttpOptions.connTimeout(5000))
-        .option(HttpOptions.readTimeout(7000)).asString
-    }
-    parliamentResponse map { response =>
-      val cleanResponse = response.replaceAll("[^a-zA-Z0-9 @#{},:\"/._-]", "")
-      JsonMethods.parse(cleanResponse) \\ "Member"
+    nameCheck(name) { memberName =>
+      val nameValue = memberName.replaceAll(" ", "%20")
+      val attemptedRequest = Try {
+        Http(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/") // todo: add membership=all
+          .header("Content-Type", "application/json")
+          .option(HttpOptions.connTimeout(5000))
+          .option(HttpOptions.readTimeout(7000)).asString
+      }
+      val requestJson = attemptedRequest map { response =>
+        val cleanResponse = response.replaceAll("[^a-zA-Z0-9 @#{},:\"/._-]", "")
+        val memberJson = JsonMethods.parse(cleanResponse) \\ "Member"
+        memberJson
+      }
+      requestJson.filter(!_.children.isEmpty)
     }
   }
 
