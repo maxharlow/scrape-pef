@@ -4,7 +4,7 @@ import org.joda.time.format.DateTimeFormat
 object CypherTools {
 
   implicit class CypherParameterValue(v: String) {
-    val value = v.replace("""\""", """\\""").replace("'", """\'""")
+    val value = v.replace("""\""", """\\\\""").replace("'", """\'""")
     def int = Option(value.replaceAll("[^0-9]", "")).filter(_.nonEmpty)
     def string = if (value.isEmpty) None else Some("'" + value + "'")
     def boolean = Some((!value.isEmpty).toString)
