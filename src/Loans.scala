@@ -61,14 +61,14 @@ object Loans {
     val companyNumber = benefactor.values("companyNumber")
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
       val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
-      val benefactorName = benefactor.values("name").get.init.tail // unquoted
-      val result = if (Cypher(s"MATCH b WHERE b.name =~ '(?i)$benefactorName' RETURN b").apply().isEmpty) {
+      val benefactorName = benefactor.values("name").get
+      val result = if (Cypher(s"MATCH b WHERE b.name = $benefactorName RETURN b").apply().isEmpty) {
         val benefactorProperties = benefactor.toMatchString(nodeType)
         Cypher(s"CREATE ($benefactorProperties)").execute()
       }
       else { // benefactor already exists
         val benefactorProperties = benefactor.toUpdateString("b")
-        Cypher(s"MATCH b WHERE b.name =~ '(?i)$benefactorName' SET $benefactorProperties").execute()
+        Cypher(s"MATCH b WHERE b.name = $benefactorName SET $benefactorProperties").execute()
       }
       if (!result) println(" => failed to add benefactor")
     }
@@ -79,14 +79,14 @@ object Loans {
       if (recipient.values("recipientType") == Some("'Political Party'")) "PoliticalParty"
       else "Individual"
     }
-    val recipientName = recipient.values("name").get.init.tail // unquoted
-    val result = if (Cypher(s"MATCH r WHERE r.name =~ '(?i)$recipientName' RETURN r").apply().isEmpty) {
+    val recipientName = recipient.values("name").get
+    val result = if (Cypher(s"MATCH r WHERE r.name = $recipientName RETURN r").apply().isEmpty) {
       val recipientProperties = recipient.toMatchString(nodeType)
       Cypher(s"CREATE ($recipientProperties)").execute()
     }
     else { // recipient already exists
       val recipientProperties = recipient.toUpdateString("r")
-      Cypher(s"MATCH r WHERE r.name =~ '(?i)$recipientName' SET $recipientProperties").execute()
+      Cypher(s"MATCH r WHERE r.name = $recipientName SET $recipientProperties").execute()
     }
     if (!result) println(" => failed to add recipient")
   }
