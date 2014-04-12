@@ -1,6 +1,15 @@
 import scala.util.Try
+import scalaj.http.{Http, HttpOptions}
 
 object Utils {
+
+  def request(uri: String, retries: Int = 5): Try[String] = {
+    val response = Try {
+      Http(uri).option(HttpOptions.connTimeout(2000)).option(HttpOptions.readTimeout(7000)).asString
+    }
+    if (response.isFailure && retries > 0) request(uri, retries - 1)
+    else response
+  }
 
   def nameCheck[A](name: String)(check: String => Try[A]): Try[A] = {
     val names = name.split(" ")

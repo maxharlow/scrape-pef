@@ -1,6 +1,5 @@
 import java.io.File
 import scala.util.{Try, Success, Failure}
-import scalaj.http.{Http, HttpOptions}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
@@ -8,6 +7,7 @@ import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.Cypher
 import CypherTools._
+import Utils._
 
 class Companies(periodStartDate: DateTime, periodEndDate: DateTime) {
 
@@ -51,12 +51,7 @@ class Companies(periodStartDate: DateTime, periodEndDate: DateTime) {
 
   private def companyData(number: String): Try[JValue] = {
     val apiToken = Config.openCorporatesKey
-    val openCorporatesResponse = Try {
-      Http(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken")
-        .option(HttpOptions.connTimeout(2000))
-        .option(HttpOptions.readTimeout(7000)).asString
-    }
-    openCorporatesResponse map { response =>
+    request(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken") map { response =>
       JsonMethods.parse(response) \\ "company"
     }
   }

@@ -1,5 +1,4 @@
 import scala.util.{Try, Success, Failure}
-import scalaj.http.{Http, HttpOptions}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
@@ -49,13 +48,8 @@ class Members(periodStartDate: DateTime, periodEndDate: DateTime) {
   private def memberData(name: String): Try[JValue] = {
     nameCheck(name) { memberName =>
       val nameValue = memberName.replaceAll(" ", "%20")
-      val attemptedRequest = Try {
-        Http(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/") // todo: add membership=all
-          .header("Content-Type", "application/json")
-          .option(HttpOptions.connTimeout(5000))
-          .option(HttpOptions.readTimeout(7000)).asString
-      }
-      val requestJson = attemptedRequest map { response =>
+      val parliamentUri = s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/" // todo: add membership=all
+      val requestJson = request(parliamentUri) map { response =>
         val cleanResponse = response.replaceAll("[^a-zA-Z0-9 @#{},:\"/._-]", "")
         val memberJson = JsonMethods.parse(cleanResponse) \\ "Member"
         memberJson
