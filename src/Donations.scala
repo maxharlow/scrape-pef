@@ -59,7 +59,11 @@ object Donations {
   private def addBenefactor(benefactor: CypherObject): Unit = {
     val companyNumber = benefactor.values("companyNumber")
     if (companyNumber.isEmpty || Cypher(s"MATCH (c {companyNumber:${companyNumber.get}}) RETURN c").apply().isEmpty) {
-      val nodeType = if (benefactor.values("benefactorType").get contains "Individual") "Individual" else "Organisation"
+      val nodeType = {
+        val benefactorType = benefactor.values("benefactorType")
+        if (benefactorType == Some("'Individual'") || benefactorType == Some("'Permitted Participant'")) "Individual"
+        else "Organisation"
+      }
       val benefactorName = benefactor.values("name").get
       val result = if (Cypher(s"MATCH b WHERE b.name = $benefactorName RETURN b").apply().isEmpty) {
         val benefactorProperties = benefactor.toMatchString(nodeType)
@@ -75,7 +79,8 @@ object Donations {
 
   private def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = {
-      if (recipient.values("recipientType") == Some("'Political Party'")) "PoliticalParty"
+      val recipientType = recipient.values("recipientType")
+      if (recipientType == Some("'Political Party'") || recipientType == Some("'Third Party'")) "PoliticalParty"
       else if (recipient.values("recipientRegulatedType") == Some("'Members Association'")) "Organisation"
       else "Individual"
     }
