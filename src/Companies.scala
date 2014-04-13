@@ -82,15 +82,11 @@ class Companies(periodStartDate: DateTime, periodEndDate: DateTime) {
 
   private def addOfficer(officer: CypherObject): Unit = {
     val officerName = officer.values("name").get.init.tail // unquoted
-    val result = if (Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' RETURN o").apply().isEmpty) {
+    if (Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' RETURN o").apply().isEmpty) {
       val officerProperties = officer.toMatchString("Individual", "o")
-      Cypher(s"CREATE ($officerProperties)").execute()
-    }
-    else { // officer already exists
-      val officerProperties = officer.toUpdateString("o")
-      Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' SET $officerProperties").execute()
-    }
-    if (!result) println(" => failed to add officer")
+      val result = Cypher(s"CREATE ($officerProperties)").execute()
+      if (!result) println(" => failed to add officer")
+    } // (no update otherwise)
   }
 
   private def getOfficership(officerJson: JValue): CypherObject = {
