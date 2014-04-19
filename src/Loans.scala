@@ -1,22 +1,31 @@
 import java.io.File
+import scala.collection.JavaConversions._
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import org.anormcypher.Cypher
 import com.github.tototoshi.csv.CSVReader
 import CypherTools._
 
 object Loans {
 
-  def run(dataLocation: String) {
-    val loans = CSVReader.open(new File(dataLocation)).allWithHeaders
-    loans foreach { entry =>
-      val benefactor = getBenefactor(entry)
-      val benefactorName = benefactor.values("name").get
-      addBenefactor(benefactor)
-      val recipient = getRecipient(entry)
-      val recipientName = recipient.values("name").get
-      addRecipient(recipient)
-      val loan = getLoan(entry)
-      addLoan(loan, benefactorName, recipientName)
-      println(s"Added loan: $benefactorName -> $recipientName")
+  def run(periodStartDate: DateTime, periodEndDate: DateTime) {
+    val files = new File(Config.dataLocation).listFiles
+    for (file <- files if file.getName matches "(loans-)\\d{4}.*(.csv)") {
+      val loans = CSVReader.open(file).allWithHeaders
+      for (entry <- loans) {
+        val benefactor = getBenefactor(entry)
+        val benefactorName = benefactor.values("name").get
+        val recipient = getRecipient(entry)
+        val recipientName = recipient.values("name").get
+        val loan = getLoan(entry)
+        val loanAcceptedDate = DateTime.parse(loan.values("startDate").get, DateTimeFormat.forPattern("yyyyMMdd"))
+        if ((loanAcceptedDate isAfter periodStartDate) && (loanAcceptedDate isBefore periodEndDate)) {
+          addBenefactor(benefactor)
+          addRecipient(recipient)
+          addLoan(loan, benefactorName, recipientName)
+          println(s"Added loan: $benefactorName -> $recipientName")
+        }
+      }
     }
   }
 

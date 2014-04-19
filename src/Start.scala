@@ -15,13 +15,13 @@ object Start extends App {
 
   println("Enter a start date:")
   val periodStartDate = readDate
-
   println("Enter an end date:")
   val periodEndDate = readDate
 
-  Donations.run(Config.donationsData)
-  Loans.run(Config.loansData)
+  if (periodEndDate isBefore periodStartDate) sys.error("End is before the start")
 
+  Donations.run(periodStartDate, periodEndDate)
+  Loans.run(periodStartDate, periodEndDate)
   Companies.run(periodStartDate, periodEndDate)
   Members.run(periodStartDate, periodEndDate)
 
@@ -29,7 +29,7 @@ object Start extends App {
     val dateString = readLine("-> ")
     Try(new DateTime(dateString)) match {
       case Success(date) => {
-        println("Using " + date.toString("yyyy-MM-dd") + "...")
+        println("Using " + date.toString("yyyy-MM-dd") + "...\n")
         date
       }
       case Failure(e) => {

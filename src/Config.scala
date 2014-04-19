@@ -6,7 +6,6 @@ object Config {
   val config = ConfigFactory.parseFile(new File("plutolatry.conf"))
 
   val openCorporatesKey = config.getString("openCorporatesKey")
-  val donationsData = config.getString("donationsData")
-  val loansData = config.getString("loansData")
+  val dataLocation = config.getString("dataLocation")
 
 }
