@@ -22,8 +22,8 @@ object Start extends App {
   Donations.run(Config.donationsData)
   Loans.run(Config.loansData)
 
-  new Companies(periodStartDate, periodEndDate).run()
-  new Members(periodStartDate, periodEndDate).run()
+  Companies.run(periodStartDate, periodEndDate)
+  Members.run(periodStartDate, periodEndDate)
 
   def readDate: DateTime = {
     val dateString = readLine("-> ")

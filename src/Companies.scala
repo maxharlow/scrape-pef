@@ -9,11 +9,11 @@ import org.anormcypher.Cypher
 import CypherTools._
 import Utils._
 
-class Companies(periodStartDate: DateTime, periodEndDate: DateTime) {
+object Companies {
 
   implicit val formats = DefaultFormats
 
-  def run() {
+  def run(periodStartDate: DateTime, periodEndDate: DateTime) {
     companyNumbers foreach { number =>
       println(s"Updating data for company $number...")
       companyData(number) match {
