@@ -19,7 +19,7 @@ object Loans {
         val recipientName = recipient.values("name").get
         val loan = getLoan(entry)
         val loanAcceptedDate = DateTime.parse(loan.values("startDate").get, DateTimeFormat.forPattern("yyyyMMdd"))
-        if ((loanAcceptedDate isAfter periodStartDate) && (loanAcceptedDate isBefore periodEndDate)) {
+        if ((loanAcceptedDate isAfter periodStartDate.minusMillis(1)) && (loanAcceptedDate isBefore periodEndDate)) {
           addBenefactor(benefactor)
           addRecipient(recipient)
           addLoan(loan, benefactorName, recipientName)

@@ -30,7 +30,7 @@ object Companies {
               DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(dateString)
             }
             val validOfficership = officershipEndDate match {
-              case Some(date) if (date isAfter periodStartDate) && (date isBefore periodEndDate) => true
+              case Some(date) if (date isAfter periodStartDate.minusMillis(1)) && (date isBefore periodEndDate) => true
               case None => true
               case _ => false
             }
@@ -51,7 +51,7 @@ object Companies {
 
   private def companyData(number: String): Try[JValue] = {
     val apiToken = Config.openCorporatesKey
-    request(s"http://api.opencorporates.com/companies/gb/$number?api_token=$apiToken") map { response =>
+    request(s"https://api.opencorporates.com/companies/gb/$number?api_token=$apiToken") map { response =>
       JsonMethods.parse(response) \\ "company"
     }
   }

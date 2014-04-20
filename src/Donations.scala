@@ -19,7 +19,7 @@ object Donations {
         val recipientName = recipient.values("name").get
         val donation = getDonation(entry)
         val donationAcceptedDate = DateTime.parse(donation.values("acceptedDate").get, DateTimeFormat.forPattern("yyyyMMdd"))
-        if ((donationAcceptedDate isAfter periodStartDate) && (donationAcceptedDate isBefore periodEndDate)) {
+        if ((donationAcceptedDate isAfter periodStartDate.minusMillis(1)) && (donationAcceptedDate isBefore periodEndDate)) {
           addBenefactor(benefactor)
           addRecipient(recipient)
           addDonation(donation, benefactorName, recipientName)
