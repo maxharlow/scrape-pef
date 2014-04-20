@@ -1,7 +1,12 @@
-Plutolatry
-==========
+Plutus
+======
 
-Who funds political parties, and why?
+	...I saw multitudes
+	to every side of me; their howls were loud
+	while, wheeling weights, they used their chests to push.
+	They struck against each other; at that point,
+	each turned around and, wheeling back those weights,
+	cried out: Why do you hoard? Why do you squander?'
 
 
 Data
@@ -40,11 +45,10 @@ This uses that API to look up members to add specific information to those nodes
 Running
 -------
 
-Requires [SBT] (http://www.scala-sbt.org/) and the [Neo4j] (http://www.neo4j.org/) graph database to be installed and running. There also needs to be a configuration file, `plutolatry.conf`, which might look like:
+Requires [SBT] (http://www.scala-sbt.org/) and the [Neo4j] (http://www.neo4j.org/) graph database to be installed and running. There also needs to be a configuration file, `plutus.conf`, which might look like:
 
     openCorporatesKey = "abcdefghijklm"
-    donationsData = "data/donations-2013.csv"
-    loansData = "data/loans-2013.csv"
+    dataLocation = "data"
 
 Usage:
 
