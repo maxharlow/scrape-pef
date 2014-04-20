@@ -86,10 +86,8 @@ object Loans {
   private def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = {
       val recipientType = recipient.values("recipientType")
-      val recipientRegulatedType  = recipient.values("recipientRegulatedType")
       if (recipientType == Some("'Political Party'") || recipientType == Some("'Third Party'")) "PoliticalParty"
-      else if (recipientRegulatedType == Some("'Members Association'") || recipientRegulatedType == Some("'Permitted Participant'")) "Organisation"
-      else "Individual"
+      else "Organisation" // cannot loan to individuals
     }
     val recipientName = recipient.values("name").get
     val result = if (Cypher(s"MATCH r WHERE r.name = $recipientName RETURN r").apply().isEmpty) {
