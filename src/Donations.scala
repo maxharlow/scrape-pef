@@ -89,8 +89,9 @@ object Donations {
   private def addRecipient(recipient: CypherObject): Unit = {
     val nodeType = {
       val recipientType = recipient.values("recipientType")
+      val recipientRegulatedType  = recipient.values("recipientRegulatedType")
       if (recipientType == Some("'Political Party'") || recipientType == Some("'Third Party'")) "PoliticalParty"
-      else if (recipient.values("recipientRegulatedType") == Some("'Members Association'")) "Organisation"
+      else if (recipientRegulatedType == Some("'Members Association'") || recipientRegulatedType == Some("'Permitted Participant'")) "Organisation"
       else "Individual"
     }
     val recipientName = recipient.values("name").get
