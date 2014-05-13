@@ -60,8 +60,7 @@ object Donations {
       "howDealtWith" -> clean(entry("How dealt with")).string, // optional
       "recordedBy" -> clean(entry("Rec'd by (AU)")).string, // optional
       "reportedUnder6212" -> clean(entry("Reported under 62:12")).string, // optional
-      "isSponsorship" -> clean(entry("Is sponsorship")).boolean,
-      "complianceBreach" -> clean(entry("Compliance breach")).string
+      "isSponsorship" -> clean(entry("Is sponsorship")).boolean
     )
   }
 
