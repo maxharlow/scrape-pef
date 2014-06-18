@@ -8,7 +8,7 @@ object BatchNameCheck {
 
   def run(file: String) {
     val list = CSVReader.open(new File(file)).allWithHeaders
-    val results = CSVWriter.open(new File(file.stripSuffix(".csv") + "-found-donations.csv"))
+    val results = CSVWriter.open(new File(file.stripSuffix(".csv") + "-found-company-donations.csv"))
     list foreach { entry =>
       val name = entry("Name")
       val row = name :: getDonations(name)
@@ -23,12 +23,14 @@ object BatchNameCheck {
     else {
       val luceneName = luceneNameTerms.map("""name:\"""" + _ + """\"""").mkString(" AND ")
       val startCypher = s"START b=node:node_auto_index('$luceneName')"
-      val matchCypher = "MATCH (b)-[d:DONATED_TO]->(r)" // reverse arrow direction to look for recipients
-      val returnCypher = "RETURN collect(DISTINCT b.name) AS matchedNames, collect(DISTINCT b.companyNumber) AS matchedCompanyNumbers, collect(DISTINCT r.name) AS recipients, count(d) AS donationsCount, sum(d.value) / 100.0 AS donationsTotal"
+      val matchCypher = "MATCH (b:Individual)-[iaoo:IS_AN_OFFICER_OF]->(o)-[d:DONATED_TO]->(r)"
+      val returnCypher = "RETURN collect(DISTINCT b.name) AS matchedNames, collect(DISTINCT iaoo.position) AS matchedPositions, collect(DISTINCT o.name) AS matchedCompanyNames, collect(DISTINCT o.companyNumber) AS matchedCompanyNumbers, collect(DISTINCT r.name) AS recipients, count(d) AS donationsCount, sum(d.value) / 100.0 AS donationsTotal"
       val result = Cypher(s"$startCypher $matchCypher $returnCypher").apply()
       val donations = result map { row =>
         List(
           row[Seq[String]]("matchedNames").mkString("; "),
+          row[Seq[String]]("matchedPositions").mkString("; "),
+          row[Seq[String]]("matchedCompanyNames").mkString("; "),
           row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
           row[Seq[String]]("recipients").mkString("; "),
           row[Int]("donationsCount").toString,
