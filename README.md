@@ -1,5 +1,5 @@
-Plutus
-======
+Pluto
+=====
 
 	...I saw multitudes
 	to every side of me; their howls were loud
@@ -45,7 +45,7 @@ This uses that API to look up members to add specific information to those nodes
 Running
 -------
 
-Requires [SBT] (http://www.scala-sbt.org/) and the [Neo4j] (http://www.neo4j.org/) graph database to be installed and running. There also needs to be a configuration file, `plutus.conf`, which might look like:
+Requires [SBT] (http://www.scala-sbt.org/) and the [Neo4j] (http://www.neo4j.org/) graph database to be installed and running. There also needs to be a configuration file, `pluto.conf`, which might look like:
 
     openCorporatesKey = "abcdefghijklm"
     dataLocation = "data"

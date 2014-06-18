@@ -1,4 +1,4 @@
-name := "plutolatry"
+name := "pluto"
 
 scalaVersion := "2.10.3"
 
