@@ -17,13 +17,13 @@ object BatchNameCheck {
   }
 
   private def getDonations(name: String): List[String] = {
-    val cleanName = name.replaceAll("""[()\[\]\*\\'"]""", """\$0""")
+    val cleanName = stripTitles(name).replaceAll("""[()\[\]\*\\'"]""", """\$0""")
     val luceneNameTerms = cleanName.split(" ").filter(_.length >= 2)
     if (luceneNameTerms.isEmpty) List[String]()
     else {
       val luceneName = luceneNameTerms.map("""name:\"""" + _ + """\" """).mkString(" AND ")
       val startCypher = s"START b=node:node_auto_index('$luceneName')"
-      val matchCypher = s"MATCH (b:Individual)-[d:DONATED_TO]-(r)"
+      val matchCypher = s"MATCH (b)-[d:DONATED_TO]->(r)" // reverse arrow direction to look for recipients
       val returnCypher = "RETURN collect(DISTINCT b.name) AS matchedNames, collect(DISTINCT b.companyNumber) AS matchedCompanyNumbers, collect(DISTINCT r.name) AS recipients, count(d) AS donationsCount, sum(d.value) / 100.0 AS donationsTotal"
       val result = Cypher(s"$startCypher $matchCypher $returnCypher").apply()
       val donations = result map { row =>
@@ -37,6 +37,13 @@ object BatchNameCheck {
       }
       donations.toList.headOption.getOrElse(List[String]())
     }
+  }
+
+  private def stripTitles(name: String): String = {
+    val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
+    val suffixes = List("QC", "MP", "MSP", "AM", "MEP")
+    val titlesRegex = (prefixes.map("^(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
+    name.replaceAll(titlesRegex, "")
   }
 
 }
