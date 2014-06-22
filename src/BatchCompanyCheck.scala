@@ -2,7 +2,7 @@ import java.io.File
 import org.anormcypher.{Cypher, Neo4jREST}
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 
-object BatchNameCheck {
+object BatchCompanyCheck {
 
   Neo4jREST.setServer("localhost")
 
