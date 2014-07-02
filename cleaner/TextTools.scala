@@ -1,3 +1,6 @@
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
 object TextTools {
 
   def clean(text: String): String = {
@@ -9,6 +12,20 @@ object TextTools {
     val suffixes = List("QC", "MP", "MSP", "AM", "MEP", "OBE", "MBE", "CBE")
     val titlesRegex = (prefixes.map("^(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
     name.replaceAll(titlesRegex, "").replaceAll("^(na )|( na)", "")
+  }
+
+  def asDate(value: String, format: String): String = {
+    val formatPattern = DateTimeFormat.forPattern(format)
+    if (value.isEmpty) ""
+    else DateTime.parse(value, formatPattern).toString("yyyy-MM-dd")
+  }
+
+  def asInt(value: String): String = {
+    value.replaceAll("[^0-9]", "")
+  }
+
+  def asBoolean(value: String): String = {
+    if (value.isEmpty) "false" else "true"
   }
 
 }
