@@ -25,7 +25,7 @@ class Loans(file: File) {
     Map(
       "benefactorName" -> (if (entry("Lender type") == "Individual") stripTitles(entry("Lender name")) else entry("Lender name")),
       "benefactorType" -> entry("Lender type"),
-      "benefactorPostcode" -> entry("Postcode"), // optional
+      "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
       "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
     )
   }

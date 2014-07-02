@@ -14,6 +14,10 @@ object TextTools {
     name.replaceAll(titlesRegex, "").replaceAll("^(na )|( na)", "")
   }
 
+  def stripFakePostcodes(postcode: String): String = {
+    postcode.replaceAll("ZZ0 0ZZ|ZZ00ZZ|ZZ1 1ZZ|ZZ11ZZ|AA0 0AA|AA00AA|AA1 1AA|AA11AA", "")
+  }
+
   def asDate(value: String, format: String): String = {
     val formatPattern = DateTimeFormat.forPattern(format)
     if (value.isEmpty) ""

@@ -25,7 +25,7 @@ class Donations(file: File) {
     Map(
       "benefactorName" -> (if (entry("Donor type") == "Individual") stripTitles(entry("Donor name")) else entry("Donor name")),
       "benefactorType" -> entry("Donor type"),
-      "benefactorPostcode" -> entry("Postcode"), // optional
+      "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
       "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
     )
   }
