@@ -2,30 +2,27 @@ import java.io.File
 import scala.collection.JavaConversions._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.anormcypher.Cypher
+import org.anormcypher.{Cypher, Neo4jREST}
 import com.github.tototoshi.csv.CSVReader
+import TextTools._
 import CypherTools._
 
-object Donations {
+class Donations(server: String) {
 
-  def run(periodStartDate: DateTime, periodEndDate: DateTime) {
-    val files = new File(Config.dataLocation).listFiles
-    for (file <- files if file.getName matches "(donations-)\\d{4}.*(.csv)") {
-      val donations = CSVReader.open(file).allWithHeaders
-      for (entry <- donations) {
-        val benefactor = getBenefactor(entry)
-        val benefactorName = benefactor.values("name").get
-        val recipient = getRecipient(entry)
-        val recipientName = recipient.values("name").get
-        val donation = getDonation(entry)
-        val donationAcceptedDate = DateTime.parse(donation.values("acceptedDate").get, DateTimeFormat.forPattern("yyyyMMdd"))
-        if ((donationAcceptedDate isAfter periodStartDate.minusMillis(1)) && (donationAcceptedDate isBefore periodEndDate)) {
-          addBenefactor(benefactor)
-          addRecipient(recipient)
-          addDonation(donation, benefactorName, recipientName)
-          println(s"Added donation: $benefactorName -> $recipientName")
-        }
-      }
+  Neo4jREST.setServer(server)
+
+  def run(file: File) {
+    val donations = CSVReader.open(file).allWithHeaders
+    for (entry <- donations) {
+      val benefactor = getBenefactor(entry)
+      val benefactorName = benefactor.values("name").get
+      val recipient = getRecipient(entry)
+      val recipientName = recipient.values("name").get
+      val donation = getDonation(entry)
+      addBenefactor(benefactor)
+      addRecipient(recipient)
+      addDonation(donation, benefactorName, recipientName)
+      println(s"Added donation: $benefactorName -> $recipientName")
     }
   }
 
@@ -111,17 +108,6 @@ object Donations {
     val createCypher = s"CREATE (b)-[$donationProperties]->(r)"
     val result = Cypher(s"$matchCypher $createCypher").execute()
     if (!result) println(" => failed to add donation")
-  }
-
-  private def clean(text: String): String = {
-    text.filter(_ >= ' ').trim
-  }
-
-  private def stripTitles(name: String): String = {
-    val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
-    val suffixes = List("QC", "MP", "MSP", "AM", "MEP")
-    val titlesRegex = (prefixes.map("^(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
-    name.replaceAll(titlesRegex, "").replaceAll("^(na )|( na)", "")
   }
 
 }

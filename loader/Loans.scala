@@ -2,30 +2,27 @@ import java.io.File
 import scala.collection.JavaConversions._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.anormcypher.Cypher
+import org.anormcypher.{Cypher, Neo4jREST}
 import com.github.tototoshi.csv.CSVReader
+import TextTools._
 import CypherTools._
 
-object Loans {
+class Loans(server: String) {
 
-  def run(periodStartDate: DateTime, periodEndDate: DateTime) {
-    val files = new File(Config.dataLocation).listFiles
-    for (file <- files if file.getName matches "(loans-)\\d{4}.*(.csv)") {
-      val loans = CSVReader.open(file).allWithHeaders
-      for (entry <- loans) {
-        val benefactor = getBenefactor(entry)
-        val benefactorName = benefactor.values("name").get
-        val recipient = getRecipient(entry)
-        val recipientName = recipient.values("name").get
-        val loan = getLoan(entry)
-        val loanAcceptedDate = DateTime.parse(loan.values("startDate").get, DateTimeFormat.forPattern("yyyyMMdd"))
-        if ((loanAcceptedDate isAfter periodStartDate.minusMillis(1)) && (loanAcceptedDate isBefore periodEndDate)) {
-          addBenefactor(benefactor)
-          addRecipient(recipient)
-          addLoan(loan, benefactorName, recipientName)
-          println(s"Added loan: $benefactorName -> $recipientName")
-        }
-      }
+  Neo4jREST.setServer(server)
+
+  def run(file: File) {
+    val loans = CSVReader.open(file).allWithHeaders
+    for (entry <- loans) {
+      val benefactor = getBenefactor(entry)
+      val benefactorName = benefactor.values("name").get
+      val recipient = getRecipient(entry)
+      val recipientName = recipient.values("name").get
+      val loan = getLoan(entry)
+      addBenefactor(benefactor)
+      addRecipient(recipient)
+      addLoan(loan, benefactorName, recipientName)
+      println(s"Added loan: $benefactorName -> $recipientName")
     }
   }
 
@@ -107,17 +104,6 @@ object Loans {
     val createCypher = s"CREATE (b)-[$loanProperties]->(r)"
     val result = Cypher(s"$matchCypher $createCypher").execute()
     if (!result) println(" => failed to add loan")
-  }
-
-  private def clean(text: String): String = {
-    text.filter(_ >= ' ').trim
-  }
-
-  private def stripTitles(name: String): String = {
-    val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Cllr", "Sir", "Dame", "The Hon", "The Rt Hon")
-    val suffixes = List("QC", "MP", "MSP", "AM", "MEP")
-    val titlesRegex = (prefixes.map("^(" + _ + " )") ++ suffixes.map("( " + _ + ")")).mkString("|")
-    name.replaceAll(titlesRegex, "").replaceAll("^(na )|( na)", "")
   }
 
 }
