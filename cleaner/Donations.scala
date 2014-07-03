@@ -23,8 +23,19 @@ class Donations(file: File) {
 
   private def getBenefactor(entry: Map[String, String]): Map[String, String] = {
     Map(
-      "benefactorName" -> (if (entry("Donor type") == "Individual") stripTitles(entry("Donor name")) else entry("Donor name")),
+      "benefactorName" -> {
+        val name = entry("Donor name")
+        if (entry("Donor type") == "Individual") stripTitles(name)
+        else if (!name.contains(", ")) name
+        else name.split(", ").head // split from address
+      },
       "benefactorType" -> entry("Donor type"),
+      "benefactorAddress" -> {
+        val name = entry("Donor name")
+        if (entry("Donor type") == "Individual") ""
+        else if (!name.contains(", ")) ""
+        else name.split(", ").tail.mkString(", ").replaceAll("^(A)$|^(NA)$", "") // split from name
+      },
       "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
       "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
     )

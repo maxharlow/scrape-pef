@@ -23,8 +23,19 @@ class Loans(file: File) {
 
   private def getBenefactor(entry: Map[String, String]): Map[String, String] = {
     Map(
-      "benefactorName" -> (if (entry("Lender type") == "Individual") stripTitles(entry("Lender name")) else entry("Lender name")),
+      "benefactorName" -> {
+        val name = entry("Lender name")
+        if (entry("Lender type") == "Individual") stripTitles(name)
+        else if (!name.contains(", ")) name
+        else name.split(", ").head // split from address
+      },
       "benefactorType" -> entry("Lender type"),
+      "benefactorAddress" -> {
+        val name = entry("Lender name")
+        if (entry("Lender type") == "Individual") ""
+        else if (!name.contains(", ")) ""
+        else name.split(", ").tail.mkString(", ").replaceAll("^(A)$|^(NA)$", "") // split from name
+      },
       "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
       "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
     )
