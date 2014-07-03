@@ -15,11 +15,11 @@ object CypherTools {
     }
   }
 
-  class CypherObject(properties: (String, Option[String])*) {
+  class CypherObject(kind: String)(properties: (String, Option[String])*) {
 
     val values = properties.toMap
 
-    def toMatchString(kind: String = "", id: String = "") = {
+    def toMatchString(id: String = "") = {
       val propertiesList = propertise("", ":", ",")
       s"$id:$kind {$propertiesList}"
     }

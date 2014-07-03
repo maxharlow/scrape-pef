@@ -3,20 +3,20 @@ import com.github.tototoshi.csv.CSVReader
 import org.anormcypher.Cypher
 import CypherTools._
 
-class Donations(file: File) {
+class Loans(file: File) {
 
   def loadFile(): Unit = {
-    val donations = CSVReader.open(file).allWithHeaders
-    for (entry <- donations) {
+    val loans = CSVReader.open(file).allWithHeaders
+    for (entry <- loans) {
       val benefactor = getBenefactor(entry)
       val benefactorName = benefactor.values("name").get
       val recipient = getRecipient(entry)
       val recipientName = recipient.values("name").get
-      val donation = getDonation(entry)
+      val loan = getLoan(entry)
       addBenefactor(benefactor)
       addRecipient(recipient)
-      addDonation(donation, benefactorName, recipientName)
-      println(s"Added donation: $benefactorName -> $recipientName")
+      addLoan(loan, benefactorName, recipientName)
+      println(s"Added loan: $benefactorName -> $recipientName")
     }
   }
 
@@ -25,32 +25,33 @@ class Donations(file: File) {
       "name" -> entry("benefactorName").string,
       "benefactorType" -> entry("benefactorType").string,
       "postcode" -> entry("benefactorPostcode").string, // optional
-      "companyNumber" -> entry("benefactorCompanyNumber").string //optional
+      "companyNumber" -> entry("benefactorCompanyNumber").string // optional
     )
   }
 
   private def getRecipient(entry: Map[String, String]): CypherObject = {
     new CypherObject(entry("recipientClass"))(
       "name" -> entry("recipientName").string,
-      "recipientType" -> entry("recipientType").string,
-      "recipientRegulatedType" -> entry("recipientRegulatedType").string // optional
+      "recipientType" -> entry("recipientType").string
     )
   }
 
-  private def getDonation(entry: Map[String, String]): CypherObject = {
-    new CypherObject("DONATED_TO")(
+  private def getLoan(entry: Map[String, String]): CypherObject = {
+    new CypherObject("LOANED")(
       "ecReference" -> entry("ecReference").string,
       "type" -> entry("type").string,
-      "value" -> entry("value").int, // in pence
-      "acceptedDate" -> entry("acceptedDate").date("yyyy-MM-dd"),
-      "receivedDate" -> entry("receivedDate").date("yyyy-MM-dd"), // optional
-      "reportedDate" -> entry("reportedDate").date("yyyy-MM-dd"), // optional
-      "nature" -> entry("nature").string, // optional
-      "purpose" -> entry("purpose").string, // optional
-      "howDealtWith" -> entry("howDealtWith").string, // optional
-      "recordedBy" -> entry("recordedBy").string, // optional
-      "reportedUnder6212" -> entry("reportedUnder6212").string, // optional
-      "isSponsorship" -> entry("isSponsorship").boolean
+      "value" -> entry("value").dropRight(2).int, // in pence (to four decimal places...?)
+      "referenceNumber" -> entry("referenceNumber").string, // optional
+      "rate" -> entry("rate").string, // optional
+      "status" -> entry("status").string,
+      "amountRepaid" -> entry("amountRepaid").int,
+      "amountConverted" -> entry("amountConverted").int,
+      "amountOutstanding" -> entry("amountOutstanding").int,
+      "startDate" -> entry("startDate").date("yyyy-MM-dd"),
+      "endDate" -> entry("endDate").date("yyyy-MM-dd"), // optional
+      "repaidDate" -> entry("repaidDate").date("yyyy-MM-dd"), // optional
+      "ecLastNotifiedDate" -> entry("ecLastNotifiedDate").date("yyyy-MM-dd"),
+      "recordedBy" -> entry("recordedBy").string // optional
     )
   }
 
@@ -83,12 +84,12 @@ class Donations(file: File) {
     if (!result) println(" => failed to add recipient")
   }
 
-  private def addDonation(donation: CypherObject, benefactorName: String, recipientName: String): Unit = {
-    val donationProperties = donation.toMatchString()
+  private def addLoan(loan: CypherObject, benefactorName: String, recipientName: String): Unit = {
+    val loanProperties = loan.toMatchString()
     val matchCypher = s"MATCH (b {name:$benefactorName}), (r {name:$recipientName})"
-    val createCypher = s"CREATE (b)-[$donationProperties]->(r)"
+    val createCypher = s"CREATE (b)-[$loanProperties]->(r)"
     val result = Cypher(s"$matchCypher $createCypher").execute()
-    if (!result) println(" => failed to add donation")
+    if (!result) println(" => failed to add loan")
   }
 
 }
