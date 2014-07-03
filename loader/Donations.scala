@@ -1,9 +1,11 @@
 import java.io.File
 import com.github.tototoshi.csv.CSVReader
-import org.anormcypher.Cypher
+import org.anormcypher.{Cypher, Neo4jREST}
 import CypherTools._
 
 class Donations(file: File) {
+
+  Neo4jREST.setServer("localhost")
 
   def loadFile(): Unit = {
     val donations = CSVReader.open(file).allWithHeaders
