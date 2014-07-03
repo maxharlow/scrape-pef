@@ -14,7 +14,7 @@ class Loans(file: File) {
       loan ++ benefactor ++ recipient
     }
     loans.close()
-    val newLoans = CSVWriter.open(file)
+    val newLoans = CSVWriter.open(new File(file.getPath.stripSuffix(".csv") + "-clean.csv"))
     newLoans.writeRow(newLoanEntries.head.keySet.toSeq)
     newLoanEntries map { entry =>
       newLoans.writeRow(entry.values.toSeq)

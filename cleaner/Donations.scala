@@ -14,7 +14,7 @@ class Donations(file: File) {
       donation ++ benefactor ++ recipient
     }
     donations.close()
-    val newDonations = CSVWriter.open(file)
+    val newDonations = CSVWriter.open(new File(file.getPath.stripSuffix(".csv") + "-clean.csv"))
     newDonations.writeRow(newDonationEntries.head.keySet.toSeq)
     newDonationEntries map { entry =>
       newDonations.writeRow(entry.values.toSeq)

@@ -15,10 +15,10 @@ object Start extends App {
   val dataLocation = "../data"
 
   val files = new File(dataLocation).listFiles
-  for (file <- files if file.getName matches "(donations-)\\d{4}.*(.csv)") {
+  for (file <- files if file.getName matches "(donations-)\\d{4}.*(?!clean)(.csv)") {
     new Donations(file).cleanFile()
   }
-  for (file <- files if file.getName matches "(loans-)\\d{4}.*(.csv)") {
+  for (file <- files if file.getName matches "(loans-)\\d{4}.*(?!clean)(.csv)") {
     new Loans(file).cleanFile()
   }
 
