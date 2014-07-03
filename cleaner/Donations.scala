@@ -1,4 +1,5 @@
 import java.io.File
+import scala.collection.immutable.ListMap
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import TextTools._
 
@@ -22,7 +23,7 @@ class Donations(file: File) {
   }
 
   private def getBenefactor(entry: Map[String, String]): Map[String, String] = {
-    Map(
+    ListMap(
       "benefactorName" -> {
         val name = entry("Donor name")
         if (entry("Donor type") == "Individual") stripTitles(name)
@@ -42,7 +43,7 @@ class Donations(file: File) {
   }
 
   private def getRecipient(entry: Map[String, String]): Map[String, String] = {
-    Map(
+    ListMap(
       "recipientName" -> stripTitles(entry("Entity name")),
       "recipientType" -> entry("Entity type"),
       "recipientRegulatedType" -> entry("Regulated donee type") // optional
@@ -50,7 +51,7 @@ class Donations(file: File) {
   }
 
   private def getDonation(entry: Map[String, String]): Map[String, String] = {
-    Map(
+    ListMap(
       "ecReference" -> entry("EC reference"),
       "type" -> entry("Type of donation"),
       "value" -> entry("Value").replaceAll("[^0-9]", ""), // in pence
