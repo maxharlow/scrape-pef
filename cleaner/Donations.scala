@@ -24,6 +24,11 @@ class Donations(file: File) {
 
   private def getBenefactor(entry: Map[String, String]): Map[String, String] = {
     ListMap(
+      "benefactorClass" -> {
+        val benefactorType = entry("Donor type")
+        if (benefactorType == "Individual" || benefactorType == "Permitted Participant") "Individual"
+        else "Organisation"
+      },
       "benefactorName" -> {
         val name = entry("Donor name")
         if (entry("Donor type") == "Individual") stripTitles(name)
@@ -44,7 +49,14 @@ class Donations(file: File) {
 
   private def getRecipient(entry: Map[String, String]): Map[String, String] = {
     ListMap(
-      "recipientName" -> stripTitles(entry("Entity name")),
+      "recipientClass" -> {
+        val recipientType = entry("Entity type")
+        val recipientRegulatedType = entry("Regulated donee type")
+        if (recipientType == "Political Party" || recipientType == "Third Party") "Party"
+        else if (recipientRegulatedType == "Members Association" || recipientRegulatedType == "Permitted Participant") "Organisation"
+        else "Individual"
+      },
+      "recipientName" -> stripTitles(entry("Entity name")).replaceAll("Conservative and Unionist Party", "Conservative Party"),
       "recipientType" -> entry("Entity type"),
       "recipientRegulatedType" -> entry("Regulated donee type") // optional
     )

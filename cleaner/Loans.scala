@@ -24,6 +24,11 @@ class Loans(file: File) {
 
   private def getBenefactor(entry: Map[String, String]): Map[String, String] = {
     ListMap(
+      "benefactorClass" -> {
+        val benefactorType = entry("Lender type")
+        if (benefactorType == "Individual") "Individual"
+        else "Organisation"
+      },
       "benefactorName" -> {
         val name = entry("Lender name")
         if (entry("Lender type") == "Individual") stripTitles(name)
@@ -44,6 +49,11 @@ class Loans(file: File) {
 
   private def getRecipient(entry: Map[String, String]): Map[String, String] = {
     ListMap(
+      "recipientClass" -> {
+        val recipientType = entry("Entity type")
+        if (recipientType == "Political Party" || recipientType == "Third Party") "Party"
+        else "Organisation" // cannot loan to individuals
+      },
       "recipientName" -> stripTitles(entry("Entity name")).replaceAll("Conservative and Unionist Party", "Conservative Party"),
       "recipientType" -> entry("Entity type")
     )
