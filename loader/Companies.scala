@@ -1,19 +1,20 @@
 import java.io.File
 import scala.util.{Try, Success, Failure}
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
 import org.json4s.JValue
 import org.json4s.native.JsonMethods
-import org.anormcypher.Cypher
+import org.anormcypher.{Cypher, Neo4jREST}
 import CypherTools._
 import Utils._
 
 object Companies {
 
-  implicit val formats = DefaultFormats
+  Neo4jREST.setServer("localhost")
 
-  def run(periodStartDate: DateTime, periodEndDate: DateTime) {
+  implicit val formats = DefaultFormats
+  val opencorporatesApiToken = ""
+
+  def run() {
     companyNumbers foreach { number =>
       println(s"Updating data for company $number...")
       companyData(number) match {
@@ -26,18 +27,8 @@ object Companies {
             val officer = getOfficer(officerJson)
             val officerName = officer.values("name").get.init.tail // unquoted
             val officership = getOfficership(officerJson)
-            val officershipEndDate = officership.values("endDate") map { dateString =>
-              DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(dateString)
-            }
-            val validOfficership = officershipEndDate match {
-              case Some(date) if (date isAfter periodStartDate.minusMillis(1)) && (date isBefore periodEndDate) => true
-              case None => true
-              case _ => false
-            }
-            if (validOfficership) {
-              addOfficer(officer)
-              addOfficership(officership, officerName, number)
-            }
+            addOfficer(officer)
+            addOfficership(officership, officerName, number)
           }
         }
       }
@@ -50,14 +41,13 @@ object Companies {
   }
 
   private def companyData(number: String): Try[JValue] = {
-    val apiToken = Config.openCorporatesKey
-    request(s"https://api.opencorporates.com/companies/gb/$number?api_token=$apiToken") map { response =>
+    request(s"https://api.opencorporates.com/companies/gb/$number?api_token=$opencorporatesApiToken") map { response =>
       JsonMethods.parse(response) \\ "company"
     }
   }
 
   private def getCompany(companyJson: JValue): CypherObject = {
-    new CypherObject(
+    new CypherObject("Organisation")(
       "companyName" -> extractString(companyJson \ "name").string,
       "companyType" -> extractString(companyJson \ "company_type").string,
       "companyRegisteredAddress" -> extractString(companyJson \ "registered_address_in_full").string,
@@ -75,7 +65,7 @@ object Companies {
   }
 
   private def getOfficer(officerJson: JValue): CypherObject = {
-    new CypherObject(
+    new CypherObject("Individual")(
       "name" ->  titleCase(extractString(officerJson \ "name")).string
     )
   }
@@ -83,14 +73,14 @@ object Companies {
   private def addOfficer(officer: CypherObject): Unit = {
     val officerName = officer.values("name").get.init.tail // unquoted
     if (Cypher(s"MATCH o WHERE o.name =~ '(?i).*$officerName.*' RETURN o").apply().isEmpty) {
-      val officerProperties = officer.toMatchString("Individual", "o")
+      val officerProperties = officer.toMatchString("o")
       val result = Cypher(s"CREATE ($officerProperties)").execute()
       if (!result) println(" => failed to add officer")
     } // (no update otherwise)
   }
 
   private def getOfficership(officerJson: JValue): CypherObject = {
-    new CypherObject(
+    new CypherObject("OFFICER_OF")(
       "position" -> extractString(officerJson \ "position").string,
       "startDate" -> extractString(officerJson \ "start_date").date("yyyy-MM-dd"),
       "endDate" -> extractString(officerJson \ "end_date").date("yyyy-MM-dd")
@@ -98,7 +88,7 @@ object Companies {
   }
 
   private def addOfficership(officership: CypherObject, officerName: String, companyNumber: String): Unit = {
-    val officershipProperties = officership.toMatchString("IS_AN_OFFICER_OF")
+    val officershipProperties = officership.toMatchString()
     val matchCypher = s"MATCH (o), (c:Organisation {companyNumber:'$companyNumber'}) WHERE o.name =~ '(?i).*$officerName.*'"
     val mergeCypher = s"MERGE (o)-[$officershipProperties]->(c)"
     val result = Cypher(s"$matchCypher $mergeCypher").execute()

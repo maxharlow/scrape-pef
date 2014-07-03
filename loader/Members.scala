@@ -4,15 +4,17 @@ import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
 import org.json4s.JValue
 import org.json4s.native.JsonMethods
-import org.anormcypher.Cypher
+import org.anormcypher.{Cypher, Neo4jREST}
 import CypherTools._
 import Utils._
 
 object Members {
 
+  Neo4jREST.setServer("localhost")
+
   implicit val formats = DefaultFormats
 
-  def run(periodStartDate: DateTime, periodEndDate: DateTime) {
+  def run() {
     membersNames foreach { name =>
       println(s"Updating data for $name...")
       memberData(name) match {
@@ -22,18 +24,8 @@ object Members {
           member.values("name").map(_.init.tail) map { memberName => // unquoted
             val partyName = getPartyName(memberJson)
             val membership = getMembership(memberJson)
-            val membershipEndDate = membership.values("endDate") map { dateString =>
-              DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(dateString)
-            }
-            val validMembership = membershipEndDate match {
-              case Some(date) if (date isAfter periodStartDate) && (date isBefore periodEndDate) => true
-              case None => true
-              case _ => false
-            }
-            if (validMembership) {
-              updateMember(member)
-              addMembership(membership, memberName, partyName)
-            }
+            updateMember(member)
+            addMembership(membership, memberName, partyName)
           }
         }
       }
@@ -59,7 +51,7 @@ object Members {
   }
 
   private def getMember(member: JValue): CypherObject = {
-    new CypherObject(
+    new CypherObject("Individual")(
       "name" -> extractString(member \ "DisplayAs").string,
       "constituency" -> extractString(member \ "MemberFrom").string,
       "house" -> extractString(member \ "House").string
@@ -79,14 +71,14 @@ object Members {
   }
 
   private def getMembership(member: JValue): CypherObject = {
-    new CypherObject(
+    new CypherObject("MEMBER_OF")(
       "startDate" -> extractString(member \ "HouseStartDate").dropRight(9).date("yyyy-MM-dd"),
       "endDate" -> extractString(member \ "HouseEndDate").dropRight(9).date("yyyy-MM-dd")
     )
   }
 
   private def addMembership(membership: CypherObject, memberName: String, partyName: String) = {
-    val membershipProperties = membership.toMatchString("MEMBER_OF")
+    val membershipProperties = membership.toMatchString()
     val matchCypher = s"MATCH (p:PoliticalParty), (m {name:'$memberName'}) WHERE p.name =~ '(?i).*$partyName.*'"
     val mergeCypher = s"MERGE (m)-[$membershipProperties]->(p)"
     val result = Cypher(s"$matchCypher $mergeCypher").execute()

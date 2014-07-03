@@ -26,6 +26,7 @@ class Loans(file: File) {
     new CypherObject(entry("benefactorClass"))(
       "name" -> entry("benefactorName").string,
       "benefactorType" -> entry("benefactorType").string,
+      "benefactorAddress" -> entry("benefactorAddress").string,
       "postcode" -> entry("benefactorPostcode").string, // optional
       "companyNumber" -> entry("benefactorCompanyNumber").string // optional
     )

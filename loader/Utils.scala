@@ -1,11 +1,12 @@
 import scala.util.Try
-import scalaj.http.{Http, HttpOptions}
+import dispatch._
+import dispatch.Defaults._
 
 object Utils {
 
   def request(uri: String, retries: Int = 5): Try[String] = {
     val response = Try {
-      Http(uri).header("Content-Type", "application/json").option(HttpOptions.connTimeout(2000)).option(HttpOptions.readTimeout(7000)).asString
+      Http(url(uri) OK as.String).apply()
     }
     if (response.isFailure && retries > 0) request(uri, retries - 1)
     else response
