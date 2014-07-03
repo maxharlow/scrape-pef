@@ -5,9 +5,9 @@ object CypherTools {
 
   implicit class CypherParameterValue(v: String) {
     val value = v.replace("""\""", """\\\\""").replace("'", """\'""")
-    def int = Option(value.replaceAll("[^0-9]", "")).filter(_.nonEmpty)
+    def int = Option(value)
     def string = if (value.isEmpty) None else Some("'" + value + "'")
-    def boolean = Some((!value.isEmpty).toString)
+    def boolean = Some(value.toBoolean.toString)
     def date(format: String) = {
       val formatPattern = DateTimeFormat.forPattern(format)
       if (value.isEmpty) None
