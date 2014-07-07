@@ -19,7 +19,7 @@ object Start extends App {
   for (file <- files if file.getName matches "(donations-)\\d{4}.*(-clean.csv)") {
     new Donations(file).loadFile()
   }
-  for (file <- files if file.getName matches "(loans-)\\d{4}.*(-clean.csv)") {
+  for (file <- files if file.getName matches "(loans-)\\d{4}.*(-clean.csv)") { // todo -- companies
     new Loans(file).loadFile()
   }
 

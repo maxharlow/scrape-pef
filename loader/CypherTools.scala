@@ -5,7 +5,7 @@ object CypherTools {
 
   implicit class CypherParameterValue(v: String) {
     val value = v.replace("""\""", """\\\\""").replace("'", """\'""")
-    def int = Option(value)
+    def int = Option(value).filter(_.nonEmpty)
     def string = if (value.isEmpty) None else Some("'" + value + "'")
     def boolean = Some(value.toBoolean.toString)
     def date(format: String) = {
