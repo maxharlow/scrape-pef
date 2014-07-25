@@ -1,11 +1,28 @@
 import java.io.File
 import scala.collection.immutable.ListMap
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
-import TextTools._
+import Common._
 
-class Donations(file: File) {
+object CleanDonations extends App {
 
-  def cleanFile(): Unit = {
+  println("""
+    ___  __     __
+   / _ \/ /_ __/ /____
+  / ___/ / // / __/ _ \
+ /_/  /_/\_,_/\__/\___/
+
+  """)
+
+  println("Cleaning CSVs...")
+
+  val dataLocation = "data"
+
+  val files = new File(dataLocation).listFiles
+  for (file <- files if file.getName matches "(donations-)\\d{4}.*(?!clean)(.csv)") {
+    cleanFile(file)
+  }
+
+  def cleanFile(file: File): Unit = {
     val donations = CSVReader.open(file)
     val newDonationEntries = donations.allWithHeaders map { entry =>
       val donation = getDonation(entry.mapValues(clean))

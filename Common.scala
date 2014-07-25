@@ -1,7 +1,7 @@
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-object TextTools {
+object Common {
 
   def clean(text: String): String = {
     text.filter(_ >= ' ').trim.replaceAll(" +", " ")
