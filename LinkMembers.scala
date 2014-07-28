@@ -5,14 +5,16 @@ import org.json4s.DefaultFormats
 import org.json4s.JValue
 import org.json4s.native.JsonMethods
 import org.anormcypher.{Cypher, Neo4jREST}
-import CypherTools._
-import Utils._
+import CommonCypher._
+import CommonUtils._
 
-object Members {
+object LinkMembers extends App {
 
   Neo4jREST.setServer("localhost")
 
   implicit val formats = DefaultFormats
+
+  run()
 
   def run() {
     membersNames foreach { name =>

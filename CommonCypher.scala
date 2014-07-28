@@ -1,7 +1,7 @@
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-object CypherTools {
+object CommonCypher {
 
   implicit class CypherParameterValue(v: String) {
     val value = v.replace("""\""", """\\\\""").replace("'", """\'""")

@@ -3,7 +3,7 @@ import scala.collection.immutable.ListMap
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import Common._
 
-object CleanDonations extends App {
+object ExtractDonations extends App {
 
   println("""
     ___  __     __
@@ -13,11 +13,7 @@ object CleanDonations extends App {
 
   """)
 
-  println("Cleaning CSVs...")
-
-  val dataLocation = "data"
-
-  val files = new File(dataLocation).listFiles
+  val files = new File("data").listFiles
   for (file <- files if file.getName matches "(donations-)\\d{4}.*(?!clean)(.csv)") {
     cleanFile(file)
   }

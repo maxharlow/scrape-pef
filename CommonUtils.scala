@@ -2,7 +2,7 @@ import scala.util.Try
 import dispatch._
 import dispatch.Defaults._
 
-object Utils {
+object CommonUtils {
 
   def request(uri: String, retries: Int = 5): Try[String] = {
     val response = Try {
