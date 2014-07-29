@@ -24,13 +24,13 @@ object LoadLoans extends App {
       s"LOAD CSV WITH HEADERS FROM 'file://${file.getAbsolutePath}' AS line" +
       """
       FOREACH(companyNumber IN (CASE WHEN line.benefactorCompanyNumber <> '' THEN [line.benefactorCompanyNumber] ELSE [] END) |
-      MERGE (b:X {companyNumber: companyNumber}) ON CREATE SET
+      MERGE (b {companyNumber: companyNumber}) ON CREATE SET
         b.class = line.benefactorClass,
         b.name = line.benefactorName,
         b.benefactorType = line.benefactorType,
         b.benefactorAddress = line.benefactorAddress,
         b.postcode = line.benefactorPostcode
-      MERGE (r:X {name: line.recipientName}) ON CREATE SET
+      MERGE (r {name: line.recipientName}) ON CREATE SET
         r.class = line.recipientClass
       CREATE (b)-[d:LOANED_TO {
         ecReference: line.ecReference,
@@ -50,10 +50,10 @@ object LoadLoans extends App {
       }]->(r)
       )
       FOREACH(name IN (CASE WHEN line.benefactorCompanyNumber = '' THEN [line.benefactorName] ELSE [] END) |
-      MERGE (b:X {name: name}) ON CREATE SET
+      MERGE (b {name: name}) ON CREATE SET
         b.class = line.benefactorClass,
         b.benefactorType = line.benefactorType
-      MERGE (r:X {name: line.recipientName}) ON CREATE SET
+      MERGE (r {name: line.recipientName}) ON CREATE SET
         r.class = line.recipientClass
       CREATE (b)-[d:LOANED_TO {
         ecReference: line.ecReference,
@@ -81,17 +81,17 @@ object LoadLoans extends App {
   }
 
   def fixLabels() {
-    val individualsQuery = "MATCH (i:X) WHERE i.class = 'Individual' SET i:Individual REMOVE i:X, i.class"
+    val individualsQuery = "MATCH (i) WHERE i.class = 'Individual' SET i:Individual REMOVE i.class"
     println(individualsQuery)
     val individualsResult = Cypher(individualsQuery).execute()
     if (!individualsResult) println(s" => failed to run query fixing individual labels")
 
-    val organisationsQuery = "MATCH (o:X) WHERE o.class = 'Organisation' SET o:Organisation REMOVE o:X, o.class"
+    val organisationsQuery = "MATCH (o) WHERE o.class = 'Organisation' SET o:Organisation REMOVE o.class"
     println(organisationsQuery)
     val organisationsResult = Cypher(organisationsQuery).execute()
     if (!organisationsResult) println(s" => failed to run query fixing organisation labels")
 
-    val partiesQuery = "MATCH (p:X) WHERE p.class = 'Party' SET p:Party REMOVE p:X, p.class"
+    val partiesQuery = "MATCH (p) WHERE p.class = 'Party' SET p:Party REMOVE p.class"
     println(partiesQuery)
     val partiesResult = Cypher(partiesQuery).execute()
     if (!partiesResult) println(s" => failed to run query fixing party labels")
