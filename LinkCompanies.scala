@@ -10,6 +10,7 @@ import org.json4s.DefaultFormats
 import org.json4s.{JValue, JString, JBool, JNull}
 import org.json4s.native.JsonMethods
 import org.anormcypher.{Cypher, Neo4jREST}
+import Common._
 
 object LinkCompanies extends App {
 
@@ -89,7 +90,7 @@ object LinkCompanies extends App {
   def propertise(bind: String, jsonMap: JsonMap): String = {
     val pairs = jsonMap map {
       case (key, JString(value)) if key contains "Date" => s"""\n  $bind.$key=${value.replace("-", "")}"""
-      case (key, JString(value)) => s"\n  $bind.$key='${clean(value)}'"
+      case (key, JString(value)) => s"\n  $bind.$key='${tidy(value)}'"
       case (key, JBool(value)) => s"\n  $bind.$key=${value.toString}"
       case (key, JNull) => ""
       case _ => throw new Exception("Unexpected Json!")
@@ -104,7 +105,7 @@ object LinkCompanies extends App {
       officers.zipWithIndex.foldLeft("\n") { case (a, ((officer, officership), i)) =>
         val officerProps = propertise("o" + i, officer)
         val officershipProps = propertise("iaoo" + i, officership)
-        val officerName = clean(officer("name").extract[String])
+        val officerName = tidy(officer("name").extract[String])
         a + s"""
         |MERGE (o$i:Individual {name: '$officerName'}) SET $officerProps
         |MERGE (o$i)-[iaoo$i:IS_AN_OFFICER_OF]->(c) SET $officershipProps
@@ -116,12 +117,6 @@ object LinkCompanies extends App {
       println(s"FAILED TO UPDATE COMPANY $companyNumber:\n")
       println(query)
     }
-  }
-
-  def clean(text: String): String = {
-    val escaped = text.replace("""\""", """\\\\""").replace("'", """\'""")
-    if (text contains ',') escaped
-    else escaped.split(" ").map(_.toLowerCase.capitalize).mkString(" ") // titlecase
   }
 
 }

@@ -3,8 +3,21 @@ import org.joda.time.format.DateTimeFormat
 
 object Common {
 
+  def tidy(text: String): String = {
+    val escaped = escapeCypher(text)
+    if (text contains ',') escaped else titlecase(escaped) // attempt to only titlecase sensible things
+  }
+
   def clean(text: String): String = {
     text.filter(_ >= ' ').trim.replaceAll(" +", " ")
+  }
+
+  def escapeCypher(text: String): String = {
+    text.replace("""\""", """\\\\""").replace("'", """\'""")
+  }
+
+  def titlecase(text: String): String = {
+    text.split(" ").map(_.toLowerCase.capitalize).mkString(" ")
   }
 
   def stripTitles(name: String): String = {
