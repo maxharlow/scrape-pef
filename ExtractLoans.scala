@@ -1,5 +1,8 @@
-import java.io.File
+import java.io.{File, StringReader}
+import java.util.logging.{Logger, Level}
 import scala.collection.immutable.ListMap
+import com.gargoylesoftware.htmlunit.{WebClient, TextPage}
+import com.gargoylesoftware.htmlunit.html._
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import Common._
 
@@ -13,29 +16,70 @@ object ExtractLoans extends App {
 
   """)
 
-  val files = new File("data").listFiles
-  for (file <- files if file.getName matches "(loans-)\\d{4}.*(?!clean)(.csv)") {
-    cleanFile(file)
+  run()
+
+  def run() {
+    val csv = CSVWriter.open(new File("loans.csv"))
+    val headers = List(
+      "benefactorClass",
+      "benefactorName",
+      "benefactorType",
+      "benefactorAddress",
+      "benefactorPostcode",
+      "benefactorCompanyNumber",
+      "recipientClass",
+      "recipientName",
+      "ecReference",
+      "type",
+      "value",
+      "referenceNumber",
+      "rate",
+      "status",
+      "amountRepaid",
+      "amountConverted",
+      "amountOutstanding",
+      "startDate",
+      "endDate",
+      "repaidDate",
+      "ecLastNotifiedDate",
+      "recordedBy",
+      "complianceBreach"
+    )
+    csv.writeRow(headers)
+    for {
+      year <- 1987 to 2014
+    }
+    yield for (data <- retrieve(year))
+    yield for (entry <- data.allWithHeaders) {
+      val selected = select(entry mapValues clean)
+      csv.writeRow(selected.values.toSeq)
+    }
+    csv.close()
   }
 
-  def cleanFile(file: File): Unit = {
-    val loans = CSVReader.open(file)
-    val newLoanEntries = loans.allWithHeaders map { entry =>
-      val loan = getLoan(entry.mapValues(clean))
-      val benefactor = getBenefactor(entry.mapValues(clean))
-      val recipient = getRecipient(entry.mapValues(clean))
-      loan ++ benefactor ++ recipient
+  def retrieve(year: Int): Option[CSVReader] = {
+    println(s"Now retrieving: $year")
+    val response = Option {
+      Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
+      val client = new WebClient
+      client.getOptions.setThrowExceptionOnScriptError(false)
+      val introPage = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
+      val searchPage = introPage.getElementByName[HtmlInput]("ctl00$ctl05$ctl07").click[HtmlPage]()
+      searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedFrom$ddlDay").setSelectedAttribute("1", true)
+      searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedFrom$ddlMonth").setSelectedAttribute("1", true)
+      searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedFrom$ddlYear").setSelectedAttribute(year.toString, true)
+      searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedTo$ddlDay").setSelectedAttribute("31", true)
+      searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedTo$ddlMonth").setSelectedAttribute("12", true)
+      searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedTo$ddlYear").setSelectedAttribute(year.toString, true)
+      val resultsPage = searchPage.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
+      resultsPage.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]().getContent()
     }
-    loans.close()
-    val newLoans = CSVWriter.open(new File(file.getPath.stripSuffix(".csv") + "-clean.csv"))
-    newLoans.writeRow(newLoanEntries.head.keySet.toSeq)
-    newLoanEntries map { entry =>
-      newLoans.writeRow(entry.values.toSeq)
+    response map { r =>
+      CSVReader.open(new StringReader(r))
     }
-    newLoans.close()
   }
 
-  private def getBenefactor(entry: Map[String, String]): Map[String, String] = {
+  def select(entry: Map[String, String]): Map[String, String] = {
     ListMap(
       "benefactorClass" -> {
         val benefactorType = entry("Lender type")
@@ -56,24 +100,14 @@ object ExtractLoans extends App {
         else name.split(", ").tail.mkString(", ").replaceAll("^(A)$|^(NA)$", "") // split from name
       },
       "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
-      "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
-    )
-  }
-
-  private def getRecipient(entry: Map[String, String]): Map[String, String] = {
-    ListMap(
+      "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", ""), // optional
       "recipientClass" -> {
         val recipientType = entry("Entity type")
         if (recipientType == "Political Party" || recipientType == "Third Party") "Party"
         else "Organisation" // cannot loan to individuals
       },
       "recipientName" -> stripTitles(entry("Entity name")).replaceAll("Conservative and Unionist Party", "Conservative Party"),
-      "recipientType" -> entry("Entity type")
-    )
-  }
-
-  private def getLoan(entry: Map[String, String]): Map[String, String] = {
-    ListMap(
+      "recipientType" -> entry("Entity type"),
       "ecReference" -> entry("EC reference"),
       "type" -> entry("Type of borrowing"),
       "value" -> asInt(entry("Total amount").dropRight(2)), // in pence (to four decimal places...?)
@@ -87,8 +121,7 @@ object ExtractLoans extends App {
       "endDate" -> asDate(entry("End date"), "dd/MM/yyyy"), // optional
       "repaidDate" -> asDate(entry("Date repaid"), "dd/MM/yyyy"), // optional
       "ecLastNotifiedDate" -> asDate(entry("Date EC last notified"), "dd/MM/yyyy"),
-      "recordedBy" -> entry("Rec'd by (AU)"), // optional
-      "complianceBreach" -> entry("Compliance breach")
+      "recordedBy" -> entry("Rec'd by (AU)") // optional
     )
   }
 

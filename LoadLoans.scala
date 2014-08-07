@@ -13,13 +13,10 @@ object LoadLoans extends App {
 
   Neo4jREST.setServer("localhost")
 
-  val files = new File("data").listFiles
-  for (file <- files if file.getName matches "(loans-)\\d{4}.*(-clean.csv)") {
-    load(file)
-  }
-  fixLabels()
+  run()
 
-  def load(file: File) {
+  def run() {
+    val file = new File("loans.csv")
     val query = {
       s"LOAD CSV WITH HEADERS FROM 'file://${file.getAbsolutePath}' AS line" +
       """
@@ -78,6 +75,7 @@ object LoadLoans extends App {
     println(query)
     val result = Cypher(query).execute()
     if (!result) println(s" => failed to add ${file.getPath}")
+    fixLabels()
   }
 
   def fixLabels() {
