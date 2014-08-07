@@ -46,7 +46,7 @@ object LinkCompanies extends App {
     }
   }
 
-  def companyNumbers: List[String] = {
+  def companyNumbers: List[String] = { // todo if has no number lookup by name else lookup by number (failures fallback to lookup by name)
     val query = Cypher("MATCH (n) WHERE has(n.companyNumber) RETURN n.companyNumber AS number").apply()
     query.map(_[String]("number")).toList
   }
@@ -57,7 +57,8 @@ object LinkCompanies extends App {
     }
     Await.ready(response, 1.minute)
     response onFailure {
-      case e => println(s"FAILED TO FIND COMPANY $number: ${e.getMessage}")
+      case e if e.getCause == StatusCode(404) => println(s"COMPANY NOT FOUND: $number")
+      case e => e.printStackTrace
     }
     response map { r =>
       JsonMethods.parse(r) \\ "company"
