@@ -70,9 +70,9 @@ object LoadDonations extends App {
       """
     }
 
-    println(query)
+    println("Loading donations...")
     val result = Cypher(query).execute()
-    if (!result) println(s" => failed to add ${file.getPath}")
+    if (!result) println("FAILED TO LOAD DONATIONS")
     fixLabels()
   }
 

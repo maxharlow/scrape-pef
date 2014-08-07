@@ -72,9 +72,9 @@ object LoadLoans extends App {
       """
     }
 
-    println(query)
+    println("Loading loans...")
     val result = Cypher(query).execute()
-    if (!result) println(s" => failed to add ${file.getPath}")
+    if (!result) println("FAILED TO LOAD LOANS")
     fixLabels()
   }
 

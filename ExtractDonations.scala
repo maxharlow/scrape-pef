@@ -1,5 +1,8 @@
 import java.io.{File, StringReader}
 import java.util.logging.{Logger, Level}
+import scala.concurrent.{Future, Await}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.collection.immutable.ListMap
 import com.gargoylesoftware.htmlunit.{WebClient, TextPage}
 import com.gargoylesoftware.htmlunit.html._
@@ -45,7 +48,7 @@ object ExtractDonations extends App {
     )
     csv.writeRow(headers)
     for {
-      year <- 2001 to 2014
+      year <- 2001 to 2015
     }
     yield for (data <- retrieve(year))
     yield for (entry <- data.allWithHeaders) {
@@ -55,9 +58,9 @@ object ExtractDonations extends App {
     csv.close()
   }
 
-  def retrieve(year: Int): Option[CSVReader] = {
-    println(s"Now retrieving: $year")
-    val response = Option {
+  def retrieve(year: Int): Future[CSVReader] = {
+    println(s"Now retrieving $year...")
+    val response = Future {
       Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
       val client = new WebClient
       client.getOptions.setThrowExceptionOnScriptError(false)
@@ -71,6 +74,10 @@ object ExtractDonations extends App {
       searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedTo$ddlYear").setSelectedAttribute(year.toString, true)
       val resultsPage = searchPage.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
       resultsPage.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]().getContent()
+    }
+    Await.ready(response, 5.minutes)
+    response onFailure {
+      case e => println(s"FAILED TO LOAD YEAR $year: ${e.getMessage}")
     }
     response map { r =>
       CSVReader.open(new StringReader(r))

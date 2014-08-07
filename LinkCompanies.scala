@@ -1,5 +1,5 @@
 import java.io.File
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import scala.concurrent.duration._
 import scala.collection.immutable.ListMap
 import dispatch._
@@ -56,7 +56,10 @@ object LinkCompanies extends App {
       url(s"https://api.opencorporates.com/companies/gb/$number?api_token=$opencorporatesApiToken") OK as.String
     }
     Await.ready(response, 1.minute)
-    response map { r => //todo: print message on failures
+    response onFailure {
+      case e => println(s"FAILED TO FIND COMPANY $number: ${e.getMessage}")
+    }
+    response map { r =>
       JsonMethods.parse(r) \\ "company"
     }
   }
