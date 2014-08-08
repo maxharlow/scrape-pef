@@ -1,4 +1,5 @@
 import java.io.File
+import scala.util.Try
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration._
 import scala.collection.immutable.ListMap
@@ -18,6 +19,10 @@ object LinkCompanies extends App {
 
   implicit val formats = DefaultFormats
   val opencorporatesApiToken = "jvc5BuxuEBq2NK1Vgjom"
+
+  val http = Http configure { b =>
+    b.setMaximumConnectionsTotal(50)
+  }
 
   println("""
     ___  __     __
@@ -52,12 +57,13 @@ object LinkCompanies extends App {
   }
 
   def retrieve(number: String): Future[JValue] = {
-    val response = Http {
+    val response = http {
       url(s"https://api.opencorporates.com/companies/gb/$number?api_token=$opencorporatesApiToken") OK as.String
     }
-    Await.ready(response, 1.minute)
+    Await.ready(response, 2.minutes)
     response onFailure {
       case e if e.getCause == StatusCode(404) => println(s"COMPANY NOT FOUND: $number")
+      case e if e.getCause == StatusCode(403) => throw e // die after hitting rate limit
       case e => e.printStackTrace
     }
     response map { r =>
@@ -110,16 +116,16 @@ object LinkCompanies extends App {
         val officerProps = propertise("o" + i, officer)
         val officershipProps = propertise("iaoo" + i, officership)
         val officerName = tidy(officer("name").extract[String])
+        val officerClass = if (officerName matches ".*[Limited|Ltd]") "Organisation" else "Individual"
+        val officershipPosition = tidy(officership("position").extract[String])
         a + s"""
-        |MERGE (o$i:Individual {name: '$officerName'}) SET $officerProps
-        |MERGE (o$i)-[iaoo$i:IS_AN_OFFICER_OF]->(c) SET $officershipProps
-        """ stripMargin // todo fuzzy-match on name
+        |MERGE (o$i:$officerClass {name: '$officerName'}) SET $officerProps
+        |MERGE (o$i)-[iaoo$i:IS_AN_OFFICER_OF {position: '$officershipPosition'}]->(c) SET $officershipProps
+        """ stripMargin // todo fuzzy-match on name & correctly deal with officers that leave and then return
       }
     }
-    val result = Cypher(query).execute()
-    if (!result) {
-      println(s"FAILED TO UPDATE COMPANY $companyNumber:\n")
-      println(query)
+    Try(Cypher(query).apply()) recover {
+      case e => println(s"FAILED TO UPDATE COMPANY $companyNumber: \n${e.getMessage}")
     }
   }
 
