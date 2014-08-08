@@ -63,7 +63,10 @@ object LinkCompanies extends App {
     Await.ready(response, 2.minutes)
     response onFailure {
       case e if e.getCause == StatusCode(404) => println(s"COMPANY NOT FOUND: $number")
-      case e if e.getCause == StatusCode(403) => throw e // die after hitting rate limit
+      case e if e.getCause == StatusCode(403) => {
+        println("HIT RATE LIMIT")
+        sys.exit
+      }
       case e => e.printStackTrace
     }
     response map { r =>
