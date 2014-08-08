@@ -1,4 +1,5 @@
 import java.io.File
+import scala.util.Try
 import org.anormcypher.{Cypher, Neo4jREST}
 
 object LoadLoans extends App {
@@ -71,10 +72,10 @@ object LoadLoans extends App {
       )
       """
     }
-
     println("Loading loans...")
-    val result = Cypher(query).execute()
-    if (!result) println("FAILED TO LOAD LOANS")
+    Try(Cypher(query).apply()) recover {
+      case e => println(s"FAILED TO LOAD LOANS: \n${e.getMessage}")
+    }
     fixLabels()
   }
 
