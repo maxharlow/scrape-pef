@@ -23,8 +23,7 @@ object QueryIndividuals extends App {
   }
 
   def getDonations(name: String): List[String] = {
-    val cleanName = stripTitles(name).replaceAll("""[()\[\]\*\\'"]""", """\$0""")
-    val luceneNameTerms = cleanName.split(" ").filter(_.length >= 2)
+    val luceneNameTerms = stripTitles(tidy(name)).split(" ").filter(_.length >= 2)
     if (luceneNameTerms.isEmpty) List[String]()
     else {
       val query = {

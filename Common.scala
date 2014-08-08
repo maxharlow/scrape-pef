@@ -4,7 +4,7 @@ import org.joda.time.format.DateTimeFormat
 object Common {
 
   def tidy(text: String): String = {
-    val escaped = escapeCypher(text)
+    val escaped = escapeCypher(clean(text))
     if (text contains ',') escaped else titlecase(escaped) // attempt to only titlecase sensible things
   }
 
@@ -13,7 +13,7 @@ object Common {
   }
 
   def escapeCypher(text: String): String = {
-    text.replace("""\""", """\\\\""").replace("'", """\'""")
+    text.replaceAll("""[()\[\]\*\\'"]""", """\$0""")
   }
 
   def titlecase(text: String): String = {
