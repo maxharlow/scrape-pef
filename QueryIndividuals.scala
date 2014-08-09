@@ -23,11 +23,11 @@ object QueryIndividuals extends App {
   }
 
   def getDonations(name: String): List[String] = {
-    val luceneNameTerms = stripTitles(tidy(name)).split(" ").filter(_.length >= 2)
+    val luceneNameTerms = tidy(stripTitles(name)).split(" ").filter(_.length >= 2)
     if (luceneNameTerms.isEmpty) List[String]()
     else {
       val query = {
-        val luceneName = luceneNameTerms.map("""name:\"""" + _ + """\"""").mkString(" AND ")
+        val luceneName = luceneNameTerms.map("name:\"" + _ + "\"").mkString(" AND ")
         s"""
           START b=node:node_auto_index('$luceneName')
           MATCH (b)-[d:DONATED_TO]->(r)
