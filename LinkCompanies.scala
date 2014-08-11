@@ -100,17 +100,6 @@ object LinkCompanies extends App {
     )
   }
 
-  def propertise(bind: String, jsonMap: JsonMap): String = {
-    val pairs = jsonMap map {
-      case (key, JString(value)) if key contains "Date" => s"""\n  $bind.$key=${value.replace("-", "")}"""
-      case (key, JString(value)) => s"\n  $bind.$key='${tidy(value)}'"
-      case (key, JBool(value)) => s"\n  $bind.$key=${value.toString}"
-      case (key, JNull) => ""
-      case _ => throw new Exception("Unexpected Json!")
-    }
-    pairs.filter(!_.isEmpty).mkString(",")
-  }
-
   def load(companyNumber: String, company: JsonMap, officers: Seq[(JsonMap, JsonMap)]): Unit = {
     val companyProps = propertise("c", company)
     val query = {

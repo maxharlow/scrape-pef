@@ -1,99 +1,108 @@
-import scala.util.{Try, Success, Failure}
+import scala.util.Try
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
+import scala.collection.immutable.ListMap
+import dispatch._
+import dispatch.Defaults._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
-import org.json4s.JValue
+import org.json4s.{JValue, JString, JNull}
 import org.json4s.native.JsonMethods
 import org.anormcypher.{Cypher, Neo4jREST}
-import CommonCypher._
-import CommonUtils._
+import Common._
 
 object LinkMembers extends App {
 
-  Neo4jREST.setServer("localhost")
-
   implicit val formats = DefaultFormats
+
+  val http = Http configure { b =>
+    b.setMaxRequestRetry(5)
+  }
+
+  println("""
+    ___  __     __
+   / _ \/ /_ __/ /____
+  / ___/ / // / __/ _ \
+ /_/  /_/\_,_/\__/\___/
+
+  """)
+
+  Neo4jREST.setServer("localhost")
 
   run()
 
   def run() {
-    membersNames foreach { name =>
-      println(s"Updating data for $name...")
-      memberData(name) match {
-        case Failure(e) => println(s" => failed to get data (${e.getMessage.toLowerCase})")
-        case Success(memberJson) => {
-          val member = getMember(memberJson)
-          member.values("name").map(_.init.tail) map { memberName => // unquoted
-            val partyName = getPartyName(memberJson)
-            val membership = getMembership(memberJson)
-            updateMember(member)
-            addMembership(membership, memberName, partyName)
-          }
-        }
-      }
+    for (memberName <- membersNames)
+    yield for (response <- retrieve(memberName)) {
+      val member = selectMember(response)
+      val membership = selectMembership(response)
+      val partyName = selectPartyName(response)
+      load(memberName, member, membership, partyName)
     }
   }
 
-  private def membersNames: List[String] = {
-    val membersNamesQuery = Cypher("MATCH m WHERE m.recipientRegulatedType='MP - Member of Parliament' RETURN m.name AS name").apply()
-    membersNamesQuery.map(_[String]("name")).toList
+  def membersNames: List[String] = {
+    val query = Cypher("MATCH m WHERE m.recipientRegulatedType='MP - Member of Parliament' RETURN m.name AS name").apply()
+    query.map(_[String]("name")).toList
   }
 
-  private def memberData(name: String): Try[JValue] = {
-    nameCheck(name) { memberName =>
-      val nameValue = memberName.replaceAll(" ", "%20")
-      val parliamentUri = s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/name*$nameValue/" // todo: add membership=all
-      val requestJson = request(parliamentUri) map { response =>
-        val cleanResponse = response.replaceAll("[^a-zA-Z0-9 @#{},:\"/._-]", "")
-        val memberJson = JsonMethods.parse(cleanResponse) \\ "Member"
-        memberJson
+  def retrieve(memberName: String): Future[JValue] = {
+    val nameValue = memberName.replaceAll(" ", "%20")
+    val response = {
+      val location = url(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/membership=all%7Cname*$nameValue/")
+      http(location.setHeader("Content-Type", "application/json") OK as.String) map {
+        case r if r.length <= 20 => throw new Exception("NOTFOUND")
+        case r => r
       }
-      requestJson.filter(!_.children.isEmpty)
+    }
+    Await.ready(response, 2.minutes)
+    response onFailure {
+      case e if e.getMessage == "NOTFOUND" => println(s"MEMBER NOT FOUND: $memberName")
+      case e => e.printStackTrace
+    }
+    response map { r =>
+      val cleanResponse = r.replaceAll("[^a-zA-Z0-9 @#{},:\"/._-]", "")
+      JsonMethods.parse(cleanResponse) \\ "Member"
     }
   }
 
-  private def getMember(member: JValue): CypherObject = {
-    new CypherObject("Individual")(
-      "name" -> extractString(member \ "DisplayAs").string,
-      "constituency" -> extractString(member \ "MemberFrom").string,
-      "house" -> extractString(member \ "House").string
+  def selectMember(member: JValue): ListMap[String, JValue] = {
+    ListMap(
+      "constituency" -> member \ "MemberFrom",
+      "house" -> member \ "House"
     )
   }
 
-  private def updateMember(member: CypherObject): Unit = {
-    member.values("name") map { memberName =>
-      val memberProperties = member.toUpdateString("m")
-      val result = Cypher(s"MATCH (m {name:$memberName}) SET $memberProperties").execute()
-      if (!result) println(" => failed to add member details")
+  def selectMembership(member: JValue): ListMap[String, JValue] = {
+    def stripTime(datetime: JValue) = datetime match {
+      case JString(s) => JString(s dropRight 9)
+      case x => JNull // actual response is inexplicably an object containing a null...
     }
-  }
-
-  private def getPartyName(member: JValue): String = {
-    extractString(member \ "Party" \ "#text")
-  }
-
-  private def getMembership(member: JValue): CypherObject = {
-    new CypherObject("MEMBER_OF")(
-      "startDate" -> extractString(member \ "HouseStartDate").dropRight(9).date("yyyy-MM-dd"),
-      "endDate" -> extractString(member \ "HouseEndDate").dropRight(9).date("yyyy-MM-dd")
+    ListMap(
+      "startDate" -> stripTime(member \ "HouseStartDate"),
+      "endDate" -> stripTime(member \ "HouseEndDate")
     )
   }
 
-  private def addMembership(membership: CypherObject, memberName: String, partyName: String) = {
-    val membershipProperties = membership.toMatchString()
-    val matchCypher = s"MATCH (p:PoliticalParty), (m {name:'$memberName'}) WHERE p.name =~ '(?i).*$partyName.*'"
-    val mergeCypher = s"MERGE (m)-[$membershipProperties]->(p)"
-    val result = Cypher(s"$matchCypher $mergeCypher").execute()
-    if (!result) println(" => failed to add membership") 
+  def selectPartyName(member: JValue): String = {
+     (member \ "Party" \ "#text").extract[String]
   }
 
-  private def extractString(json: JValue): String = {
-    Try {
-      json.noNulls.toOption.map(_.extract[String]).getOrElse("")
+  def load(memberName: String, member: ListMap[String, JValue], membership: ListMap[String, JValue], partyName: String): Unit = {
+    val memberProps = propertise("m", member)
+    val membershipProps = propertise("mbshp", membership)
+    val membershipStartDate = membership("startDate").extract[String].replaceAll("-", "")
+    val query = {
+      s"""
+        MATCH (m:Individual {name:'$memberName'}) SET $memberProps
+        WITH m
+        MATCH (p:Party) WHERE p.name =~ '$partyName.*'
+        MERGE (m)-[mbshp:IS_A_MP_FOR {startDate: $membershipStartDate}]-(p) ON CREATE SET $membershipProps
+      """
     }
-    match {
-      case Failure(e) => ""
-      case Success(value) => value
+    Try(Cypher(query).apply()) recover {
+      case e => println(s"FAILED TO UPDATE MEMBER: $memberName \n${e.getMessage}")
     }
   }
 
