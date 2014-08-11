@@ -75,7 +75,7 @@ object ExtractLoans extends App {
       searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedTo$ddlMonth").setSelectedAttribute("12", true)
       searchPage.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$searchControl1$dtAcceptedTo$ddlYear").setSelectedAttribute(year.toString, true)
       val resultsPage = searchPage.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
-      resultsPage.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]().getContent()
+      resultsPage.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]().getWebResponse().getContentAsString("ISO-8859-1")
     }
     Await.ready(response, 5.minutes)
     response onFailure {
