@@ -81,19 +81,16 @@ object LoadLoans extends App {
 
   def fixLabels() {
     val individualsQuery = "MATCH (i) WHERE i.class = 'Individual' SET i:Individual REMOVE i.class"
-    println(individualsQuery)
     val individualsResult = Cypher(individualsQuery).execute()
-    if (!individualsResult) println(s" => failed to run query fixing individual labels")
+    if (!individualsResult) println(s"FAILED TO FIX LABELS FOR INDIVIDUALS")
 
     val organisationsQuery = "MATCH (o) WHERE o.class = 'Organisation' SET o:Organisation REMOVE o.class"
-    println(organisationsQuery)
     val organisationsResult = Cypher(organisationsQuery).execute()
-    if (!organisationsResult) println(s" => failed to run query fixing organisation labels")
+    if (!organisationsResult) println(s"FAILED TO FIX LABELS FOR ORGANISATIONS")
 
     val partiesQuery = "MATCH (p) WHERE p.class = 'Party' SET p:Party REMOVE p.class"
-    println(partiesQuery)
     val partiesResult = Cypher(partiesQuery).execute()
-    if (!partiesResult) println(s" => failed to run query fixing party labels")
+    if (!partiesResult) println(s"FAILED TO FIX LABELS FOR PARTIES")
   }
 
 }
