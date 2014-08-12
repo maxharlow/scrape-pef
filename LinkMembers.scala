@@ -1,9 +1,9 @@
 import scala.util.Try
 import scala.concurrent.{Future, Await}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.collection.immutable.ListMap
-import dispatch._
-import dispatch.Defaults._
+import dispatch.{Http, url, as}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
