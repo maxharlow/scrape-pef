@@ -1,8 +1,6 @@
 import java.io.{File, StringReader}
 import java.util.logging.{Logger, Level}
-import scala.concurrent.{Future, Await}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.util.Try
 import scala.collection.immutable.ListMap
 import com.gargoylesoftware.htmlunit.{WebClient, TextPage}
 import com.gargoylesoftware.htmlunit.html._
@@ -50,7 +48,7 @@ object ExtractLoans extends App {
     csv.writeRow(headers)
 
     for {
-      year <- 1987 to 2015
+      year <- 1987 to 2014
     }
     yield for (data <- retrieve(year))
     yield for (entry <- data.allWithHeaders) {
@@ -60,9 +58,9 @@ object ExtractLoans extends App {
     csv.close()
   }
 
-  def retrieve(year: Int): Future[CSVReader] = {
+  def retrieve(year: Int): Try[CSVReader] = {
     println(s"Now retrieving $year...")
-    val response = Future {
+    val response = Try {
       Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
       val client = new WebClient
       client.getOptions.setThrowExceptionOnScriptError(false)
@@ -77,8 +75,7 @@ object ExtractLoans extends App {
       val resultsPage = searchPage.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
       resultsPage.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]().getWebResponse().getContentAsString("ISO-8859-1")
     }
-    Await.ready(response, 5.minutes)
-    response onFailure {
+    response recover {
       case e => println(s"FAILED TO LOAD YEAR $year: ${e.getMessage}")
     }
     response map { r =>
