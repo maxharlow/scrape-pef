@@ -70,7 +70,7 @@ Organisation,HSBC,Company,PO Box,SA7 9XF,14259,Party,Conservative Party,Politica
 Organisation,Wyler Investments Ltd,Company,20 Ropemaker Street,EC2Y 9AR,3288760,Party,Conservative Party,Political Party,AL0036625,Loan,50000000,,Base + 1%,Ended,50000000,,,2003-07-01,2007-06-30,2007-06-30,2005-10-10,
 Individual,Nigel Howells,Individual,,,,Party,Liberal Democrats,Political Party,AL0036737,Loan,147315,,Nil,Ended,,147315,,2003-12-01,2009-01-01,2009-01-01,2006-04-30,Cardiff Central & South
 Organisation,HSBC Bank,Company,8 Canada Square,E14 5HQ,14259,Party,Plaid Cymru - The Party of Wales,Political Party,AL0036750,Loan,15000000,,Base + 2%,Ended,15000000,,,2003-02-05,2006-12-20,2006-12-20,2006-03-31,
-Organisation,Juniper Trading Equities Ltd,Company,Lenz & Staehelin,,BVIRegistered,Party,Conservative Party,Political Party,AL0036312,Loan,25000000,,Base - 025%,Outstanding,,,25000000,2004-12-30,2029-11-30,,2005-10-10,
+Organisation,Juniper Trading Equities Ltd,Company,Lenz & Staehelin,,BVIRegistered,Party,Conservative Party,Political Party,AL0036312,Loan,25000000,,Base - 025%,Ended,25000000,,,2004-12-30,2029-11-30,2014-05-28,2005-10-10,
 Organisation,National Westminster Bank Plc,Company,135 Bishopsgate,EC2M 3UR,929027,Party,Conservative Party,Political Party,AL0036321,Loan,8500000,,Base + 2%,Outstanding,,,8500000,2004-09-06,2026-09-06,,2005-10-10,Rutland & Melton
 Organisation,Lloyds TSB,Company,Penzance Direct,EX4 3ZU,2652402,Party,Conservative Party,Political Party,AL0036322,Loan,1000000,,825%,Ended,1000000,,,2004-04-16,2014-04-16,2012-04-11,2005-10-10,St Ives
 Organisation,Medlina Foundation,Unincorporated Association,c/o Marxer & Partners,,,Party,Conservative Party,Political Party,AL0036326,Loan,95000000,,Base + 100%,Ended,95000000,,,2004-07-28,,2013-09-27,2005-10-10,
@@ -90,12 +90,12 @@ Individual,Laurence K Edkins,Individual,,,,Party,Liberal Democrats,Political Par
 Organisation,Glisson Printers Ltd,Company,Sheridan House,CB1 2HD,2662298,Party,Liberal Democrats,Political Party,AL0036705,Loan,291900,,Nil,Ended,291900,,,2004-03-01,2007-11-12,2007-11-12,2006-04-30,Cambridge
 Individual,Paul Marshall,Individual,,,,Party,Liberal Democrats,Political Party,AL0036716,Loan,12500000,,Nil,Ended,12500000,,,2004-10-05,2006-12-22,2006-12-22,2006-04-30,
 Individual,Clive Searle,Individual,,,,Party,The Respect Party,Political Party,AL0036760,Loan,906085,,Nil,Ended,906085,,,2004-05-04,2008-12-30,2008-12-30,2006-03-31,
-Organisation,Morain Investments (UK) Ltd,Company,5th Floor,SW1X 7BL,5386427,Party,Conservative Party,Political Party,AL0036313,Credit Facility,250000000,,LIBOR + 075%,Outstanding,,,250000000,2005-05-03,,,2005-10-10,
-Organisation,Cringle Corporation Ltd,Company,2 Hardman Street,M60 2AT,413150,Party,Conservative Party,Political Party,AL0036314,Loan,45000000,,Base + 1%,Outstanding,,15000000,30000000,2005-10-10,,,2005-10-10,
+Organisation,Morain Investments (UK) Ltd,Company,5th Floor,SW1X 7BL,5386427,Party,Conservative Party,Political Party,AL0036313,Credit Facility,250000000,,LIBOR + 075%,Ended,250000000,,,2005-05-03,,2014-04-01,2005-10-10,
+Organisation,Cringle Corporation Ltd,Company,2 Hardman Street,M60 2AT,413150,Party,Conservative Party,Political Party,AL0036314,Loan,45000000,,Base + 1%,Ended,45000000,,,2005-10-10,,2014-04-11,2005-10-10,
 Organisation,Royal Bank of Scotland,Company,PO Box 90,AB10 1DU,SC090312,Party,Conservative Party,Political Party,AL0036316,Loan,1000000,,Base + 3%,Ended,1000000,,,2005-04-27,,2013-04-30,2005-10-10,Aberdeen South
 Organisation,National Westminster Bank Plc,Company,Dudley Business Centre,DY1 1LJ,929027,Party,Conservative Party,Political Party,AL0036324,Credit Facility,1000000,,Base + 375%,Outstanding,,,1000000,2005-12-09,,,2005-10-10,Wyre Forest
 Organisation,Lloyds TSB,Company,Market Square,MK18 3AB,2652402,Party,Conservative Party,Political Party,AL0036325,Credit Facility,1000000,,Not specified,Ended,1000000,,,2005-01-01,,2014-03-01,2005-10-10,Buckingham
-Individual,Paul Johnston,Individual,,,,Party,Conservative Party,Political Party,AL0036330,Loan,200000,,Nil,Outstanding,,,200000,2005-05-27,,,2005-10-10,Kingston & Surbiton
+Individual,Paul Johnston,Individual,,,,Party,Conservative Party,Political Party,AL0036330,Loan,200000,,Nil,Ended,200000,,,2005-05-27,,2007-02-14,2005-10-10,Kingston & Surbiton
 Individual,John Rutter,Individual,,,,Party,Conservative Party,Political Party,AL0036331,Loan,1200000,,Nil,Ended,1200000,,,2005-01-28,,2006-12-15,2005-10-10,Kingston & Surbiton
 Organisation,Earlswood Hall Trust,Unincorporated Association,Beverley,RH1 3DT,,Party,Conservative Party,Political Party,AL0036341,Loan,1000000,,4%,Ended,1000000,,,2005-02-10,2010-03-10,2010-03-10,2005-10-10,Reigate and Banstead
 Organisation,National Westminster Bank Plc,Company,Market Place,DH1 3YU,929027,Party,Conservative Party,Political Party,AL0036350,Loan,8000000,,Base + 325%,Outstanding,,,8000000,2005-04-02,2019-04-02,,2005-10-10,City of Durham
@@ -513,7 +513,7 @@ Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11
 Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11],Political Party,AL0037135,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-13,2029-01-29,2010-09-30,2011-04-07,
 Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11],Political Party,AL0037136,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-20,2026-01-29,2010-09-30,2011-04-07,
 Individual,Peter Walker,Individual,,,,Party,Liberal Democrats,Political Party,AL0037218,Loan,300000,,Nil,Ended,300000,,,2010-12-01,2011-12-31,2012-06-30,2011-04-28,Warrington
-Organisation,National Westminster Bank Plc,Company,225 High Street,LN2 1AZ,929027,Party,Conservative Party,Political Party,AL0042333,Credit Facility,6000000,,Base +3%,Outstanding,,,6000000,2010-04-01,,,2011-07-28,Taunton Deane
+Organisation,National Westminster Bank Plc,Company,225 High Street,LN2 1AZ,929027,Party,Conservative Party,Political Party,AL0042333,Credit Facility,6000000,,Base +3%,Ended,6000000,,,2010-04-01,,2014-05-13,2011-07-28,Taunton Deane
 Individual,Alex Feakes,Individual,,,,Party,Liberal Democrats,Political Party,AL0088829,Loan,329340,,Nil,Ended,,329340,,2010-04-23,2013-04-30,2013-01-06,2013-04-29,Lewisham & North Beckenham
 Individual,Stephen Locke,Individual,,,,Party,Liberal Democrats,Political Party,AL0088830,Loan,1000000,,Nil,Ended,1000000,,,2010-04-23,2013-04-30,2013-01-06,2013-04-29,Lewisham & North Beckenham
 Individual,Jennifer Smiley,Individual,,,,Party,Labour Party,Political Party,AL0037129,Loan,300000,,Nil,Outstanding,,,300000,2011-01-01,,,2011-04-28,Wallasey CLP
@@ -633,4 +633,14 @@ Organisation,Svenska Handelsbanken AB (PUBL),Company,Kungstradgardsgatan 2,S-106
 Organisation,Seymour Manufacturing International Ltd,Company,Sutton Hall,TF11 9NQ,2322042,Party,UK Independence Party (UKIP),Political Party,AL0097234,Loan,1000000,,0,Outstanding,,,1000000,2014-02-26,,,2014-04-30,West Midlands Regional Branch
 Individual,Jillian Seymour,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0097239,Loan,200000,,0,Outstanding,,,200000,2014-02-26,,,2014-04-30,West Midlands Regional Branch
 Individual,Stephen Corcoran,Individual,,,,Party,Labour Party,Political Party,AL0097244,Loan,200000,,Nil,Outstanding,,,200000,2014-03-11,,,2014-04-29,Congleton CLP
+Individual,Frank H Everist,Individual,,,,Party,Conservative Party,Political Party,AL0099696,Loan,500000,,00,Outstanding,,,500000,2014-05-06,,,2014-07-30,Brentford & Isleworth
 Individual,Anthony Banks,Individual,,,,Organisation,Business for Scotland Ltd,Permitted Participant,AL0099773,Loan,1500000,,0,Outstanding,,,1500000,2014-04-03,2014-04-04,,2014-07-03,
+Individual,David Brown,Individual,,,,Party,Conservative Party,Political Party,AL0099881,Loan,600000,,00,Outstanding,,,600000,2014-05-19,,,2014-07-30,Pendle
+Individual,Penny Iles,Individual,,,,Party,Equal and Just Society,Political Party,AL0100012,Loan,800000,,Zero,Outstanding,,,800000,2014-06-13,,,2014-07-29,
+Individual,Robin Tilbrook,Individual,,,,Party,English Democrats,Political Party,AL0100152,Loan,1000000,,nil,Outstanding,,,1000000,2014-04-25,,,2014-07-30,
+Individual,John Fearon,Individual,,,,Party,Labour Party,Political Party,AL0103551,Loan,1500000,,Nil,Outstanding,,,1500000,2014-06-28,,,2014-07-30,Plymouth Sutton and Devonport CLP
+Individual,Diana Gallop,Individual,,,,Party,Liberal Democrats,Political Party,AL0104100,Loan,300000,,Nil,Outstanding,,,300000,2014-04-08,2015-04-30,,2014-07-30,Camden Borough
+Individual,Lord Alliance,Individual,,,,Party,Liberal Democrats,Political Party,AL0104101,Loan,2000000,,nil,Outstanding,,,2000000,2014-06-27,,,2014-07-30,Bermondsey & Old Southwark
+Individual,Edward McMillan-Scott,Individual,,,,Party,Liberal Democrats,Political Party,AL0104102,Loan,500000,,Nil,Outstanding,,,500000,2014-04-14,,,2014-07-30,Yorkshire & Humber Region
+Individual,Ian Couzens,Individual,,,,Party,Liberal Democrats,Political Party,AL0104103,Loan,400000,,nil,Outstanding,,,400000,2014-05-16,,,2014-07-30,Norwich South
+Individual,Anne Winstanley,Individual,,,,Party,Liberal Democrats,Political Party,AL0104104,Loan,500000,,nil,Outstanding,,,500000,2014-06-11,,,2014-07-30,Eastleigh
