@@ -1,9 +1,7 @@
 import scala.util.Try
-import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
 import scala.collection.immutable.ListMap
-import dispatch.{Http, url, as}
+import dispatch._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
@@ -47,17 +45,16 @@ object LinkMembers extends App {
     query.map(_[String]("name")).toList
   }
 
-  def retrieve(memberName: String): Future[JValue] = {
+  def retrieve(memberName: String): Try[JValue] = {
     val nameValue = memberName.replaceAll(" ", "%20")
-    val response = {
+    val response = Try {
       val location = url(s"http://data.parliament.uk/membersdataplatform/services/mnis/members/query/membership=all%7Cname*$nameValue/")
-      http(location.setHeader("Content-Type", "application/json") OK as.String) map {
+      http(location.setHeader("Content-Type", "application/json") OK as.String).apply() match {
         case r if r.length <= 20 => throw new Exception("NOTFOUND")
         case r => r
       }
     }
-    Await.ready(response, 2.minutes)
-    response onFailure {
+    response recover {
       case e if e.getMessage == "NOTFOUND" => println(s"MEMBER NOT FOUND: $memberName")
       case e => e.printStackTrace
     }

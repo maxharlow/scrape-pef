@@ -1,10 +1,8 @@
 import java.io.File
 import scala.util.Try
-import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
 import scala.collection.immutable.ListMap
-import dispatch.{Http, StatusCode, url, as}
+import dispatch._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.DefaultFormats
@@ -56,12 +54,11 @@ object LinkCompanies extends App {
     query.map(_[String]("number")).toList
   }
 
-  def retrieve(number: String): Future[JValue] = {
-    val response = http {
-      url(s"https://api.opencorporates.com/companies/gb/$number?api_token=$opencorporatesApiToken") OK as.String
+  def retrieve(number: String): Try[JValue] = {
+    val response = Try {
+      http(url(s"https://api.opencorporates.com/companies/gb/$number?api_token=$opencorporatesApiToken") OK as.String).apply()
     }
-    Await.ready(response, 2.minutes)
-    response onFailure {
+    response recover {
       case e if e.getCause == StatusCode(404) => println(s"COMPANY NOT FOUND: $number")
       case e if e.getCause == StatusCode(403) => {
         println("HIT RATE LIMIT")
