@@ -4,6 +4,19 @@ import org.anormcypher.{Cypher, Neo4jREST}
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import Common._
 
+/*
+
+Querying uses Neo4j legacy indexing for full-text search until something better arrives.
+To set it up:
+
+ $ curl -vX POST -H 'Content-Type: application/json' -d '{"name":"node_auto_index","config":{"type":"fulltext","provider":"lucene"}}' localhost:7474/db/data/index/node/
+ $ sed -i bak 's/#node_auto_indexing/node_auto_indexing/g' /usr/local/Cellar/neo4j/2.1.1/libexec/conf/neo4j.properties
+ $ sed -i bak 's/#node_keys_indexable/node_keys_indexable/g' /usr/local/Cellar/neo4j/2.1.1/libexec/conf/neo4j.properties
+ $ neo4j restart
+ $ curl -vX POST -H 'Content-Type: application/json' -d '{"query":"MATCH (n) WHERE has(n.name) SET n.name=n.name"}' localhost:7474/db/data/cypher
+
+*/
+
 object QueryIndividuals extends App {
 
   Neo4jREST.setServer("localhost")
