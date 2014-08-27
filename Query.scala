@@ -24,19 +24,18 @@ object Query extends App {
   run()
 
   def run() {
-    val inputFile = StdIn.readLine("Input file:\n=> ")
-    val outputFile = StdIn.readLine("Output file:\n=> ")
     val query = StdIn.readLine("Query name:\n=> ") match {
       case "individuals" => queryIndividuals _
       case "organisations" => queryOrganisations _
       case _ => sys.exit()
     }
-    val input = CSVReader.open(new File(inputFile)).allWithHeaders
+    val outputFile = StdIn.readLine("Output file:\n=> ")
     val output = CSVWriter.open(new File(outputFile))
+    val inputFile = StdIn.readLine("Input file:\n=> ")
+    val input = CSVReader.open(new File(inputFile)).allWithHeaders
     input foreach { entry =>
       val name = entry("Name")
-      val row = name :: query(name)
-      output.writeRow(row)
+      output.writeRow(query(name))
     }
   }
 
@@ -67,7 +66,7 @@ object Query extends App {
         row[Double]("donationsTotal").toString
       )
     }
-    results.toList
+    name :: results.toList
   }
 
   def queryOrganisations(name: String): List[String] = {
@@ -96,7 +95,7 @@ object Query extends App {
         row[Double]("donationsTotal").toString
       )
     }
-    results.toList
+    name :: results.toList
   }
 
 }
