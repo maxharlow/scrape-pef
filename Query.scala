@@ -25,8 +25,8 @@ object Query extends App {
 
   def run() {
     val query = StdIn.readLine("Query name:\n=> ") match {
-      case "individuals" => queryIndividuals _
-      case "organisations" => queryOrganisations _
+      case "direct" => queryDirectDonations _
+      case "indirect" => queryIndirectDonations _
       case _ => sys.exit()
     }
     val outputFile = StdIn.readLine("Output file:\n=> ")
@@ -44,7 +44,11 @@ object Query extends App {
     terms.map("name:\"" + _ + "\"").mkString(" AND ")
   }
 
-  def queryIndividuals(name: String): List[String] = {
+  /*
+    Match names of either company or individual donors, and return
+    the total amount and number of donations they made
+   */
+  def queryDirectDonations(name: String): List[String] = {
     val query = {
       s"""
         START b=node:node_auto_index('${luceneName(name)}')
@@ -69,7 +73,11 @@ object Query extends App {
     name :: results.toList
   }
 
-  def queryOrganisations(name: String): List[String] = {
+  /*
+    Match names of those who sit on the board of companies who have donated,
+    and return the total amount and number of donations the company made
+   */
+  def queryIndirectDonations(name: String): List[String] = {
     val query = {
       s"""
         START b=node:node_auto_index('${luceneName(name)}')
