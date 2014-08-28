@@ -89,7 +89,7 @@ object Query extends App {
       val query = {
         s"""
         START b=node:node_auto_index('${luceneName(name)}')
-        MATCH (b:Individual)-[iaoo:IS_AN_OFFICER_OF]->(o)-[d:DONATED_TO]->(r)
+        MATCH (b)-[iaoo:IS_AN_OFFICER_OF]->(o)-[d:DONATED_TO]->(r)
         RETURN
           collect(DISTINCT b.name) AS matchedNames,
           collect(DISTINCT iaoo.position) AS matchedPositions,
