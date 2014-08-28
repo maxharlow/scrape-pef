@@ -25,17 +25,22 @@ object Query extends App {
 
   def run() {
     val query = StdIn.readLine("Query name:\n=> ") match {
-      case "direct" => queryDirectDonations _
-      case "indirect" => queryIndirectDonations _
+      case "direct" => queryDirectDonations
+      case "indirect" => queryIndirectDonations
+      case "top" => queryTopRecipients
       case _ => sys.exit()
     }
     val outputFile = StdIn.readLine("Output file:\n=> ")
     val output = CSVWriter.open(new File(outputFile))
+    output.writeAll(query)
+  }
+
+  def inputBatch(key: String)(block: String => List[String]): List[List[String]] = {
     val inputFile = StdIn.readLine("Input file:\n=> ")
     val input = CSVReader.open(new File(inputFile)).allWithHeaders
-    input foreach { entry =>
-      val name = entry("Name")
-      output.writeRow(query(name))
+    input map { entry =>
+      val keyValue = entry(key)
+      block(keyValue)
     }
   }
 
@@ -48,38 +53,41 @@ object Query extends App {
     Match names of either company or individual donors, and return
     the total amount and number of donations they made
    */
-  def queryDirectDonations(name: String): List[String] = {
-    val query = {
-      s"""
-        START b=node:node_auto_index('${luceneName(name)}')
-        MATCH (b)-[d:DONATED_TO]->(r)
-        RETURN
-          collect(DISTINCT b.name) AS matchedNames,
-          collect(DISTINCT b.companyNumber) AS matchedCompanyNumbers,
-          collect(DISTINCT r.name) AS recipients,
-          count(d) AS donationsCount,
-          sum(d.value) / 100.0 AS donationsTotal
-      """
+  def queryDirectDonations(): List[List[String]] = {
+    inputBatch("Name") { name =>
+      val query = {
+        s"""
+          START b=node:node_auto_index('${luceneName(name)}')
+          MATCH (b)-[d:DONATED_TO]->(r)
+          RETURN
+            collect(DISTINCT b.name) AS matchedNames,
+            collect(DISTINCT b.companyNumber) AS matchedCompanyNumbers,
+            collect(DISTINCT r.name) AS recipients,
+            count(d) AS donationsCount,
+            sum(d.value) / 100.0 AS donationsTotal
+        """
+      }
+      val results = Cypher(query).apply() flatMap { row =>
+        List(
+          row[Seq[String]]("matchedNames").mkString("; "),
+          row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
+          row[Seq[String]]("recipients").mkString("; "),
+          row[Int]("donationsCount").toString,
+          row[Double]("donationsTotal").toString
+        )
+      }
+      name :: results.toList
     }
-    val results = Cypher(query).apply() flatMap { row =>
-      List(
-        row[Seq[String]]("matchedNames").mkString("; "),
-        row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
-        row[Seq[String]]("recipients").mkString("; "),
-        row[Int]("donationsCount").toString,
-        row[Double]("donationsTotal").toString
-      )
-    }
-    name :: results.toList
   }
 
   /*
     Match names of those who sit on the board of companies who have donated,
     and return the total amount and number of donations the company made
    */
-  def queryIndirectDonations(name: String): List[String] = {
-    val query = {
-      s"""
+  def queryIndirectDonations(): List[List[String]] = {
+    inputBatch("Name") { name =>
+      val query = {
+        s"""
         START b=node:node_auto_index('${luceneName(name)}')
         MATCH (b:Individual)-[iaoo:IS_AN_OFFICER_OF]->(o)-[d:DONATED_TO]->(r)
         RETURN
@@ -91,19 +99,47 @@ object Query extends App {
           count(d) AS donationsCount,
           sum(d.value) / 100.0 AS donationsTotal
         """
+      }
+      val results = Cypher(query).apply() flatMap { row =>
+        List(
+          row[Seq[String]]("matchedNames").mkString("; "),
+          row[Seq[String]]("matchedPositions").mkString("; "),
+          row[Seq[String]]("matchedCompanyNames").mkString("; "),
+          row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
+          row[Seq[String]]("recipients").mkString("; "),
+          row[Int]("donationsCount").toString,
+          row[Double]("donationsTotal").toString
+        )
+      }
+      name :: results.toList
     }
-    val results = Cypher(query).apply() flatMap { row =>
+  }
+
+  /*
+    List the top ten party recepients of donations reported (not received!) since the given date
+   */
+  def queryTopRecipients(): List[List[String]] = {
+    val date = StdIn.readLine("From date (yyyy-mm-dd):\n=> ").replace("-", "")
+    val query = {
+      s"""
+        MATCH (b)-[d:DONATED_TO]->(r:Party)
+        WHERE d.reportedDate >= $date
+        AND d.type <> 'Public Funds'
+        RETURN
+          r.name AS recipient,
+          count(d) AS donationsCount,
+          sum(d.value) / 100.0 AS donationsTotal
+        ORDER BY donationsTotal DESC
+      """
+    }
+    val results = Cypher(query).apply() map { row =>
       List(
-        row[Seq[String]]("matchedNames").mkString("; "),
-        row[Seq[String]]("matchedPositions").mkString("; "),
-        row[Seq[String]]("matchedCompanyNames").mkString("; "),
-        row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
-        row[Seq[String]]("recipients").mkString("; "),
+        row[String]("recipient"),
         row[Int]("donationsCount").toString,
         row[Double]("donationsTotal").toString
       )
     }
-    name :: results.toList
+    results.toList
   }
 
 }
