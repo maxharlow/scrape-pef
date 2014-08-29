@@ -593,11 +593,12 @@ Individual,Amelia I'anson,Individual,,,,Party,Conservative Party,Political Party
 Individual,Michael Bannister,Individual,,,,Party,Conservative Party,Political Party,AL0084914,Loan,500000,,Base Rate + 1%,Outstanding,,,500000,2012-12-19,2015-12-31,,2013-01-28,Skipton & Ripon
 Individual,James Bedford,Individual,,,,Party,Conservative Party,Political Party,AL0084915,Loan,500000,,Base Rate + 1%,Outstanding,,,500000,2012-12-14,2015-12-31,,2013-01-28,Skipton & Ripon
 Individual,Stuart Wheeler,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0085010,Loan,8000000,,0%,Ended,8000000,,,2012-10-09,,2012-12-18,2013-01-30,
-Individual,Godfrey Bloom,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0085028,Loan,700000,,0%,Outstanding,,,700000,2012-11-08,,,2013-01-30,Yorkshire & the Humber Regional Branch
+Individual,Godfrey Bloom,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0085028,Loan,700000,,0%,Ended,,700000,,2012-11-08,,2014-06-30,2013-01-30,Yorkshire & the Humber Regional Branch
 Organisation,The Co-Operative Bank PLC,Company,1 Balloon Street,M60 4EP,990937,Organisation,Oliver Martins,Regulated Donee,AL0087023,Loan,1250000,,101%,Outstanding,,,1250000,2012-12-17,2015-12-17,,2013-01-23,
 Individual,Simon Hall,Individual,,,,Party,Labour Party,Political Party,AL0087472,Loan,233200,,Nil,Outstanding,,,233200,2012-10-12,,,2013-04-30,Croydon Local Campaign Forum
 Individual,James H Holt,Individual,,,,Party,Conservative Party,Political Party,AL0087066,Loan,460000,,Nil,Outstanding,,,460000,2013-03-28,,,2013-04-29,Thirsk and Malton
-Individual,Judith Morris,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0087158,Loan,200000,,000%,Outstanding,,,200000,2013-01-24,,,2013-04-30,Yorkshire & the Humber Regional Branch
+Individual,Michael Kendall,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0087157,Loan,263800,,000%,Ended,100000,163800,,2013-01-24,,2014-06-30,2013-04-30,Yorkshire & the Humber Regional Branch
+Individual,Judith Morris,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0087158,Loan,200000,,000%,Ended,,200000,,2013-01-24,,2014-06-30,2013-04-30,Yorkshire & the Humber Regional Branch
 Individual,Christine Stevens,Individual,,,,Party,Liberal Democrats,Political Party,AL0087473,Loan,500000,,0,Outstanding,,,500000,2013-03-08,2015-03-31,,2013-04-29,Portsmouth
 Individual,Simon Hughes,Individual,,,,Party,Liberal Democrats,Political Party,AL0087498,Loan,1100000,,0,Outstanding,,,1100000,2013-02-27,,,2013-04-29,Bermondsey & Old Southwark
 Individual,Michael R Evans,Individual,,,,Party,Conservative Party,Political Party,AL0088838,Loan,1000000,,5%,Outstanding,,,1000000,2013-04-16,2014-04-16,,2013-07-29,Solihull
@@ -617,13 +618,13 @@ Organisation,Svenska Handelsbanken AB (PUBL),Company,Kungstradgardsgatan 2,S-106
 Individual,Steven Thomas Uncles,Individual,,,,Party,English Democrats,Political Party,AL0092579,Loan,4860300,,None,Outstanding,,,4860300,2013-04-15,,,2013-06-21,
 Individual,Peter Humphries,Individual,,,,Party,Labour Party,Political Party,AL0092648,Loan,250000,,Nil,Outstanding,,,250000,2013-09-07,2018-09-07,,2013-10-30,Stroud CLP
 Individual,Stewart Stevenson,Individual,,,,Party,Scottish National Party (SNP),Political Party,AL0092649,Loan,400000,,Zero,Outstanding,,,400000,2013-07-18,,,2013-10-30,Banffshire & Buchan Coast Constituency
-Individual,Michael Kendall,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094787,Loan,100000,,0%,Outstanding,,,100000,2013-05-01,,,2014-01-30,Yorkshire & the Humber Regional Branch
+Individual,Michael Kendall,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094787,Loan,100000,,0%,Ended,100000,,,2013-05-01,,2014-06-30,2014-01-30,Yorkshire & the Humber Regional Branch
 Individual,Stuart Wheeler,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094788,Loan,10000000,,0%,Ended,10000000,,,2013-10-25,,2013-11-11,2014-01-30,
-Individual,Michael Kendall,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094789,Loan,200000,,0%,Outstanding,,,200000,2013-11-04,,,2014-01-30,Yorkshire & the Humber Regional Branch
-Individual,Ivor Williams,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094790,Loan,300000,,0%,Outstanding,,,300000,2013-11-04,,,2014-01-30,Yorkshire & the Humber Regional Branch
-Individual,Jane Collins,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094791,Loan,1000000,,0%,Outstanding,,,1000000,2013-11-05,,,2014-01-30,Yorkshire & the Humber Regional Branch
-Individual,Judith Morris,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094792,Loan,200000,,0%,Outstanding,,,200000,2013-11-05,,,2014-01-30,Yorkshire & the Humber Regional Branch
-Individual,Amjad Bashir,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094793,Loan,1000000,,0%,Outstanding,,,1000000,2013-12-02,,,2014-01-30,Yorkshire & the Humber Regional Branch
+Individual,Michael Kendall,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094789,Loan,200000,,0%,Ended,200000,,,2013-11-04,,2014-06-30,2014-01-30,Yorkshire & the Humber Regional Branch
+Individual,Ivor Williams,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094790,Loan,300000,,0%,Ended,300000,,,2013-11-04,,2014-06-30,2014-01-30,Yorkshire & the Humber Regional Branch
+Individual,Jane Collins,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094791,Loan,1000000,,0%,Ended,,1000000,,2013-11-05,,2014-06-30,2014-01-30,Yorkshire & the Humber Regional Branch
+Individual,Judith Morris,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094792,Loan,200000,,0%,Ended,,200000,,2013-11-05,,2014-06-30,2014-01-30,Yorkshire & the Humber Regional Branch
+Individual,Amjad Bashir,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094793,Loan,1000000,,0%,Ended,,1000000,,2013-12-02,,2014-06-30,2014-01-30,Yorkshire & the Humber Regional Branch
 Individual,Brian Adams,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0094794,Loan,260000,,0%,Outstanding,,,260000,2013-12-04,2015-12-03,,2014-01-30,Aylesbury & Buckingham
 Individual,Edward McMillan-Scott,Individual,,,,Party,Liberal Democrats,Political Party,AL0097037,Loan,150000,,0,Outstanding,,,150000,2013-12-19,,,2014-01-30,Yorkshire & Humber Region
 Individual,Frank H Everist,Individual,,,,Party,Conservative Party,Political Party,AL0097216,Loan,500000,,00,Outstanding,,,500000,2013-12-12,,,2014-04-29,Brentford & Isleworth
@@ -637,6 +638,10 @@ Individual,Frank H Everist,Individual,,,,Party,Conservative Party,Political Part
 Individual,Anthony Banks,Individual,,,,Organisation,Business for Scotland Ltd,Permitted Participant,AL0099773,Loan,1500000,,0,Outstanding,,,1500000,2014-04-03,2014-04-04,,2014-07-03,
 Individual,David Brown,Individual,,,,Party,Conservative Party,Political Party,AL0099881,Loan,600000,,00,Outstanding,,,600000,2014-05-19,,,2014-07-30,Pendle
 Individual,Penny Iles,Individual,,,,Party,Equal and Just Society,Political Party,AL0100012,Loan,800000,,Zero,Outstanding,,,800000,2014-06-13,,,2014-07-29,
+Organisation,Seymour Manufacturing International Ltd,Company,Sutton Hall,TF11 9NQ,2322042,Party,UK Independence Party (UKIP),Political Party,AL0100063,Loan,1000000,,0,Outstanding,,,1000000,2014-02-26,,,2014-07-30,West Midlands Regional Branch
+Individual,Jillian Seymour,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0100064,Loan,200000,,0,Outstanding,,,200000,2014-02-26,,,2014-07-30,West Midlands Regional Branch
+Individual,Andrew Perloff,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0100065,Loan,1750000,,0,Ended,1750000,,,2014-04-14,,2014-06-26,2014-07-30,
+Organisation,Bown Properties Ltd,Company,10 Overcliffe,DA11 0EF,7581224,Party,UK Independence Party (UKIP),Political Party,AL0100067,Loan,1000000,,0,Outstanding,,,1000000,2014-04-01,2015-06-30,,2014-07-30,West Midlands Regional Branch
 Individual,Robin Tilbrook,Individual,,,,Party,English Democrats,Political Party,AL0100152,Loan,1000000,,nil,Outstanding,,,1000000,2014-04-25,,,2014-07-30,
 Individual,John Fearon,Individual,,,,Party,Labour Party,Political Party,AL0103551,Loan,1500000,,Nil,Outstanding,,,1500000,2014-06-28,,,2014-07-30,Plymouth Sutton and Devonport CLP
 Individual,Diana Gallop,Individual,,,,Party,Liberal Democrats,Political Party,AL0104100,Loan,300000,,Nil,Outstanding,,,300000,2014-04-08,2015-04-30,,2014-07-30,Camden Borough
@@ -644,3 +649,4 @@ Individual,Lord Alliance,Individual,,,,Party,Liberal Democrats,Political Party,A
 Individual,Edward McMillan-Scott,Individual,,,,Party,Liberal Democrats,Political Party,AL0104102,Loan,500000,,Nil,Outstanding,,,500000,2014-04-14,,,2014-07-30,Yorkshire & Humber Region
 Individual,Ian Couzens,Individual,,,,Party,Liberal Democrats,Political Party,AL0104103,Loan,400000,,nil,Outstanding,,,400000,2014-05-16,,,2014-07-30,Norwich South
 Individual,Anne Winstanley,Individual,,,,Party,Liberal Democrats,Political Party,AL0104104,Loan,500000,,nil,Outstanding,,,500000,2014-06-11,,,2014-07-30,Eastleigh
+Individual,Janet Grauberg,Individual,,,,Party,Liberal Democrats,Political Party,AL0104229,Loan,300000,,nil,Outstanding,,,300000,2014-04-08,2015-04-30,,2014-07-30,Camden Borough
