@@ -1,5 +1,6 @@
 import java.io.File
 import scala.io.StdIn
+import scala.math.BigDecimal
 import org.anormcypher.{Cypher, Neo4jREST}
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import Common._
@@ -73,7 +74,7 @@ object Query extends App {
           row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
           row[Seq[String]]("recipients").mkString("; "),
           row[Int]("donationsCount").toString,
-          row[Double]("donationsTotal").toString
+          row[BigDecimal]("donationsTotal").toString
         )
       }
       name :: results.toList
@@ -108,7 +109,7 @@ object Query extends App {
           row[Seq[String]]("matchedCompanyNumbers").mkString("; "),
           row[Seq[String]]("recipients").mkString("; "),
           row[Int]("donationsCount").toString,
-          row[Double]("donationsTotal").toString
+          row[BigDecimal]("donationsTotal").toString
         )
       }
       name :: results.toList
@@ -136,7 +137,7 @@ object Query extends App {
       List(
         row[String]("recipient"),
         row[Int]("donationsCount").toString,
-        row[Double]("donationsTotal").toString
+        row[BigDecimal]("donationsTotal").toString
       )
     }
     results.toList
