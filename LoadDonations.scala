@@ -30,7 +30,9 @@ object LoadDonations extends App {
         b.postcode = line.benefactorPostcode
       MERGE (r {name: line.recipientName}) ON CREATE SET
         r.class = line.recipientClass,
-        r.recipientRegulatedType = line.recipientRegulatedType
+        r.recipientType = line.recipientType,
+        r.recipientRegulatedType = line.recipientRegulatedType,
+        r.deregisteredDate = line.recipientDeregisteredDate
       CREATE (b)-[d:DONATED_TO {
         ecReference: line.ecReference,
         type: line.type,
@@ -52,7 +54,9 @@ object LoadDonations extends App {
         b.benefactorType = line.benefactorType
       MERGE (r {name: line.recipientName}) ON CREATE SET
         r.class = line.recipientClass,
-        r.recipientRegisteredType = line.recipientRegisteredType
+        r.recipientType = line.recipientType,
+        r.recipientRegulatedType = line.recipientRegulatedType,
+        r.deregisteredDate = line.recipientDeregisteredDate
       CREATE (b)-[d:DONATED_TO {
         ecReference: line.ecReference,
         type: line.type,

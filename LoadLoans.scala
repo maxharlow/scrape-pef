@@ -29,7 +29,8 @@ object LoadLoans extends App {
         b.benefactorAddress = line.benefactorAddress,
         b.postcode = line.benefactorPostcode
       MERGE (r {name: line.recipientName}) ON CREATE SET
-        r.class = line.recipientClass
+        r.class = line.recipientClass,
+        r.deregisteredDate = line.recipientDeregisteredDate
       CREATE (b)-[d:LOANED_TO {
         ecReference: line.ecReference,
         type: line.type,
@@ -52,7 +53,8 @@ object LoadLoans extends App {
         b.class = line.benefactorClass,
         b.benefactorType = line.benefactorType
       MERGE (r {name: line.recipientName}) ON CREATE SET
-        r.class = line.recipientClass
+        r.class = line.recipientClass,
+        r.deregisteredDate = line.recipientDeregisteredDate
       CREATE (b)-[d:LOANED_TO {
         ecReference: line.ecReference,
         type: line.type,
