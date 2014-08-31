@@ -30,6 +30,7 @@ object ExtractLoans extends App {
       "benefactorCompanyNumber",
       "recipientClass",
       "recipientName",
+      "recipientDeregisteredDate",
       "ecReference",
       "type",
       "value",
@@ -112,6 +113,11 @@ object ExtractLoans extends App {
         else "Organisation" // cannot loan to individuals
       },
       "recipientName" -> stripTitles(entry("Entity name")).replaceAll(""" \[De-registered .*\]""", "").replaceAll("Conservative and Unionist Party", "Conservative Party"),
+      "recipientDeregisteredDate" -> { // optional, de-registered parties only
+        val recipientName = entry("Entity name")
+        if (recipientName contains "De-registered") asDate(recipientName.replaceAll(".*De-registered ", ""), "dd/MM/yy]")
+        else ""
+      },
       "recipientType" -> entry("Entity type"),
       "ecReference" -> entry("EC reference"),
       "type" -> entry("Type of borrowing"),

@@ -32,6 +32,7 @@ object ExtractDonations extends App {
       "recipientName",
       "recipientType",
       "recipientRegulatedType",
+      "recipientDeregisteredDate",
       "ecReference",
       "type",
       "value",
@@ -114,6 +115,11 @@ object ExtractDonations extends App {
       "recipientName" -> stripTitles(entry("Entity name")).replaceAll(""" \[De-registered .*\]""", "").replaceAll("Conservative and Unionist Party", "Conservative Party"),
       "recipientType" -> entry("Entity type"),
       "recipientRegulatedType" -> entry("Regulated donee type"), // optional
+      "recipientDeregisteredDate" -> { // optional, de-registered parties only
+        val recipientName = entry("Entity name")
+        if (recipientName contains "De-registered") asDate(recipientName.replaceAll(".*De-registered ", ""), "dd/MM/yy]")
+        else ""
+      },
       "ecReference" -> entry("EC reference"),
       "type" -> entry("Type of donation"),
       "value" -> entry("Value").replaceAll("[^0-9]", ""), // in pence
