@@ -88,6 +88,7 @@ object ExtractLoans extends App {
       "benefactorClass" -> {
         val benefactorType = entry("Lender type")
         if (benefactorType == "Individual") "Individual"
+        else if (benefactorType == "Registered Political Party") "Party"
         else "Organisation"
       },
       "benefactorName" -> {

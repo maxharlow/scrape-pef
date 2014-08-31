@@ -86,6 +86,7 @@ object ExtractDonations extends App {
       "benefactorClass" -> {
         val benefactorType = entry("Donor type")
         if (benefactorType == "Individual" || benefactorType == "Permitted Participant") "Individual"
+        else if (benefactorType == "Registered Political Party") "Party"
         else "Organisation"
       },
       "benefactorName" -> {
