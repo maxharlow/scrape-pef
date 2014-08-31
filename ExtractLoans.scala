@@ -111,7 +111,7 @@ object ExtractLoans extends App {
         if (recipientType == "Political Party" || recipientType == "Third Party") "Party"
         else "Organisation" // cannot loan to individuals
       },
-      "recipientName" -> stripTitles(entry("Entity name")).replaceAll("Conservative and Unionist Party", "Conservative Party"),
+      "recipientName" -> stripTitles(entry("Entity name")).replaceAll(""" \[De-registered .*\]""", "").replaceAll("Conservative and Unionist Party", "Conservative Party"),
       "recipientType" -> entry("Entity type"),
       "ecReference" -> entry("EC reference"),
       "type" -> entry("Type of borrowing"),

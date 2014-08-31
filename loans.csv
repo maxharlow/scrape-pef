@@ -231,15 +231,15 @@ Individual,Chris Huhne,Individual,,,,Party,Liberal Democrats,Political Party,AL0
 Individual,David Simmons,Individual,,,,Party,Liberal Democrats,Political Party,AL0036510,Loan,386000,,Nil,Outstanding,,,386000,2007-11-30,,,2011-04-11,Camden Borough
 Individual,Idris Jones,Individual,,,,Party,Plaid Cymru - The Party of Wales,Political Party,AL0036537,Loan,101300,,Nil,Outstanding,,,101300,2007-05-19,,,2007-06-30,Ynys Mon
 Individual,Mair Owen,Individual,,,,Party,Plaid Cymru - The Party of Wales,Political Party,AL0036538,Loan,200000,,nil,Outstanding,,,200000,2007-06-01,,,2007-06-30,Ynys Mon
-Organisation,Royal Bank of Scotland,Company,26 St Andrews Square,EH2 2YB,SC090312,Party,The Progressive Party [De-registered 05/11/13],Political Party,AL0036539,Loan,10000000,,Base + 3%,Outstanding,,,10000000,2007-03-21,2008-03-21,,2007-03-31,
-Organisation,Royal Bank of Scotland,Company,26 St Andrews Square,EH2 2YB,SC090312,Party,The Progressive Party [De-registered 05/11/13],Political Party,AL0036540,Credit Facility,500000,,Base + 3%,Outstanding,,,500000,2007-03-21,2008-03-21,,2007-03-31,
-Individual,Robert Durward,Individual,,,,Party,The Progressive Party [De-registered 05/11/13],Political Party,AS0036541,Authorised Participant Security,10500000,,Not specified,Outstanding,,,10500000,2007-03-21,2008-03-21,,2007-03-31,
+Organisation,Royal Bank of Scotland,Company,26 St Andrews Square,EH2 2YB,SC090312,Party,The Progressive Party,Political Party,AL0036539,Loan,10000000,,Base + 3%,Outstanding,,,10000000,2007-03-21,2008-03-21,,2007-03-31,
+Organisation,Royal Bank of Scotland,Company,26 St Andrews Square,EH2 2YB,SC090312,Party,The Progressive Party,Political Party,AL0036540,Credit Facility,500000,,Base + 3%,Outstanding,,,500000,2007-03-21,2008-03-21,,2007-03-31,
+Individual,Robert Durward,Individual,,,,Party,The Progressive Party,Political Party,AS0036541,Authorised Participant Security,10500000,,Not specified,Outstanding,,,10500000,2007-03-21,2008-03-21,,2007-03-31,
 Organisation,Royal Bank of Scotland,Company,12 Golden Square,AB10 1DU,SC090312,Party,Scottish National Party (SNP),Political Party,AL0036553,Loan,10000000,,800%,Outstanding,,,10000000,2007-10-31,2017-10-31,,2007-12-31,North East Scotland Liaison Committee
 Organisation,Keir & Cawder Estates Ltd,Company,Craigarnhall,FK9 4NG,SC12241,Party,Scottish Voice,Political Party,AL0036558,Loan,15000000,,Nil,Outstanding,,,15000000,2007-04-01,,,2007-06-30,
 Individual,Gordon Morgan,Individual,,,,Party,Solidarity - Scotland's Socialist Movement,Political Party,AL0036560,Loan,1350000,,Nil,Ended,1350000,,,2007-04-05,2013-01-01,,2007-06-30,
-Individual,Francis Joseph Branston,Individual,,,,Party,Better Bedford Independent Party [De-registered 20/09/11],Political Party,AL0036562,Loan,700000,,Nil,Ended,662400,37600,,2007-03-03,2008-08-21,2008-08-21,2007-03-31,
-Individual,Francis Joseph Branston,Individual,,,,Party,Better Bedford Independent Party [De-registered 20/09/11],Political Party,AL0036563,Loan,1300000,,Nil,Ended,,1300000,,2007-03-07,2008-08-21,2008-08-21,2007-03-31,
-Individual,Francis Joseph Branston,Individual,,,,Party,Better Bedford Independent Party [De-registered 20/09/11],Political Party,AL0036564,Loan,1430000,,Nil,Ended,,1430000,,2007-03-22,2008-08-21,2008-08-21,2007-03-31,
+Individual,Francis Joseph Branston,Individual,,,,Party,Better Bedford Independent Party,Political Party,AL0036562,Loan,700000,,Nil,Ended,662400,37600,,2007-03-03,2008-08-21,2008-08-21,2007-03-31,
+Individual,Francis Joseph Branston,Individual,,,,Party,Better Bedford Independent Party,Political Party,AL0036563,Loan,1300000,,Nil,Ended,,1300000,,2007-03-07,2008-08-21,2008-08-21,2007-03-31,
+Individual,Francis Joseph Branston,Individual,,,,Party,Better Bedford Independent Party,Political Party,AL0036564,Loan,1430000,,Nil,Ended,,1430000,,2007-03-22,2008-08-21,2008-08-21,2007-03-31,
 Individual,Fiedrich Ewald Topham,Individual,,,,Party,Conservative Party,Political Party,AL0036587,Loan,200000,,Nil,Ended,200000,,,2007-04-05,2009-12-30,2009-12-30,2011-04-11,Thurrock
 Organisation,Knole Club,Unincorporated Association,The Mount House,TN16 1JB,,Party,Conservative Party,Political Party,AL0036589,Loan,800000,,Base + 050%,Ended,800000,,,2007-05-11,2008-06-28,2008-06-28,2011-04-11,Sevenoaks
 Individual,Dorothy Turner,Individual,,,,Party,Conservative Party,Political Party,AL0036615,Loan,104500,,Base + 100%,Ended,104500,,,2007-05-31,2007-12-18,2007-12-18,2011-04-11,South Wales Central
@@ -306,7 +306,7 @@ Individual,Francis Moore,Individual,,,,Party,Conservative Party,Political Party,
 Individual,Granville Paul Heeley,Individual,,,,Party,Conservative Party,Political Party,AL0036592,Loan,3200000,,Variable: Base,Ended,3200000,,,2008-07-01,2009-11-20,2009-11-20,2008-09-30,South East Cornwall
 Individual,Herbert Victor Aveling,Individual,,,,Party,Conservative Party,Political Party,AL0036630,Loan,411250,,Variable,Ended,411250,,,2008-05-20,2008-12-18,2008-12-18,2008-06-30,North East Cambridgeshire
 Individual,Alan Chedzoy,Individual,,,,Party,Labour Party,Political Party,AL0036681,Loan,1000000,,Nil,Ended,1000000,,,2008-05-20,2009-11-20,2009-11-20,2008-06-30,South Dorset CLP
-Individual,Ayham Zekra,Individual,,,,Party,Left List [De-registered 20/04/10],Political Party,AL0036683,Loan,1000000,,No,Ended,1000000,,,2008-07-18,2009-11-20,2009-11-20,2008-09-30,
+Individual,Ayham Zekra,Individual,,,,Party,Left List,Political Party,AL0036683,Loan,1000000,,No,Ended,1000000,,,2008-07-18,2009-11-20,2009-11-20,2008-09-30,
 Individual,John Parker,Individual,,,,Party,Liberal Democrats,Political Party,AL0036730,Loan,173900,,Nil,Ended,173900,,,2008-03-28,2008-05-19,2008-05-19,2008-03-31,Romsey & Southampton North
 Individual,John D Lewis,Individual,,,,Party,Liberal Democrats,Political Party,AL0036733,Loan,378375,,nil,Ended,378375,,,2008-06-04,2008-09-28,2008-09-28,2008-06-30,Borough of Brent
 Individual,Andy Jeffery,Individual,,,,Party,Liberal Democrats,Political Party,AL0036734,Loan,198151,,NIl,Ended,198151,,,2008-10-01,2008-11-30,2008-11-30,2008-12-31,Guildford
@@ -320,8 +320,8 @@ Individual,James Corbin Penberthy,Individual,,,,Organisation,The Difference Maga
 Individual,James Corbin Penberthy,Individual,,,,Organisation,The Difference Magazine,Regulated Donee,AL0037064,Loan,450000,,0,Outstanding,,,450000,2008-03-26,,,2008-04-07,
 Organisation,Arbuthnot Latham and Co Ltd,Company,20 Ropemaker Street,EC2Y 9AR,819519,Party,Conservative Party,Political Party,AL0037146,Credit Facility,20000000,,Base + 25%,Ended,20000000,,,2008-03-07,,2011-05-11,2011-04-28,
 Organisation,Murodigital,Unincorporated Association,Presentation House,BS24 9AX,,Party,Conservative Party,Political Party,AL0042359,Loan,3070161,,55%,Ended,3070161,,,2008-08-28,2013-08-28,2014-02-28,2011-07-28,Taunton Deane
-Individual,William Seymour Philip Richards,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship"" [De-registered 26/07/12]",Political Party,AL0036291,Loan,8500000,,Nil,Outstanding,,,8500000,2009-07-06,,,2009-09-30,
-Individual,William Seymour Philip Richards,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship"" [De-registered 26/07/12]",Political Party,AL0036292,Loan,6500000,,Nil,Outstanding,,,6500000,2009-09-28,,,2009-09-30,
+Individual,William Seymour Philip Richards,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship""",Political Party,AL0036291,Loan,8500000,,Nil,Outstanding,,,8500000,2009-07-06,,,2009-09-30,
+Individual,William Seymour Philip Richards,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship""",Political Party,AL0036292,Loan,6500000,,Nil,Outstanding,,,6500000,2009-09-28,,,2009-09-30,
 Organisation,CHoare & Co,Company,37 Fleet Street,EC4P 4DQ,240822,Party,Conservative Party,Political Party,AL0036309,Credit Facility,2000000,,25% above base,Ended,2000000,,,2009-08-11,,2011-01-14,2009-09-30,
 Organisation,CHoare & Co,Company,37 Fleet Street,EC4P 4DQ,240822,Party,Conservative Party,Political Party,AL0036310,Credit Facility,13000000,,25% over base,Ended,13000000,,,2009-01-04,,2011-01-14,2009-03-31,
 Organisation,Woodlands Schools Ltd,Company,,,1389757,Party,Conservative Party,Political Party,AL0036359,Loan,348461,,Nil,Ended,348461,,,2009-06-01,,2013-04-17,2009-06-30,Great Yarmouth
@@ -342,10 +342,10 @@ Individual,Helena Young,Individual,,,,Party,Conservative Party,Political Party,A
 Individual,Peter Sparling,Individual,,,,Party,Conservative Party,Political Party,AL0036374,Loan,500000,,Nil,Ended,,500000,,2009-12-08,,2013-10-01,2009-12-31,Elmet and Rothwell
 Individual,Martin Parry,Individual,,,,Party,Conservative Party,Political Party,AL0036375,Loan,112000,,Nil,Ended,112000,,,2009-11-06,,2012-05-17,2009-12-31,Delyn
 Individual,Martin Parry,Individual,,,,Party,Conservative Party,Political Party,AL0036376,Loan,92780,,Nil,Ended,92780,,,2009-10-02,,2012-05-17,2009-12-31,Delyn
-Individual,Paul Judge,Individual,,,,Party,Jury Team [De-registered 09/05/11],Political Party,AL0036383,Credit Facility,2000000,,Nil,Outstanding,,,2000000,2009-03-13,,,2009-03-31,
-Individual,Paul Judge,Individual,,,,Party,Jury Team [De-registered 09/05/11],Political Party,AL0036384,Loan,19195571,,Nil,Outstanding,,,19195571,2009-04-03,,,2009-06-30,
-Individual,Paul Judge,Individual,,,,Party,Jury Team [De-registered 09/05/11],Political Party,AL0036385,Loan,10850000,,Nil,Outstanding,,,10850000,2009-07-06,,,2009-09-30,
-Individual,Paul Judge,Individual,,,,Party,Jury Team [De-registered 09/05/11],Political Party,AL0036386,Loan,5710000,,Nil,Outstanding,,,5710000,2009-10-02,,,2009-12-31,
+Individual,Paul Judge,Individual,,,,Party,Jury Team,Political Party,AL0036383,Credit Facility,2000000,,Nil,Outstanding,,,2000000,2009-03-13,,,2009-03-31,
+Individual,Paul Judge,Individual,,,,Party,Jury Team,Political Party,AL0036384,Loan,19195571,,Nil,Outstanding,,,19195571,2009-04-03,,,2009-06-30,
+Individual,Paul Judge,Individual,,,,Party,Jury Team,Political Party,AL0036385,Loan,10850000,,Nil,Outstanding,,,10850000,2009-07-06,,,2009-09-30,
+Individual,Paul Judge,Individual,,,,Party,Jury Team,Political Party,AL0036386,Loan,5710000,,Nil,Outstanding,,,5710000,2009-10-02,,,2009-12-31,
 Individual,Allen Brett,Individual,,,,Party,Labour Party,Political Party,AL0036445,Loan,139300,,Nil,Outstanding,,,139300,2009-03-31,,,2009-03-31,Rochdale CLP
 Organisation,The Lionel Cooke Memorial Fund Limited,Company,39 Victoria Street,SW1H 0HA,560074,Party,Labour Party,Political Party,AS0036446,Authorised Participant Security,60000000,,Nil,Ended,60000000,,,2009-06-30,,2013-04-01,2009-06-30,
 Organisation,The Co-operative Bank plc,Company,PO Box 101,M60 4EP,990937,Party,Labour Party,Political Party,AL0036447,Credit Facility,200000000,,Base + 3%,Ended,200000000,,,2009-09-28,2010-10-31,2009-12-23,2009-09-30,
@@ -372,7 +372,7 @@ Individual,Julia Goldsworthy,Individual,,,,Party,Liberal Democrats,Political Par
 Individual,Deborah Hinton,Individual,,,,Party,Liberal Democrats,Political Party,AL0036530,Loan,300000,,Nil,Ended,300000,,,2009-12-21,2011-12-31,2011-12-31,2009-12-31,St Austell & Newquay
 Individual,Sarita Robinson,Individual,,,,Party,Liberal Democrats,Political Party,AL0036531,Loan,100000,,Nil,Ended,100000,,,2009-09-08,2010-06-30,2010-06-30,2009-09-30,Hull North
 Individual,Veronica Beadle,Individual,,,,Party,Liberal Democrats,Political Party,AL0036532,Loan,100000,,Nil,Outstanding,20000,,80000,2009-04-20,,,2009-06-30,North Norfolk & Great Yarmouth
-Individual,J M Cockburn,Individual,,,,Party,Pensioners Party [De-registered 05/11/13],Political Party,AL0036533,Loan,843600,,Nil,Outstanding,,,843600,2009-06-15,,,2009-06-30,
+Individual,J M Cockburn,Individual,,,,Party,Pensioners Party,Political Party,AL0036533,Loan,843600,,Nil,Outstanding,,,843600,2009-06-15,,,2009-06-30,
 Individual,William Wilson,Individual,,,,Party,Scottish National Party (SNP),Political Party,AL0036555,Loan,5000000,,Nil,Ended,5000000,,,2009-10-19,,2011-11-08,2009-12-31,
 Individual,Alison Copley,Individual,,,,Party,Conservative Party,Political Party,AL0036569,Loan,1000000,,7%,Ended,1000000,,,2009-02-01,2010-07-10,2010-07-10,2009-03-31,Warrington South
 Individual,Noel Copley,Individual,,,,Party,Conservative Party,Political Party,AL0036570,Loan,1000000,,7%,Ended,1000000,,,2009-02-01,2010-07-10,2010-07-10,2009-03-31,Warrington South
@@ -391,7 +391,7 @@ Individual,Richard Cornelius,Individual,,,,Party,Conservative Party,Political Pa
 Individual,Graham Old,Individual,,,,Party,Conservative Party,Political Party,AL0036637,Loan,300000,,Nil,Ended,300000,,,2009-09-23,2009-10-27,2009-10-27,2009-09-30,Finchley & Golders Green
 Individual,Mike Bird,Individual,,,,Party,Labour Party,Political Party,AL0036646,Loan,160600,,Nil,Ended,,160600,,2009-09-30,2010-03-31,2010-03-31,2009-09-30,Clwyd West CLP
 Organisation,Co-operative Bank,Company,PO Box 101,M60 4EP,990937,Party,Labour Party,Political Party,AL0036679,Credit Facility,200000000,,5% above bank base rate,Ended,200000000,,,2009-11-11,2009-12-31,2009-12-31,2009-12-31,
-Individual,Jackie Turner,Individual,,,,Party,Left List [De-registered 20/04/10],Political Party,AL0036682,Loan,1000000,,Nil,Ended,1000000,,,2009-03-19,2010-04-30,2010-04-30,2009-03-31,
+Individual,Jackie Turner,Individual,,,,Party,Left List,Political Party,AL0036682,Loan,1000000,,Nil,Ended,1000000,,,2009-03-19,2010-04-30,2010-04-30,2009-03-31,
 Individual,Baroness Sharp,Individual,,,,Party,Liberal Democrats,Political Party,AL0036694,Loan,100000,,Nil,Ended,100000,,,2009-05-26,2010-01-26,2010-01-26,2009-06-30,Guildford
 Individual,Tom Sharp,Individual,,,,Party,Liberal Democrats,Political Party,AL0036695,Loan,100000,,Nil,Ended,100000,,,2009-05-26,2010-02-22,2010-02-22,2009-06-30,Guildford
 Individual,David Simmons,Individual,,,,Party,Liberal Democrats,Political Party,AL0036696,Loan,100000,,Nil,Ended,,100000,,2009-07-09,2010-01-26,2010-01-26,2009-09-30,Camden Borough
@@ -402,13 +402,13 @@ Individual,Philip Eavis,Individual,,,,Party,Liberal Democrats,Political Party,AL
 Individual,Jeremy Hall,Individual,,,,Party,Liberal Democrats,Political Party,AL0036746,Loan,450000,,Nil,Ended,450000,,,2009-06-17,2009-09-08,2009-09-08,2009-06-30,Chippenham
 Individual,Patricia Hutton,Individual,,,,Party,Liberal Democrats,Political Party,AL0036747,Loan,200000,,Nil,Ended,100000,100000,,2009-07-02,2009-10-07,2009-10-07,2009-09-30,Camden Borough
 Individual,Joanna Kenny,Individual,,,,Party,Liberal Democrats,Political Party,AL0036749,Loan,139516,,Nil,Ended,,139516,,2009-03-30,2009-12-23,2009-12-23,2009-03-31,St Austell & Newquay
-Individual,Andrew Jamieson,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036753,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
-Individual,Andrew Jamieson,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036754,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
-Individual,Kevin O'Connell,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036755,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
-Individual,Kevin O'Connell,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036756,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
-Individual,Kevin O'Connell,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036757,Loan,50000,,Nil,Ended,,50000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
-Individual,Dan Hill,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036758,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
-Individual,Dan Hill,Individual,,,,Party,Pro Democracy: Libertaseu [De-registered 02/11/10],Political Party,AL0036759,Loan,150000,,Nil,Ended,,150000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Andrew Jamieson,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036753,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Andrew Jamieson,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036754,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Kevin O'Connell,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036755,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Kevin O'Connell,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036756,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Kevin O'Connell,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036757,Loan,50000,,Nil,Ended,,50000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Dan Hill,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036758,Loan,500000,,Nil,Ended,,500000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
+Individual,Dan Hill,Individual,,,,Party,Pro Democracy: Libertaseu,Political Party,AL0036759,Loan,150000,,Nil,Ended,,150000,,2009-05-06,2010-06-30,2010-06-30,2009-06-30,
 Individual,Alastair Whitelaw,Individual,,,,Party,Scottish Green Party,Political Party,AL0036763,Loan,506000,,Nil,Ended,506000,,,2009-05-01,2009-05-06,2009-05-06,2009-06-30,
 Individual,Anthony Micklethwait,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0036774,Loan,575000,,Nil,Ended,200000,375000,,2009-09-28,2010-01-01,2010-01-01,2009-09-30,
 Individual,Nikki Sinclaire,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0036779,Loan,240000,,Nil,Ended,240000,,,2009-03-29,2009-04-29,2009-04-29,2009-03-31,West Midlands
@@ -416,7 +416,7 @@ Individual,Alan Wood,Individual,,,,Party,UK Independence Party (UKIP),Political 
 Individual,David Bendall,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0036782,Loan,200000,,Nil,Ended,200000,,,2009-05-29,2009-08-31,2009-08-31,2009-06-30,South West
 Individual,Adrian Blake,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0036783,Loan,200000,,Nil,Ended,200000,,,2009-05-16,2009-08-31,2009-08-31,2009-06-30,South West
 Individual,John Kelly,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0036784,Loan,200000,,Nil,Ended,200000,,,2009-05-21,2009-08-31,2009-08-31,2009-06-30,South West
-Individual,William Philip Seymour Richards,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship"" [De-registered 26/07/12]",Political Party,AL0036290,Loan,5000000,,Nil,Outstanding,,,5000000,2010-06-07,,,2010-06-30,
+Individual,William Philip Seymour Richards,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship""",Political Party,AL0036290,Loan,5000000,,Nil,Outstanding,,,5000000,2010-06-07,,,2010-06-30,
 Organisation,Lloyds TSB Bank PLC,Company,25 Gresham Street,EC2V 7HN,2065,Party,Conservative Party,Political Party,AL0036293,Credit Facility,2500000,,Base +3%,Ended,2500000,,,2010-04-10,,2012-09-14,2011-04-11,Yeovil
 Individual,Jasmine Chesters,Individual,,,,Party,Conservative Party,Political Party,AL0036294,Loan,1100000,,Fixed: 675%,Outstanding,,,1100000,2010-09-20,,,2010-09-30,North Devon
 Individual,Margot Gregory,Individual,,,,Party,Conservative Party,Political Party,AL0036295,Loan,300000,,Nil,Ended,300000,,,2010-10-22,,2011-02-05,2010-12-31,Wokingham
@@ -433,8 +433,8 @@ Organisation,Woodlands School Ltd,Company,428 Rayleigh Road,CM13 1SD,1389757,Par
 Individual,Brian Steward,Individual,,,,Party,Conservative Party,Political Party,AL0036306,Loan,500000,,Nil,Outstanding,,,500000,2010-02-12,,,2010-03-31,North Tyneside Federation
 Individual,Geoffrey N Crass,Individual,,,,Party,Conservative Party,Political Party,AL0036307,Loan,278200,,Nil,Ended,,278200,,2010-01-04,,2011-10-06,2010-03-31,Sedgefield
 Organisation,Ford Memorial Trust,Unincorporated Association,c/o Geoff Gollop,BS1 5QT,,Party,Conservative Party,Political Party,AL0036308,Loan,2500000,,Nil,Outstanding,,,2500000,2010-02-05,,,2010-03-31,Bristol West
-Individual,Paul Judge,Individual,,,,Party,Jury Team [De-registered 09/05/11],Political Party,AL0036381,Loan,8000000,,Nil,Outstanding,,,8000000,2010-04-01,,,2010-06-30,
-Individual,Paul Judge,Individual,,,,Party,Jury Team [De-registered 09/05/11],Political Party,AL0036382,Loan,8150000,,Nil,Outstanding,,,8150000,2010-01-20,,,2010-03-31,
+Individual,Paul Judge,Individual,,,,Party,Jury Team,Political Party,AL0036381,Loan,8000000,,Nil,Outstanding,,,8000000,2010-04-01,,,2010-06-30,
+Individual,Paul Judge,Individual,,,,Party,Jury Team,Political Party,AL0036382,Loan,8150000,,Nil,Outstanding,,,8150000,2010-01-20,,,2010-03-31,
 Individual,Mark Mildred,Individual,,,,Party,Labour Party,Political Party,AL0036387,Loan,200000,,Nil,Ended,200000,,,2010-12-10,2012-12-31,2012-05-04,2010-12-31,Battersea CLP
 Organisation,Dumfries and Galloway Labour Group,Unincorporated Association,Council Offices,DG1 2DD,,Party,Labour Party,Political Party,AL0036388,Loan,64700,,Nil,Ended,64700,,,2010-12-01,,2011-11-16,2010-12-31,"Dumfriesshire, Clydesdale and Tweeddale CLP DR"
 Organisation,Wealdstone Labour Halls Limited,Company,c/o Sproull & Co,HA1 1EJ,258706,Party,Labour Party,Political Party,AL0036389,Loan,150000,,Nil,Ended,150000,,,2010-03-11,,2013-07-31,2010-03-31,Harrow East CLP
@@ -478,7 +478,7 @@ Individual,Mark Crowne,Individual,,,,Party,Liberal Democrats,Political Party,AL0
 Individual,John Richmond,Individual,,,,Party,Liberal Democrats,Political Party,AL0036482,Loan,200000,,Nil,Ended,200000,,,2010-01-04,2011-06-01,2010-09-11,2010-03-31,Watford
 Individual,John Ferguson,Individual,,,,Party,Scottish National Party (SNP),Political Party,AL0036545,Loan,1000000,,Nil,Ended,1000000,,,2010-11-11,2011-06-30,2011-08-08,2010-12-31,
 Individual,Angus Tulloch,Individual,,,,Party,Scottish National Party (SNP),Political Party,AL0036546,Loan,5000000,,Nil,Ended,5000000,,,2010-04-01,,2012-07-02,2006-03-31,
-Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11],Political Party,AL0036561,Credit Facility,2000000,,Nil,Ended,,2000000,,2010-03-26,2010-06-01,2010-09-30,2010-03-31,
+Individual,John Stuart Wheeler,Individual,,,,Party,Trust,Political Party,AL0036561,Credit Facility,2000000,,Nil,Ended,,2000000,,2010-03-26,2010-06-01,2010-09-30,2010-03-31,
 Individual,John Fenty,Individual,,,,Party,Conservative Party,Political Party,AL0036565,Loan,2000000,,Nil,Ended,2000000,,,2010-02-02,2010-12-21,2010-12-21,2010-03-31,Great Grimsby
 Individual,Victoria Ayling,Individual,,,,Party,Conservative Party,Political Party,AL0036566,Loan,539583,,Nil,Ended,539583,,,2010-06-04,2010-12-21,2010-12-21,2011-04-11,Great Grimsby
 Individual,Steven Schrier,Individual,,,,Party,Conservative Party,Political Party,AL0036567,Loan,1000000,,Nil,Ended,1000000,,,2010-03-30,2010-11-17,2010-11-17,2010-03-31,Havant
@@ -509,9 +509,9 @@ Individual,John Spellar,Individual,,,,Organisation,Edward Balls,Regulated Donee,
 Organisation,The Royal Bank of Scotland,Company,36 ST ANDREW SQUARE,EH2 2YB,SC090312,Organisation,Lisa Eve Nandy,Regulated Donee,AL0037061,Credit Facility,300000,,0,Outstanding,,,300000,2010-03-05,,,2010-06-07,
 Organisation,Lloyds TSB,Company,25 GRESHAM STREET,EC2V 7HN,2652402,Organisation,Valerie Vaz,Regulated Donee,AL0037062,Credit Facility,350000,,148,Outstanding,,,350000,2010-05-24,,,2010-06-04,
 Individual,Felicia Gavron,Individual,,,,Organisation,Kenneth Livingstone,Regulated Donee,AL0037065,Loan,500000,,Not specified,Outstanding,,,500000,2010-07-01,,,2010-07-21,
-Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11],Political Party,AL0037134,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-06,2011-09-30,2010-09-30,2011-04-07,
-Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11],Political Party,AL0037135,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-13,2029-01-29,2010-09-30,2011-04-07,
-Individual,John Stuart Wheeler,Individual,,,,Party,Trust [De-registered 12/04/11],Political Party,AL0037136,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-20,2026-01-29,2010-09-30,2011-04-07,
+Individual,John Stuart Wheeler,Individual,,,,Party,Trust,Political Party,AL0037134,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-06,2011-09-30,2010-09-30,2011-04-07,
+Individual,John Stuart Wheeler,Individual,,,,Party,Trust,Political Party,AL0037135,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-13,2029-01-29,2010-09-30,2011-04-07,
+Individual,John Stuart Wheeler,Individual,,,,Party,Trust,Political Party,AL0037136,Credit Facility,4000000,,Not specified,Ended,,4000000,,2010-04-20,2026-01-29,2010-09-30,2011-04-07,
 Individual,Peter Walker,Individual,,,,Party,Liberal Democrats,Political Party,AL0037218,Loan,300000,,Nil,Ended,300000,,,2010-12-01,2011-12-31,2012-06-30,2011-04-28,Warrington
 Organisation,National Westminster Bank Plc,Company,225 High Street,LN2 1AZ,929027,Party,Conservative Party,Political Party,AL0042333,Credit Facility,6000000,,Base +3%,Ended,6000000,,,2010-04-01,,2014-05-13,2011-07-28,Taunton Deane
 Individual,Alex Feakes,Individual,,,,Party,Liberal Democrats,Political Party,AL0088829,Loan,329340,,Nil,Ended,,329340,,2010-04-23,2013-04-30,2013-01-06,2013-04-29,Lewisham & North Beckenham
@@ -519,8 +519,8 @@ Individual,Stephen Locke,Individual,,,,Party,Liberal Democrats,Political Party,A
 Individual,Jennifer Smiley,Individual,,,,Party,Labour Party,Political Party,AL0037129,Loan,300000,,Nil,Outstanding,,,300000,2011-01-01,,,2011-04-28,Wallasey CLP
 Individual,Angus Tulloch,Individual,,,,Party,Scottish National Party (SNP),Political Party,AL0037131,Loan,7500000,,Nil,Ended,7500000,,,2011-02-25,,2012-07-02,2011-04-30,
 Individual,William Wilson,Individual,,,,Party,Scottish National Party (SNP),Political Party,AL0037132,Loan,3000000,,Nil,Ended,3000000,,,2011-02-08,,2012-02-08,2011-04-30,
-Individual,The Reverend James George Hargreaves,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship"" [De-registered 26/07/12]",Political Party,AL0037138,Loan,200000,,Not specified,Outstanding,,,200000,2011-03-29,,,2011-04-30,
-Individual,Donald Boyd,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship"" [De-registered 26/07/12]",Political Party,AL0037139,Loan,100000,,Not specified,Outstanding,,,100000,2011-03-22,,,2011-04-30,
+Individual,The Reverend James George Hargreaves,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship""",Political Party,AL0037138,Loan,200000,,Not specified,Outstanding,,,200000,2011-03-29,,,2011-04-30,
+Individual,Donald Boyd,Individual,,,,Party,"Christian Party ""Proclaiming Christ's Lordship""",Political Party,AL0037139,Loan,100000,,Not specified,Outstanding,,,100000,2011-03-22,,,2011-04-30,
 Individual,Lord Malcolm Pearson,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0037140,Loan,1152000,,Nil,Ended,1152000,,,2011-01-07,2012-12-31,2012-03-22,2011-04-21,United Kingdom Independence Party Limited
 Organisation,Bowns Bags & Luggage,Company,Unit 2A,RM10 8XE,6727338,Party,UK Independence Party (UKIP),Political Party,AL0037141,Loan,2500000,,Nil,Ended,,2500000,,2011-03-29,2012-12-31,2011-12-14,2011-04-21,
 Individual,Stuart Wheeler,Individual,,,,Party,UK Independence Party (UKIP),Political Party,AL0037145,Loan,2500000,,Nil,Ended,,2500000,,2011-03-14,2012-12-31,2011-12-06,2011-04-21,

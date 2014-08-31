@@ -91,7 +91,7 @@ object ExtractDonations extends App {
       },
       "benefactorName" -> {
         val name = entry("Donor name")
-        if (entry("Donor type") == "Individual") stripTitles(name)
+        if (entry("Donor type") == "Individual") stripTitles(name).replaceAll(" - Sponsorship", "")
         else if (!name.contains(", ")) name
         else name.split(", ").head // split from address
       },
@@ -111,7 +111,7 @@ object ExtractDonations extends App {
         else if (recipientRegulatedType == "Members Association" || recipientRegulatedType == "Permitted Participant") "Organisation"
         else "Individual"
       },
-      "recipientName" -> stripTitles(entry("Entity name")).replaceAll("Conservative and Unionist Party", "Conservative Party"),
+      "recipientName" -> stripTitles(entry("Entity name")).replaceAll(""" \[De-registered .*\]""", "").replaceAll("Conservative and Unionist Party", "Conservative Party"),
       "recipientType" -> entry("Entity type"),
       "recipientRegulatedType" -> entry("Regulated donee type"), // optional
       "ecReference" -> entry("EC reference"),
