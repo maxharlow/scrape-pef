@@ -106,7 +106,11 @@ object ExtractLoans extends App {
         else ""
       },
       "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
-      "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", ""), // optional
+      "benefactorCompanyNumber" -> {
+        val benefactorType = entry("Lender type")
+        if (benefactorType == "Registered Political Party") "" // parties shouldn't have company numbers
+        else entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
+      },
       "recipientClass" -> {
         val recipientType = entry("Entity type")
         if (recipientType == "Political Party" || recipientType == "Third Party") "Party"
