@@ -95,15 +95,15 @@ object ExtractLoans extends App {
       "benefactorName" -> {
         val name = entry("Lender name")
         if (entry("Lender type") == "Individual") stripTitles(name)
-        else if (!name.contains(", ")) name
-        else name.split(", ").head // split from address
+        else if (name contains ", ") name.split(", ").init.mkString(", ") // split from address
+        else name
       },
       "benefactorType" -> entry("Lender type"),
       "benefactorAddress" -> {
         val name = entry("Lender name")
         if (entry("Lender type") == "Individual") ""
-        else if (!name.contains(", ")) ""
-        else name.split(", ").tail.mkString(", ").replaceAll("^(A)$|^(NA)$", "") // split from name
+        else if (name contains ", ") name.split(", ").last.replaceAll("^(A)$|^(NA)$", "") // split from name
+        else ""
       },
       "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
       "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", ""), // optional

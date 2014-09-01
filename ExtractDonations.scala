@@ -91,17 +91,17 @@ object ExtractDonations extends App {
         else "Organisation"
       },
       "benefactorName" -> {
-        val name = entry("Donor name")
-        if (entry("Donor type") == "Individual") stripTitles(name).replaceAll(" - Sponsorship", "")
-        else if (!name.contains(", ")) name
-        else name.split(", ").head // split from address
+        val name = entry("Donor name").replaceAll(" - Sponsorship", "")
+        if (entry("Donor type") == "Individual") stripTitles(name)
+        else if (name contains ", ") name.split(", ").init.mkString(", ") // split from address
+        else name
       },
       "benefactorType" -> entry("Donor type"),
       "benefactorAddress" -> {
         val name = entry("Donor name")
         if (entry("Donor type") == "Individual") ""
-        else if (!name.contains(", ")) ""
-        else name.split(", ").tail.mkString(", ").replaceAll("^(A)$|^(NA)$", "") // split from name
+        else if (name contains ", ") name.split(", ").last.replaceAll("^(A)$|^(NA)$", "") // split from name
+        else ""
       },
       "benefactorPostcode" -> stripFakePostcodes(entry("Postcode")), // optional
       "benefactorCompanyNumber" -> entry("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", ""), // optional
