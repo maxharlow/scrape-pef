@@ -21,10 +21,8 @@ object LoadDonations extends App {
     val query = {
       s"LOAD CSV WITH HEADERS FROM 'file://${file.getAbsolutePath}' AS line" +
       """
-      FOREACH(companyNumber IN (CASE WHEN line.benefactorCompanyNumber <> '' THEN [line.benefactorCompanyNumber] ELSE [] END) |
-      MERGE (b {companyNumber: companyNumber}) ON CREATE SET
+      MERGE (b {name: line.benefactorName, companyNumber: line.benefactorCompanyNumber}) ON CREATE SET
         b.class = line.benefactorClass,
-        b.name = line.benefactorName,
         b.benefactorType = line.benefactorType,
         b.address = line.benefactorAddress,
         b.postcode = line.benefactorPostcode
@@ -47,31 +45,6 @@ object LoadDonations extends App {
         reportedUnder6212: line.reportedUnder6212,
         isSponsorship: line.isSponsorship
       }]->(r)
-      )
-      FOREACH(name IN (CASE WHEN line.benefactorCompanyNumber = '' THEN [line.benefactorName] ELSE [] END) |
-      MERGE (b {name: name}) ON CREATE SET
-        b.class = line.benefactorClass,
-        b.benefactorType = line.benefactorType
-      MERGE (r {name: line.recipientName}) ON CREATE SET
-        r.class = line.recipientClass,
-        r.recipientType = line.recipientType,
-        r.recipientRegulatedType = line.recipientRegulatedType,
-        r.deregisteredDate = line.recipientDeregisteredDate
-      CREATE (b)-[d:DONATED_TO {
-        ecReference: line.ecReference,
-        type: line.type,
-        value: toInt(line.value),
-        acceptedDate: toInt(replace(line.acceptedDate, '-', '')),
-        receivedDate: toInt(replace(line.receivedDate, '-', '')),
-        reportedDate: toInt(replace(line.reportedDate, '-', '')),
-        nature: line.nature,
-        purpose: line.purpose,
-        howDealtWith: line.howDealtWith,
-        recordedBy: line.recordedBy,
-        reportedUnder6212: line.reportedUnder6212,
-        isSponsorship: line.isSponsorship
-      }]->(r)
-      )
       """
     }
     println("Loading donations...")

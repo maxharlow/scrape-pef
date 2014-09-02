@@ -21,12 +21,10 @@ object LoadLoans extends App {
     val query = {
       s"LOAD CSV WITH HEADERS FROM 'file://${file.getAbsolutePath}' AS line" +
       """
-      FOREACH(companyNumber IN (CASE WHEN line.benefactorCompanyNumber <> '' THEN [line.benefactorCompanyNumber] ELSE [] END) |
-      MERGE (b {companyNumber: companyNumber}) ON CREATE SET
+      MERGE (b {name: line.benefactorName, companyNumber: line.benefactorCompanyNumber}) ON CREATE SET
         b.class = line.benefactorClass,
-        b.name = line.benefactorName,
         b.benefactorType = line.benefactorType,
-        b.benefactorAddress = line.benefactorAddress,
+        b.address = line.benefactorAddress,
         b.postcode = line.benefactorPostcode
       MERGE (r {name: line.recipientName}) ON CREATE SET
         r.class = line.recipientClass,
@@ -47,31 +45,6 @@ object LoadLoans extends App {
         ecLastNotifiedDate: toInt(replace(line.ecLastNotifiedDate, '-', '')),
         recordedBy: line.recordedBy
       }]->(r)
-      )
-      FOREACH(name IN (CASE WHEN line.benefactorCompanyNumber = '' THEN [line.benefactorName] ELSE [] END) |
-      MERGE (b {name: name}) ON CREATE SET
-        b.class = line.benefactorClass,
-        b.benefactorType = line.benefactorType
-      MERGE (r {name: line.recipientName}) ON CREATE SET
-        r.class = line.recipientClass,
-        r.deregisteredDate = line.recipientDeregisteredDate
-      CREATE (b)-[d:LOANED_TO {
-        ecReference: line.ecReference,
-        type: line.type,
-        value: toInt(line.value),
-        referenceNumber: line.referenceNumber,
-        rate: line.rate,
-        status: line.status,
-        amountRepaid: line.amountRepaid,
-        amountConverted: line.amountConverted,
-        amountOutstanding: line.amountOutstanding,
-        startDate: toInt(replace(line.startDate, '-', '')),
-        endDate: toInt(replace(line.endDate, '-', '')),
-        repaidDate: toInt(replace(line.repaidDate, '-', '')),
-        ecLastNotifiedDate: toInt(replace(line.ecLastNotifiedDate, '-', '')),
-        recordedBy: line.recordedBy
-      }]->(r)
-      )
       """
     }
     println("Loading loans...")
