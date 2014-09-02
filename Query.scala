@@ -117,7 +117,7 @@ object Query extends App {
   }
 
   /*
-    List the top ten party recepients of donations reported (not received or accepted!) since the given date
+    List the top ten party recepients of donations accepted (not received or reported!) since the given date
     Doesn't include public funds!
    */
   def queryTopRecipients(): List[List[String]] = {
@@ -125,7 +125,7 @@ object Query extends App {
     val query = {
       s"""
         MATCH (b)-[d:DONATED_TO]->(r:Party)
-        WHERE d.reportedDate >= $date
+        WHERE d.acceptedDate >= $date
         AND d.type <> 'Public Funds'
         RETURN
           r.name AS recipient,
