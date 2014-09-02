@@ -117,7 +117,8 @@ object Query extends App {
   }
 
   /*
-    List the top ten party recepients of donations reported (not received!) since the given date
+    List the top ten party recepients of donations reported (not received or accepted!) since the given date
+    Doesn't include public funds!
    */
   def queryTopRecipients(): List[List[String]] = {
     val date = StdIn.readLine("From date (yyyy-mm-dd):\n=> ").replace("-", "")
