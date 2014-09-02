@@ -50,7 +50,7 @@ object LinkCompanies extends App {
   }
 
   def companyNumbers: List[String] = { // todo if has no number lookup by name else lookup by number (failures fallback to lookup by name)
-    val query = Cypher("MATCH (n) WHERE has(n.companyNumber) RETURN n.companyNumber AS number").apply()
+    val query = Cypher("MATCH (n) WHERE n.companyNumber <> '' RETURN n.companyNumber AS number").apply()
     query.map(_[String]("number")).toList
   }
 
