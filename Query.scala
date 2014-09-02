@@ -28,7 +28,8 @@ object Query extends App {
     val query = StdIn.readLine("Query name:\n=> ") match {
       case "direct" => queryDirectDonations
       case "indirect" => queryIndirectDonations
-      case "top" => queryTopRecipients
+      case "received" => queryReceived
+      case "top" => queryTopDonations
       case _ => sys.exit()
     }
     val outputFile = StdIn.readLine("Output file:\n=> ")
@@ -117,10 +118,10 @@ object Query extends App {
   }
 
   /*
-    List the top ten party recepients of donations accepted (not received or reported!) since the given date
+    The total amount donated to each party -- accepted (not received or reported!) since the given date
     Doesn't include public funds!
    */
-  def queryTopRecipients(): List[List[String]] = {
+  def queryReceived(): List[List[String]] = {
     val date = StdIn.readLine("From date (yyyy-mm-dd):\n=> ").replace("-", "")
     val query = {
       s"""
@@ -139,6 +140,38 @@ object Query extends App {
         row[String]("recipient"),
         row[Int]("donationsCount").toString,
         row[BigDecimal]("donationsTotal").toString
+      )
+    }
+    results.toList
+  }
+
+
+  /*
+    The top ten individual donations by size -- accepted (not received or reported!) since the given date
+    Doesn't include public funds!
+   */
+  def queryTopDonations(): List[List[String]] = {
+    val date = StdIn.readLine("From date (yyyy-mm-dd):\n=> ").replace("-", "")
+    val query = {
+      s"""
+        MATCH (b)-[d:DONATED_TO]->(r:Party)
+        WHERE d.acceptedDate >= $date
+        AND d.type <> 'Public Funds'
+        RETURN
+          b.name AS benefactor,
+          r.name AS recipient,
+          d.acceptedDate AS date,
+          d.value / 100.0 AS donationAmount
+        ORDER BY donationAmount DESC
+        LIMIT 10
+      """
+    }
+    val results = Cypher(query).apply() map { row =>
+      List(
+        row[String]("benefactor"),
+        row[String]("recipient"),
+        row[Int]("date").toString,
+        row[BigDecimal]("donationAmount").toString
       )
     }
     results.toList
