@@ -11,6 +11,7 @@ Querying uses Neo4j legacy indexing for full-text search until something better 
 To set it up:
 
  $ curl -vX POST -H 'Content-Type: application/json' -d '{"name":"node_auto_index","config":{"type":"fulltext","provider":"lucene"}}' localhost:7474/db/data/index/node/
+    (if you get an error try rm -rf /usr/local/Cellar/neo4j/2.1.1/libexec/data/graph.db/index*)
  $ sed -i bak 's/#node_auto_indexing/node_auto_indexing/g' /usr/local/Cellar/neo4j/2.1.1/libexec/conf/neo4j.properties
  $ sed -i bak 's/#node_keys_indexable/node_keys_indexable/g' /usr/local/Cellar/neo4j/2.1.1/libexec/conf/neo4j.properties
  $ neo4j restart
