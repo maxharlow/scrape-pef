@@ -30,7 +30,8 @@ object Query extends App {
       case "direct" => queryDirectDonations
       case "indirect" => queryIndirectDonations
       case "received" => queryReceived
-      case "top" => queryTopDonations
+      case "top-donors" => queryTopDonors
+      case "top-donations" => queryTopDonations
       case _ => sys.exit()
     }
     val outputFile = StdIn.readLine("Output file:\n=> ")
@@ -146,6 +147,36 @@ object Query extends App {
     results.toList
   }
 
+  /*
+    The top ten donors -- accepted (not received or reported!) since the given date
+    Doesn't include public funds!
+   */
+  def queryTopDonors(): List[List[String]] = {
+    val date = StdIn.readLine("From date (yyyy-mm-dd):\n=> ").replace("-", "")
+    val query = {
+      s"""
+        MATCH (b)-[d:DONATED_TO]->(r:Party)
+        WHERE d.acceptedDate >= $date
+        AND d.type <> 'Public Funds'
+        RETURN
+          b.name AS benefactor,
+          r.name AS recipient,
+          count(d) AS donationsCount,
+          sum(d.value) / 100.0 AS donationsTotal
+        ORDER BY donationsTotal DESC
+        LIMIT 10
+      """
+    }
+    val results = Cypher(query).apply() map { row =>
+      List(
+        row[String]("benefactor"),
+        row[String]("recipient"),
+        row[Int]("donationsCount").toString,
+        row[BigDecimal]("donationsTotal").toString
+      )
+    }
+    results.toList
+  }
 
   /*
     The top ten individual donations by size -- accepted (not received or reported!) since the given date
