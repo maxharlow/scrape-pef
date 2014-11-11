@@ -7,7 +7,7 @@ import com.gargoylesoftware.htmlunit.html._
 import com.github.tototoshi.csv.{CSVReader, CSVWriter}
 import Common._
 
-object ExtractDonations extends App {
+object Donations extends App {
 
   run()
 
