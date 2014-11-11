@@ -9,14 +9,6 @@ import Common._
 
 object ExtractDonations extends App {
 
-  println("""
-    ___  __     __
-   / _ \/ /_ __/ /____
-  / ___/ / // / __/ _ \
- /_/  /_/\_,_/\__/\___/
-
-  """)
-
   run()
 
   def run() {
