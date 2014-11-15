@@ -349,7 +349,7 @@ Individual,Paul Judge,Individual,,,,Party,Jury Team,2011-05-09,Political Party,A
 Individual,Allen Brett,Individual,,,,Party,Labour Party,,Political Party,AL0036445,Loan,139300,,Nil,Outstanding,,,139300,2009-03-31,,,2009-03-31,Rochdale CLP
 Organisation,The Lionel Cooke Memorial Fund Limited,Company,39 Victoria Street,SW1H 0HA,560074,Party,Labour Party,,Political Party,AS0036446,Authorised Participant Security,60000000,,Nil,Ended,60000000,,,2009-06-30,,2013-04-01,2009-06-30,
 Organisation,The Co-operative Bank plc,Company,PO Box 101,M60 4EP,990937,Party,Labour Party,,Political Party,AL0036447,Credit Facility,200000000,,Base + 3%,Ended,200000000,,,2009-09-28,2010-10-31,2009-12-23,2009-09-30,
-Individual,Diane Whitford,Individual,,,,Party,Labour Party,,Political Party,AL0036448,Loan,500000,,Nil,Outstanding,125000,,375000,2009-07-28,2015-12-31,,2009-09-30,Stroud CLP
+Individual,Diane Whitford,Individual,,,,Party,Labour Party,,Political Party,AL0036448,Loan,500000,,Nil,Ended,500000,,,2009-07-28,2015-12-31,2014-07-07,2009-09-30,Stroud CLP
 Individual,Deion Smith,Individual,,,,Party,Labour Party,,Political Party,AL0036449,Loan,215000,,Nil,Outstanding,,,215000,2009-09-30,,,2009-09-30,Clwyd West CLP
 Organisation,The Co-operative Bank plc,Company,PO Box 101,M60 4EP,990937,Party,Labour Party,,Political Party,AL0036450,Loan,400000,,Base +4%,Ended,400000,,,2009-07-03,2012-07-31,2012-07-31,2009-09-30,Islington South and Finsbury CLP
 Organisation,Wealdstone Labour Hall Limited,Company,c/o Sproull & co,HA1 1EJ,990937,Party,Labour Party,,Political Party,AL0036451,Loan,250000,,Nil,Outstanding,78000,,172000,2009-10-22,,,2009-12-31,Harrow West CLP
@@ -422,7 +422,7 @@ Individual,Jasmine Chesters,Individual,,,,Party,Conservative Party,,Political Pa
 Individual,Margot Gregory,Individual,,,,Party,Conservative Party,,Political Party,AL0036295,Loan,300000,,Nil,Ended,300000,,,2010-10-22,,2011-02-05,2010-12-31,Wokingham
 Organisation,BNP Paribas Lease Group (Rentals) Plc,Company,St James Court,B51 3LH,2133823,Party,Conservative Party,,Political Party,AL0036296,Loan,379224,,Fixed 94%,Outstanding,,,379224,2010-09-07,2015-09-07,,2010-09-30,Totnes
 Individual,Andrew Bridgen,Individual,,,,Party,Conservative Party,,Political Party,AL0036297,Loan,300000,,Nil,Ended,300000,,,2010-09-01,,2012-06-11,2010-09-30,North West Leicestershire
-Individual,James H Holt,Individual,,,,Party,Conservative Party,,Political Party,AL0036298,Loan,421000,,Nil,Outstanding,,,421000,2010-09-28,,,2010-09-30,Thirsk and Malton
+Individual,James H Holt,Individual,,,,Party,Conservative Party,,Political Party,AL0036298,Loan,421000,,Nil,Ended,421000,,,2010-09-28,,2014-07-07,2010-09-30,Thirsk and Malton
 Organisation,Ford Memorial Trust,Unincorporated Association,c/o Geoff Gollop,BS1 5QT,,Party,Conservative Party,,Political Party,AL0036299,Loan,1000000,,Nil,Outstanding,,,1000000,2010-07-30,,,2010-09-30,Bristol West
 Organisation,Royal Bank of Scotland,Company,6 The Square,TD5 7HG,SC090312,Party,Conservative Party,,Political Party,AL0036300,Loan,5000000,,Fixed 85%,Outstanding,,,5000000,2010-05-14,,,2011-04-11,"Berwickshire, Roxburgh & Selkirk"
 Individual,A B Palmer,Individual,,,,Party,Conservative Party,,Political Party,AL0036301,Loan,550000,,Nil,Ended,550000,,,2010-06-01,,2013-06-26,2011-04-11,Elmet and Rothwell
@@ -581,7 +581,7 @@ Organisation,Watford Labour Halls Limited,Friendly Society,270 St Albans Road,WD
 Organisation,Cronfa Goffa O M Roberts,Other,Hen Efail,LL54 7YH,,Party,Plaid Cymru - The Party of Wales,,Political Party,AL0079286,Loan,1000000,,3%,Ended,1000000,,,2012-04-23,2012-11-01,2012-09-05,2012-07-25,
 Individual,S Squires,Individual,,,,Party,British National Party,,Political Party,AL0080596,Loan,1225000,,0,Ended,1225000,,,2012-03-28,2012-06-19,2012-06-16,2012-07-30,
 Individual,Gerald Vernon-Jackson,Individual,,,,Party,Liberal Democrats,,Political Party,AL0080598,Loan,200000,,0,Ended,200000,,,2012-04-11,,2012-06-06,2012-07-30,Portsmouth
-Individual,Anne Winstanley,Individual,,,,Party,Liberal Democrats,,Political Party,AL0080599,Loan,250000,,0,Outstanding,,,250000,2012-04-19,,,2012-07-30,Eastleigh
+Individual,Anne Winstanley,Individual,,,,Party,Liberal Democrats,,Political Party,AL0080599,Loan,250000,,0,Outstanding,200000,,50000,2012-04-19,,,2012-07-30,Eastleigh
 Individual,John Mallinson,Individual,,,,Party,Conservative Party,,Political Party,AL0082712,Loan,1900000,,Base + 3%,Outstanding,,,1900000,2012-06-26,2019-08-26,,2012-10-26,Penrith & The Border
 Individual,Anne Elizabeth Mallinson,Individual,,,,Party,Conservative Party,,Political Party,AL0082713,Loan,1900000,,Base + 3%,Outstanding,,,1900000,2012-06-26,2019-08-26,,2012-10-26,Carlisle
 Organisation,Lloyds TSB Bank PLC,Company,25 Gresham Street,EC2V 7HN,2065,Party,Conservative Party,,Political Party,AL0082812,Loan,5176500,,Base + 434%,Outstanding,,,5176500,2012-09-21,2027-09-21,,2012-10-26,Yeovil
@@ -595,8 +595,8 @@ Individual,James Bedford,Individual,,,,Party,Conservative Party,,Political Party
 Individual,Stuart Wheeler,Individual,,,,Party,UK Independence Party (UKIP),,Political Party,AL0085010,Loan,8000000,,0%,Ended,8000000,,,2012-10-09,,2012-12-18,2013-01-30,
 Individual,Godfrey Bloom,Individual,,,,Party,UK Independence Party (UKIP),,Political Party,AL0085028,Loan,700000,,0%,Ended,,700000,,2012-11-08,,2014-06-30,2013-01-30,Yorkshire & the Humber Regional Branch
 Organisation,The Co-Operative Bank PLC,Company,1 Balloon Street,M60 4EP,990937,Organisation,Oliver Martins,,Regulated Donee,AL0087023,Loan,1250000,,101%,Outstanding,,,1250000,2012-12-17,2015-12-17,,2013-01-23,
-Individual,Simon Hall,Individual,,,,Party,Labour Party,,Political Party,AL0087472,Loan,233200,,Nil,Outstanding,,,233200,2012-10-12,,,2013-04-30,Croydon Local Campaign Forum
-Individual,James H Holt,Individual,,,,Party,Conservative Party,,Political Party,AL0087066,Loan,460000,,Nil,Outstanding,,,460000,2013-03-28,,,2013-04-29,Thirsk and Malton
+Individual,Simon Hall,Individual,,,,Party,Labour Party,,Political Party,AL0087472,Loan,233200,,Nil,Ended,233200,,,2012-10-12,,2014-09-19,2013-04-30,Croydon Local Campaign Forum
+Individual,James H Holt,Individual,,,,Party,Conservative Party,,Political Party,AL0087066,Loan,460000,,Nil,Ended,460000,,,2013-03-28,,2014-07-07,2013-04-29,Thirsk and Malton
 Individual,Judith Morris,Individual,,,,Party,UK Independence Party (UKIP),,Political Party,AL0087158,Loan,200000,,000%,Ended,,200000,,2013-01-24,,2014-06-30,2013-04-30,Yorkshire & the Humber Regional Branch
 Individual,Christine Stevens,Individual,,,,Party,Liberal Democrats,,Political Party,AL0087473,Loan,500000,,0,Outstanding,,,500000,2013-03-08,2015-03-31,,2013-04-29,Portsmouth
 Individual,Simon Hughes,Individual,,,,Party,Liberal Democrats,,Political Party,AL0087498,Loan,1880000,,0,Outstanding,,,1880000,2013-02-27,,,2013-04-29,Bermondsey & Old Southwark
@@ -647,7 +647,20 @@ Individual,Diana Gallop,Individual,,,,Party,Liberal Democrats,,Political Party,A
 Individual,Lord Alliance,Individual,,,,Party,Liberal Democrats,,Political Party,AL0104101,Loan,2000000,,nil,Outstanding,,,2000000,2014-06-27,,,2014-07-30,Bermondsey & Old Southwark
 Individual,Edward McMillan-Scott,Individual,,,,Party,Liberal Democrats,,Political Party,AL0104102,Loan,500000,,Nil,Outstanding,,,500000,2014-04-14,,,2014-07-30,Yorkshire & Humber Region
 Individual,Ian Couzens,Individual,,,,Party,Liberal Democrats,,Political Party,AL0104103,Loan,400000,,nil,Outstanding,,,400000,2014-05-16,,,2014-07-30,Norwich South
-Individual,Anne Winstanley,Individual,,,,Party,Liberal Democrats,,Political Party,AL0104104,Loan,500000,,nil,Outstanding,,,500000,2014-06-11,,,2014-07-30,Eastleigh
+Individual,Anne Winstanley,Individual,,,,Party,Liberal Democrats,,Political Party,AL0104104,Loan,500000,,nil,Ended,500000,,,2014-06-11,,2014-09-25,2014-07-30,Eastleigh
 Individual,Janet Grauberg,Individual,,,,Party,Liberal Democrats,,Political Party,AL0104229,Loan,300000,,nil,Outstanding,,,300000,2014-04-08,2015-04-30,,2014-07-30,Camden Borough
+Individual,Robert M Sears,Individual,,,,Party,Conservative Party,,Political Party,AL0104304,Loan,331900,,Nil,Outstanding,,,331900,2014-08-04,,,2014-10-22,North East Cambridgeshire
 Individual,Roderick James Nugent Stewart,Individual,,,,Organisation,Cumbria Broadband Rural and Community Projects Limited,,Permitted Participant,AL0104810,Loan,1280000,,0%,Outstanding,,,1280000,2014-08-07,,,2014-08-28,
 Organisation,Lloyds Bank PLC,Company,1 City Road East,M15 4PU,2065,Organisation,Charlotte Leslie,,Regulated Donee,AS0105254,Authorised Participant Security,500000,,,Outstanding,,,500000,2014-07-22,,,2014-07-31,
+Individual,John McGrath,Individual,,,,Party,Conservative Party,,Political Party,AL0106291,Loan,200000,,NIL,Outstanding,,,200000,2014-08-12,,,2014-10-22,North Wiltshire
+Individual,Cyril Freedman,Individual,,,,Party,Conservative Party,,Political Party,AL0106292,Loan,200000,,NIL,Outstanding,,,200000,2014-08-12,,,2014-10-22,North Wiltshire
+Individual,Neville A Baxter,Individual,,,,Party,Conservative Party,,Political Party,AL0106293,Loan,200000,,NIL,Outstanding,,,200000,2014-09-25,,,2014-10-22,Nottingham South
+Individual,Andrew Reid,Individual,,,,Party,UK Independence Party (UKIP),,Political Party,AL0106362,Loan,5000000,,0%,Outstanding,1050000,,3950000,2014-07-25,2014-07-25,,2014-10-29,
+Individual,Andrew Reid,Individual,,,,Party,UK Independence Party (UKIP),,Political Party,AL0106363,Loan,1525090,,0%,Outstanding,,,1525090,2014-09-02,,,2014-10-29,
+Individual,Benjamin Walker,Individual,,,,Party,UK Independence Party (UKIP),,Political Party,AL0106372,Loan,242439,,0%,Outstanding,,,242439,2014-09-30,,,2014-10-29,Filton and Bradley Stoke
+Individual,Rogre Hough,Individual,,,,Party,Labour Party,,Political Party,AL0106400,Loan,200000,,Nil,Outstanding,,,200000,2014-08-26,,,2014-10-29,Greenwich and Woolwich CLP
+Individual,Peter Carpenter,Individual,,,,Party,Labour Party,,Political Party,AL0106401,Loan,500000,,Nil,Outstanding,,,500000,2014-09-22,2015-09-22,,2014-10-29,Battersea CLP
+Organisation,Unity Trust Bank Plc,Company,9 Brindley Place,B1 2HB,1713124,Party,Labour Party,,Political Party,AL0106404,Loan,4700000,,Variable,Outstanding,,,4700000,2014-08-20,2029-08-20,,2014-10-29,Eastleigh CLP
+Individual,Nick Townsend,Individual,,,,Party,Liberal Democrats,,Political Party,AL0112929,Loan,300000,,0,Outstanding,,,300000,2014-07-30,,,2014-10-30,Bermondsey & Old Southwark
+Individual,Ray Hancock,Individual,,,,Party,Liberal Democrats,,Political Party,AL0112935,Loan,100000,,0,Outstanding,,,100000,2014-04-01,2014-08-10,,2014-10-30,"Camborne, Redruth & Hayle"
+Individual,Ray Hancock,Individual,,,,Party,Liberal Democrats,,Political Party,AL0112936,Loan,400000,,0,Outstanding,,,400000,2014-07-22,2018-09-18,,2014-10-30,"Camborne, Redruth & Hayle"
