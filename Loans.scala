@@ -23,6 +23,7 @@ object Loans extends App {
       "recipientClass",
       "recipientName",
       "recipientDeregisteredDate",
+      "recipientType",
       "ecReference",
       "type",
       "value",

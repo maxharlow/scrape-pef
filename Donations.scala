@@ -34,6 +34,7 @@ object Donations extends App {
       "nature",
       "purpose",
       "howDealtWith",
+      "recordedBy",
       "reportedUnder6212",
       "isSponsorship"
     )
