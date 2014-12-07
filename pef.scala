@@ -58,12 +58,10 @@ trait PEF extends App {
       client.waitForBackgroundJavaScript(500)
       result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
     }
-    val supplementary = ListMap(
-//      "ecReference" -> r.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblRefValue", false).getTextContent(),
-      "explanatoryNotes" -> Try(response.getElementByName[HtmlTextArea]("ctl00$ContentPlaceHolder1$DonationControl1$txtExplanatoryNotes")).map(_.getTextContent()).getOrElse("")
-    )
-    record ++ supplementary
+    record ++ lookupList(response)
   }
+
+  def lookupList(response: HtmlPage): Map[String, String]
 
   def select(record: Map[String, String]): Map[String, String]
 

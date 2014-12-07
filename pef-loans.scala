@@ -1,4 +1,6 @@
+import scala.util.Try
 import scala.collection.immutable.ListMap
+import com.gargoylesoftware.htmlunit.html._
 
 object Loans extends PEF {
 
@@ -33,6 +35,10 @@ object Loans extends PEF {
 
   val controlSearch = "ctl00$ctl05$ctl07"
   val controlResult = "ctl00_ContentPlaceHolder1_searchControl1_grdLoanFullResults_ctl00_ctl04_lbViewLoanReturnItem"
+
+  override def lookupList(response: HtmlPage): Map[String, String] = {
+    ListMap()
+  }
 
   override def select(entry: Map[String, String]): Map[String, String] = {
     ListMap(
