@@ -37,7 +37,43 @@ object Loans extends PEF {
   val controlResult = "ctl00_ContentPlaceHolder1_searchControl1_grdLoanFullResults_ctl00_ctl04_lbViewLoanReturnItem"
 
   override def lookupList(response: HtmlPage): Map[String, String] = {
-    ListMap()
+    ListMap(
+      "organisation" -> response.getElementByName[HtmlSelect]("ctl00_ContentPlaceHolder1_LoanTransactionControl1_loanTransactionControl1_ddlOrganisation").getTextContent(),
+      "reference" -> response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$txtReference").getTextContent(),
+      "enteredIntoDate" -> {
+        val year = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$dsDateEnteredInto$ddlYear").getTextContent()
+        val month = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$dsDateEnteredInto$ddlMonth").getTextContent()
+        val day = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$dsDateEnteredInto$ddlDay").getTextContent()
+        s"$year-$month-$day"
+      },
+      "repaymentTerm" -> response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$ddlLoanRepaymentTerm").getTextContent(),
+      "repayableDate" -> {
+        val year = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$dsDateRepayable$ddlYear").getTextContent()
+        val month = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$dsDateRepayable$ddlMonth").getTextContent()
+        val day = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$dsDateRepayable$ddlDay").getTextContent()
+        val date = s"$year-$month-$day"
+        if (date != "----------") date else ""
+      },
+      "value" -> response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$txtLoanValue").getTextContent(),
+      "interestRate" -> response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$txtRateOfInterest").getTextContent(),
+      "interestRateFixed" -> response.getElementByName[HtmlCheckBoxInput]("ctl00_ContentPlaceHolder1_LoanTransactionControl1_loanTransactionControl1_chkRateOfInterestFixed").isChecked().toString(),
+      "interestRateVariable" -> response.getElementByName[HtmlCheckBoxInput]("ctl00_ContentPlaceHolder1_LoanTransactionControl1_loanTransactionControl1_chkRateOfInterestVariable").isChecked().toString(),
+      "additionalInformation" -> response.getElementByName[HtmlTextArea]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$txtAdditionalInformation").getTextContent(),
+      "benefactorStatus" -> response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$ddlParticipantStatus").getTextContent(),
+      "benefactorTitle" -> {
+        val title = response.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$ddlTitle").getTextContent()
+        if (title contains "Please Select") "" else title
+      },
+      "benefactorFirstName" -> {
+        val firstName = response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtFirstname").getTextContent()
+        if (firstName == "na") "" else firstName
+      },
+      "benefactorMiddleName" -> response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtMiddlename").getTextContent(),
+      "benefactorLastName" -> response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtSurname").getTextContent(),
+      "benefactorCompanyName" -> {
+        response.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtParticupantName").getTextContent()
+      }
+    )
   }
 
   override def select(entry: Map[String, String]): Map[String, String] = {
