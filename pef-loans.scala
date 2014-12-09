@@ -1,10 +1,9 @@
 import scala.util.Try
 import scala.collection.immutable.ListMap
+import scala.collection.JavaConversions._
 import com.gargoylesoftware.htmlunit.html._
 
 object Loans extends PEF {
-
-  run("pef-loans.csv")
 
   override val headers = List(
     "benefactorClass",
@@ -35,6 +34,8 @@ object Loans extends PEF {
 
   override val controlSearch = "ctl00$ctl05$ctl07"
   override val controlResult = "ctl00_ContentPlaceHolder1_searchControl1_grdLoanFullResults_ctl00_ctl04_lbViewLoanReturnItem"
+
+  run("pef-loans.csv")
 
   // override def lookupList(response: HtmlPage): Map[String, String] = {
   //   ListMap(
