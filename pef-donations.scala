@@ -1,101 +1,158 @@
 import scala.util.Try
 import scala.collection.immutable.ListMap
+import scala.collection.JavaConversions._
 import com.gargoylesoftware.htmlunit.html._
 
 object Donations extends PEF {
 
-  run("pef-donations.csv")
-
-  val headers = List(
-    "benefactorClass",
-    "benefactorName",
-    "benefactorType",
-    "benefactorAddress",
-    "benefactorPostcode",
-    "benefactorCompanyNumber",
-    "recipientClass",
+  override val headers = List(
+    "ecReference",
+    "ecReportedDate",
+    "ecPublishedDate",
+    "ecReleaseTitle",
+    "donorType",
+    "donorTitle",
+    "donorFirstName",
+    "donorMiddleName",
+    "donorLastName",
+    "donorName",
+    "donorCompanyNumber",
+    "donorAddress",
+    "donorPostcode",
+    "donorCountry",
+    "donorPhoneNumber",
+    "donorEmailAddress",
     "recipientName",
+    "recipientID",
     "recipientType",
     "recipientRegulatedType",
+    "recipientAccountingUnit",
+    "recipientAccountingUnitID",
     "recipientDeregisteredDate",
-    "ecReference",
-    "type",
     "value",
-    "acceptedDate",
+    "type",
     "receivedDate",
-    "reportedDate",
+    "acceptedDate",
+    "returnedDate",
     "nature",
     "purpose",
-    "explanatoryNotes",
+    "notes",
     "howDealtWith",
-    "recordedBy",
-    "reportedUnder6212",
+    "isReportedDueToAggregation",
+    "isReportedUnder6212",
     "isSponsorship"
   )
 
-  val controlSearch = "ctl00$ctl05$ctl01"
-  val controlResult = "ctl00_ContentPlaceHolder1_searchControl1_grdDonationFullResults_ctl00_ctl04_lbViewDonationReturnItem"
+  override val controlSearch = "ctl00$ctl05$ctl01"
+  override val controlResult = "ctl00_ContentPlaceHolder1_searchControl1_grdDonationFullResults_ctl00_ctl04_lbViewDonationReturnItem"
 
-  override def lookupList(response: HtmlPage): Map[String, String] = {
-    ListMap(
-      "explanatoryNotes" -> Try(response.getElementByName[HtmlTextArea]("ctl00$ContentPlaceHolder1$DonationControl1$txtExplanatoryNotes")).map(_.getTextContent()).getOrElse("")
-    )
-  }
+  run("pef-donations.csv")
 
-  override def select(record: Map[String, String]): Map[String, String] = {
+  override def select(record: Map[String, String], page: HtmlPage): Map[String, String] = {
     ListMap(
-      "benefactorClass" -> {
-        val benefactorType = record("Donor type")
-        if (benefactorType == "Individual" || benefactorType == "Permitted Participant") "Individual"
-        else if (benefactorType == "Registered Political Party") "Party"
-        else "Organisation"
+      "ecReference" -> record("EC reference"),
+      "ecReportedDate" -> asDate(record("Reported date"), "dd/MM/yyyy"), // aka 'submitted date'
+      "ecPublishedDate" -> {
+        val publishedDate = Try(page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblPublishedDateValue", true))        
+        publishedDate.map(_.getTextContent()).map(asDate(_, "dd/MM/yyyy")).getOrElse("")
       },
-      "benefactorName" -> {
-        val name = record("Donor name").replaceAll(", ([0-9]),", ", $1").replaceAll(" - Sponsorship", "")
-        if (record("Donor type") == "Individual") stripTitles(name)
-        else if (name contains ", ") name.split(", ").init.mkString(", ") // split from address
-        else name
+      "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true).getTextContent(),
+      "donorType" -> record("Donor type"),
+      "donorTitle" -> { // individuals only
+        val title = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlTitle"))
+        val titleText = title.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+        if (titleText matches "na|-- Please Select --") "" else titleText
       },
-      "benefactorType" -> record("Donor type"),
-      "benefactorAddress" -> {
-        val name = record("Donor name").replaceAll(", ([0-9]),", ", $1")
-        if (record("Donor type") == "Individual") ""
-        else if (name contains ", ") name.split(", ").last.replaceAll("^(A)$|^(NA)$", "") // split from name
-        else ""
+      "donorFirstName" -> { // individuals only
+        val firstName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtFirstname"))
+        val firstNameText = firstName.map(_.getValueAttribute()).getOrElse("")
+        if (firstNameText == "na") "" else firstNameText
       },
-      "benefactorPostcode" -> stripFakePostcodes(record("Postcode")), // optional
-      "benefactorCompanyNumber" -> {
-        val benefactorType = record("Donor type")
-        if (benefactorType == "Registered Political Party") "" // parties shouldn't have company numbers
-        else record("Company reg. no.").replaceAll("[^0+A-Za-z0-9]", "").replaceAll("^0*", "") // optional
+      "donorMiddleName" -> { // individuals only
+        val middleName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtMiddlename"))
+        val middleNameText = middleName.map(_.getValueAttribute()).getOrElse("")
+        if (middleNameText == "na") "" else middleNameText
       },
-      "recipientClass" -> {
-        val recipientType = record("Entity type")
-        val recipientRegulatedType = record("Regulated donee type")
-        if (recipientType == "Political Party" || recipientType == "Third Party") "Party"
-        else if (recipientRegulatedType == "Members Association" || recipientRegulatedType == "Permitted Participant") "Organisation"
-        else "Individual"
+      "donorLastName" -> { // individuals only
+        val lastName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtSurname"))
+        val lastNameText = lastName.map(_.getValueAttribute()).getOrElse("")
+        if (lastNameText == "na") "" else lastNameText
       },
-      "recipientName" -> stripTitles(record("Entity name")).replaceAll(""" \[De-registered .*\]""", "").replaceAll("Conservative and Unionist Party", "Conservative Party"),
+      "donorName" -> { // non-individuals only
+        val donorName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtParticupantName"))
+        donorName.map(_.getValueAttribute()).getOrElse("")
+      },
+      "donorCompanyNumber" -> { // companies only
+        val donorCompanyNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtCompanyRegistrationNumber"))
+        donorCompanyNumber.map(_.getValueAttribute()).getOrElse("")
+      },
+      "donorAddress" -> {
+        val address = List(
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine1")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine2")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine3")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine4")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtTown")).map(_.getValueAttribute()).map(_.replace("no town", "")),
+          Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCounty")).map(_.getSelectedOptions().head.getTextContent())
+        )
+        address.map(_.getOrElse("")).filterNot(_.isEmpty).mkString(", ")
+      },
+      "donorPostcode" -> {
+        val postcode = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPostcode"))
+        postcode.map(_.getValueAttribute()).map(stripFakePostcodes).getOrElse("")
+      },
+      "donorCountry" -> {
+        val donorCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCountry"))
+        donorCountry.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+      },
+      "donorPhoneNumber" -> {
+        val donorPhoneNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPhoneNumber"))
+        donorPhoneNumber.map(_.getValueAttribute()).getOrElse("")
+      },
+      "donorEmailAddress" -> {
+        val donorEmailAddress = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtEmail"))
+        donorEmailAddress.map(_.getValueAttribute()).getOrElse("")
+      },
+      "recipientName" -> {
+        val recipientName = stripTitles(record("Entity name")).replaceAll(""" \[De-registered .*\]""", "")
+        recipientName.replaceAll("Conservative and Unionist Party", "Conservative Party")
+      },
+      "recipientID" -> record("Entity ID"),
       "recipientType" -> record("Entity type"),
-      "recipientRegulatedType" -> record("Regulated donee type"), // optional
-      "recipientDeregisteredDate" -> { // optional, de-registered parties only
+      "recipientRegulatedType" -> record("Regulated donee type"),
+      "recipientAccountingUnit" -> { // aka 'recorded by' or 'received by'
+        val accountingUnit = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$ddlReceivedBy"))
+        accountingUnit.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+      },
+      "recipientAccountingUnitID" -> record("Accounting unit ID"),
+      "recipientDeregisteredDate" -> { // for de-registered parties
         val recipientName = record("Entity name")
         if (recipientName contains "De-registered") asDate(recipientName.replaceAll(".*De-registered ", ""), "dd/MM/yy]")
         else ""
       },
-      "ecReference" -> record("EC reference"),
+      "value" -> record("Value"),
       "type" -> record("Type of donation"),
-      "value" -> record("Value").replaceAll("[^0-9]", ""), // in pence
+      "receivedDate" -> asDate(record("Received date"), "dd/MM/yyyy"),
       "acceptedDate" -> asDate(record("Accepted date"), "dd/MM/yyyy"),
-      "receivedDate" -> asDate(record("Received date"), "dd/MM/yyyy"), // optional
-      "reportedDate" -> asDate(record("Reported date"), "dd/MM/yyyy"), // optional
-      "nature" -> record("Nature / Provision"), // optional
-      "purpose" -> record("Purpose"), // optional
-      "explanatoryNotes" -> record("explanatoryNotes"), // optional
-      "howDealtWith" -> record("How dealt with"), // optional
-      "recordedBy" -> record("Rec'd by (AU)"), // optional
-      "reportedUnder6212" -> asBoolean(record("Reported under 62:12")), // optional
+      "returnedDate" -> { // for impermissable donations
+        val year = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlYear")).map(_.getTextContent()).getOrElse("")
+        val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlMonth")).map(_.getTextContent()).getOrElse("")
+        val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlDay")).map(_.getTextContent()).getOrElse("")
+        val date = s"$year-$month-$day"
+        if (date == "--") "" else date
+      },
+      "nature" -> record("Nature / Provision"),
+      "purpose" -> record("Purpose"),
+      "notes" -> {
+        val explanatoryNotes = Try(page.getElementByName[HtmlTextArea]("ctl00$ContentPlaceHolder1$DonationControl1$txtExplanatoryNotes"))
+        explanatoryNotes.map(_.getTextContent()).getOrElse("")
+      },
+      "howDealtWith" -> record("How dealt with"),
+      "isReportedDueToAggregation" -> {
+        val isReportedDueToAggregation = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$DonationControl1$chkAggregation"))
+        isReportedDueToAggregation.map(_.isChecked()).getOrElse(false).toString()
+      },
+      "isReportedUnder6212" -> asBoolean(record("Reported under 62:12")),
       "isSponsorship" -> asBoolean(record("Is sponsorship"))
     )
   }

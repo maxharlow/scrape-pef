@@ -19,13 +19,13 @@ trait PEF extends App {
   val controlResult: String
 
   def run(filename: String) {
-    val csv = CSVWriter.open(new File(filename))
+    val csv = CSVWriter.open(filename)
     csv.writeRow(headers)
 
     def write(record: Map[String, String]): Unit = csv.writeRow(record.values.toSeq)
 
     val origin = CSVReader.open(new StringReader(source)).allWithHeaders.view
-    val process = lookup _ andThen select andThen write
+    val process = lookup _ andThen write
     Await.result(Future.traverse(origin)(r => Future(process(r))), Duration.Inf)
 
     csv.close()
@@ -46,7 +46,7 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val response = {
+    val page = {
       Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
       val client = new WebClient()
       client.getOptions.setThrowExceptionOnScriptError(false)
@@ -58,12 +58,10 @@ trait PEF extends App {
       client.waitForBackgroundJavaScript(500)
       result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
     }
-    record ++ lookupList(response)
+    select(record, page)
   }
 
-  def lookupList(response: HtmlPage): Map[String, String]
-
-  def select(record: Map[String, String]): Map[String, String]
+  def select(record: Map[String, String], response: HtmlPage): Map[String, String]
 
   def clean(text: String): String = {
     text.filter(_ >= ' ').trim.replaceAll(" +", " ").replaceAll("\\.", "")
