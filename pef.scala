@@ -63,10 +63,6 @@ trait PEF extends App {
 
   def select(record: Map[String, String], response: HtmlPage): Map[String, String]
 
-  def clean(text: String): String = {
-    text.filter(_ >= ' ').trim.replaceAll(" +", " ").replaceAll("\\.", "")
-  }
-
   def stripTitles(name: String): String = {
     val cleanName = name.replaceAll("^(na )|( na)", "")
     val prefixes = List("Ms", "Mrs", "Miss", "Mr", "Dr", "Cllr", "Sir", "Dame", "Hon", "The Hon", "Rt Hon", "The Rt Hon")
