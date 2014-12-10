@@ -55,7 +55,7 @@ trait PEF extends App {
       val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
       search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
       val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
-      client.waitForBackgroundJavaScript(500)
+      client.waitForBackgroundJavaScriptStartingBefore(500)
       result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
     }
     select(record, page)
