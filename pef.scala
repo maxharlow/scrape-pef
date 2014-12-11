@@ -34,28 +34,32 @@ trait PEF extends App {
   def source: String = {
     println("Retrieving source...")
     Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    val client = new WebClient()
-    client.getOptions.setThrowExceptionOnScriptError(false)
-    val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
-    val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
-    val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
-    val export = result.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]()
+    val export = blocking {
+      val client = new WebClient()
+      client.getOptions.setThrowExceptionOnScriptError(false)
+      val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
+      val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
+      val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
+      result.getElementByName[HtmlButton]("ctl00$ContentPlaceHolder1$searchControl1$btnExportAllResults").click[TextPage]()
+    }
     export.getWebResponse().getContentAsString("ISO-8859-1")
   }
 
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    val client = new WebClient()
-    client.getOptions.setThrowExceptionOnScriptError(false)
-    client.setAjaxController(new NicelyResynchronizingAjaxController())
-    val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
-    val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
-    search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
-    val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
-    client.waitForBackgroundJavaScriptStartingBefore(500)
-    val report = result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+    val report = blocking {
+      Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
+      val client = new WebClient()
+      client.getOptions.setThrowExceptionOnScriptError(false)
+      client.setAjaxController(new NicelyResynchronizingAjaxController())
+      val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
+      val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
+      search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
+      val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
+      client.waitForBackgroundJavaScriptStartingBefore(500)
+      result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+    }
     select(record, report)
   }
 
