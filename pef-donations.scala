@@ -59,24 +59,24 @@ object Donations extends PEF {
       "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true).getTextContent(),
       "donorType" -> record("Donor type"),
       "donorTitle" -> { // individuals only
-        val title = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlTitle"))
-        val titleText = title.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
-        if (titleText matches "na|-- Please Select --") "" else titleText
+        val donorTitle = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlTitle"))
+        val donorTitleText = donorTitle.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+        if (donorTitleText matches "na|-- Please Select --") "" else donorTitleText
       },
       "donorFirstName" -> { // individuals only
-        val firstName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtFirstname"))
-        val firstNameText = firstName.map(_.getValueAttribute()).getOrElse("")
-        if (firstNameText == "na") "" else firstNameText
+        val donorFirstName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtFirstname"))
+        val donorFirstNameText = donorFirstName.map(_.getValueAttribute()).getOrElse("")
+        if (donorFirstNameText == "na") "" else donorFirstNameText
       },
       "donorMiddleName" -> { // individuals only
-        val middleName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtMiddlename"))
-        val middleNameText = middleName.map(_.getValueAttribute()).getOrElse("")
-        if (middleNameText == "na") "" else middleNameText
+        val donorMiddleName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtMiddlename"))
+        val donorMiddleNameText = donorMiddleName.map(_.getValueAttribute()).getOrElse("")
+        if (donorMiddleNameText == "na") "" else donorMiddleNameText
       },
       "donorLastName" -> { // individuals only
-        val lastName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtSurname"))
-        val lastNameText = lastName.map(_.getValueAttribute()).getOrElse("")
-        if (lastNameText == "na") "" else lastNameText
+        val donorLastName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtSurname"))
+        val donorLastNameText = donorLastName.map(_.getValueAttribute()).getOrElse("")
+        if (donorLastNameText == "na") "" else donorLastNameText
       },
       "donorName" -> { // non-individuals only
         val donorName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtParticupantName"))
@@ -120,16 +120,16 @@ object Donations extends PEF {
       "recipientID" -> record("Entity ID"),
       "recipientType" -> record("Entity type"),
       "recipientRegulatedType" -> record("Regulated donee type"),
-      "recipientAccountingUnit" -> { // aka 'recorded by' or 'received by'
-        val accountingUnit = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$ddlReceivedBy"))
-        accountingUnit.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
-      },
-      "recipientAccountingUnitID" -> record("Accounting unit ID"),
       "recipientDeregisteredDate" -> { // for de-registered parties
         val recipientName = record("Entity name")
         if (recipientName contains "De-registered") asDate(recipientName.replaceAll(".*De-registered ", ""), "dd/MM/yy]")
         else ""
       },
+      "accountingUnit" -> { // aka 'recorded by' or 'received by'
+        val accountingUnit = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$ddlReceivedBy"))
+        accountingUnit.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+      },
+      "accountingUnitID" -> record("Accounting unit ID"),
       "value" -> record("Value"),
       "type" -> record("Type of donation"),
       "receivedDate" -> asDate(record("Received date"), "dd/MM/yyyy"),
@@ -144,8 +144,8 @@ object Donations extends PEF {
       "nature" -> record("Nature / Provision"),
       "purpose" -> record("Purpose"),
       "notes" -> {
-        val explanatoryNotes = Try(page.getElementByName[HtmlTextArea]("ctl00$ContentPlaceHolder1$DonationControl1$txtExplanatoryNotes"))
-        explanatoryNotes.map(_.getTextContent()).getOrElse("")
+        val notes = Try(page.getElementByName[HtmlTextArea]("ctl00$ContentPlaceHolder1$DonationControl1$txtExplanatoryNotes"))
+        notes.map(_.getTextContent()).getOrElse("")
       },
       "howDealtWith" -> record("How dealt with"),
       "isReportedDueToAggregation" -> {
