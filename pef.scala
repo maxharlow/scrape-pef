@@ -1,6 +1,6 @@
 import java.io.{File, StringReader}
 import java.util.logging.{Logger, Level}
-import scala.concurrent.{Future, Await}
+import scala.concurrent.{Future, Await, blocking}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.collection.immutable.ListMap
@@ -46,19 +46,17 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val page = {
-      Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-      val client = new WebClient()
-      client.getOptions.setThrowExceptionOnScriptError(false)
-      client.setAjaxController(new NicelyResynchronizingAjaxController())
-      val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
-      val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
-      search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
-      val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
-      client.waitForBackgroundJavaScriptStartingBefore(500)
-      result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
-    }
-    select(record, page)
+    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
+    val client = new WebClient()
+    client.getOptions.setThrowExceptionOnScriptError(false)
+    client.setAjaxController(new NicelyResynchronizingAjaxController())
+    val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
+    val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
+    search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
+    val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
+    client.waitForBackgroundJavaScriptStartingBefore(500)
+    val report = result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+    select(record, report)
   }
 
   def select(record: Map[String, String], response: HtmlPage): Map[String, String]
