@@ -34,7 +34,7 @@ trait PEF extends App {
   def source: String = {
     println("Retrieving source...")
     Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    val export = blocking {
+    val export = {
       val client = new WebClient()
       client.getOptions.setThrowExceptionOnScriptError(false)
       val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
@@ -48,7 +48,7 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val report = blocking {
+    val report = {
       Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
       val client = new WebClient()
       client.getOptions.setThrowExceptionOnScriptError(false)
