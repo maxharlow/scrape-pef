@@ -87,7 +87,7 @@ object Donations extends PEF {
         donorCompanyNumber.map(_.getValueAttribute()).getOrElse("")
       },
       "donorAddress" -> {
-        val address = List(
+        val donorAddress = List(
           Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine1")).map(_.getValueAttribute()),
           Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine2")).map(_.getValueAttribute()),
           Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtAddressLine3")).map(_.getValueAttribute()),
@@ -95,11 +95,11 @@ object Donations extends PEF {
           Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtTown")).map(_.getValueAttribute()).map(_.replace("no town", "")),
           Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCounty")).map(_.getSelectedOptions().head.getTextContent())
         )
-        address.map(_.getOrElse("")).filterNot(_.isEmpty).mkString(", ")
+        donorAddress.map(_.getOrElse("")).filterNot(_.isEmpty).mkString(", ")
       },
       "donorPostcode" -> {
-        val postcode = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPostcode"))
-        postcode.map(_.getValueAttribute()).map(stripFakePostcodes).getOrElse("")
+        val donorPostcode = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPostcode"))
+        donorPostcode.map(_.getValueAttribute()).map(stripFakePostcodes).getOrElse("")
       },
       "donorCountry" -> {
         val donorCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCountry"))
