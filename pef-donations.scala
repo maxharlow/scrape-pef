@@ -150,7 +150,7 @@ object Donations extends PEF {
       "howDealtWith" -> record("How dealt with"),
       "isReportedDueToAggregation" -> {
         val isReportedDueToAggregation = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$DonationControl1$chkAggregation"))
-        isReportedDueToAggregation.map(_.isChecked()).getOrElse(false).toString()
+        isReportedDueToAggregation.map(_.isChecked().toString()).getOrElse("")
       },
       "isReportedUnder6212" -> asBoolean(record("Reported under 62:12")),
       "isSponsorship" -> asBoolean(record("Is sponsorship"))
