@@ -56,7 +56,10 @@ object Donations extends PEF {
         val publishedDate = Try(page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblPublishedDateValue", true))        
         publishedDate.map(_.getTextContent()).map(asDate(_, "dd/MM/yyyy")).getOrElse("")
       },
-      "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true).getTextContent(),
+      "ecReleaseTitle" -> { // TODO -- last exception said this doesn't exist? TEMP making this optional -- can't think why it should be though
+        val ecReleaseTitle = Try(page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true))
+        ecReleaseTitle.map(_.getTextContent()).getOrElse("")
+      },
       "donorType" -> record("Donor type"),
       "donorTitle" -> { // individuals only
         val donorTitle = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlTitle"))
