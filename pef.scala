@@ -82,10 +82,6 @@ trait PEF extends App {
     else DateTime.parse(value, formatPattern).toString("yyyy-MM-dd")
   }
 
-  def asInt(value: String): String = {
-    value.replaceAll("[^0-9]", "")
-  }
-
   def asBoolean(value: String): String = {
     if (value.isEmpty) "false" else "true"
   }
