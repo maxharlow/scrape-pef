@@ -1,7 +1,8 @@
 import java.io.{File, StringReader}
 import java.util.logging.{Logger, Level}
+import java.util.concurrent.Executors
 import scala.concurrent.{Future, Await, blocking}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
 import scala.collection.immutable.ListMap
 import scala.util.Try
@@ -18,6 +19,8 @@ trait PEF extends App {
   val controlSearch: String
   val controlResult: String
 
+  implicit val context = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(15))
+
   def run(filename: String) {
     val csv = CSVWriter.open(filename)
     csv.writeRow(headers)
@@ -33,8 +36,8 @@ trait PEF extends App {
 
   def source: String = {
     println("Retrieving source...")
-    Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-    val export = {
+    val export = blocking {
+      Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
       val client = new WebClient()
       client.getOptions.setThrowExceptionOnScriptError(false)
       val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
@@ -48,7 +51,7 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val report = {
+    val report = blocking {
       Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
       val client = new WebClient()
       client.getOptions.setThrowExceptionOnScriptError(false)
