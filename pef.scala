@@ -85,7 +85,10 @@ trait PEF extends App {
   final def retry[T](n: Int)(block: => T): T = {
     Try(block) match {
       case Success(x) => x
-      case _ if n > 1 => retry(n - 1)(block)
+      case Failure(e) if n > 1 => {
+        println(s"Failed: ${e.getMessage}. Retrying...")
+        retry(n - 1)(block)
+      }
       case Failure(e) => throw e
     }
   }
