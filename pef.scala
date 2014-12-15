@@ -5,7 +5,7 @@ import scala.concurrent.{Future, Await, blocking}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
 import scala.collection.immutable.ListMap
-import scala.util.Try
+import scala.util.{Try, Success, Failure}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.json4s.{JValue, JString, JBool, JNull}
@@ -19,7 +19,7 @@ trait PEF extends App {
   val controlSearch: String
   val controlResult: String
 
-  implicit val context = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(15))
+  implicit val context = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(10))
 
   def run(filename: String) {
     val csv = CSVWriter.open(filename)
@@ -51,19 +51,21 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val report = blocking {
-      Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
-      val client = new WebClient()
-      client.getOptions.setThrowExceptionOnScriptError(false)
-      client.setAjaxController(new NicelyResynchronizingAjaxController())
-      val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
-      val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
-      search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
-      val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
-      client.waitForBackgroundJavaScriptStartingBefore(500)
-      result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+    val page = retry(10) {
+      blocking {
+        Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
+        val client = new WebClient()
+        client.getOptions.setThrowExceptionOnScriptError(false)
+        client.setAjaxController(new NicelyResynchronizingAjaxController())
+        val origin = client.getPage[HtmlPage]("https://pefonline.electoralcommission.org.uk/Search/CommonReturnsSearch.aspx")
+        val search = origin.getElementByName[HtmlInput](controlSearch).click[HtmlPage]()
+        search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
+        val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
+        client.waitForBackgroundJavaScriptStartingBefore(500)
+        result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+      }
     }
-    select(record, report)
+    select(record, page)
   }
 
   def select(record: Map[String, String], response: HtmlPage): Map[String, String]
@@ -77,6 +79,15 @@ trait PEF extends App {
 
   def stripFakePostcodes(postcode: String): String = {
     postcode.replaceAll("ZZ0 0ZZ|ZZ00ZZ|ZZ1 1ZZ|ZZ11ZZ|AA0 0AA|AA00AA|AA1 1AA|AA11AA", "")
+  }
+
+  @annotation.tailrec
+  final def retry[T](n: Int)(block: => T): T = {
+    Try(block) match {
+      case Success(x) => x
+      case _ if n > 1 => retry(n - 1)(block)
+      case Failure(e) => throw e
+    }
   }
 
   def asDate(value: String, format: String): String = {
