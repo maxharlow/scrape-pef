@@ -23,8 +23,8 @@ object Donations extends PEF {
     "donorCountry",
     "donorPhoneNumber",
     "donorEmailAddress",
-    "recipientName",
     "recipientID",
+    "recipientName",
     "recipientType",
     "recipientRegulatedType",
     "accountingUnitName",
@@ -121,11 +121,11 @@ object Donations extends PEF {
         val donorEmailAddress = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtEmail"))
         donorEmailAddress.map(_.getValueAttribute()).getOrElse("")
       },
+      "recipientID" -> record("Entity ID"),
       "recipientName" -> {
         val recipientName = stripTitles(record("Entity name")).replaceAll(""" \[De-registered .*\]""", "")
         recipientName.replaceAll("Conservative and Unionist Party", "Conservative Party")
       },
-      "recipientID" -> record("Entity ID"),
       "recipientType" -> record("Entity type"),
       "recipientRegulatedType" -> record("Regulated donee type"),
       "recipientDeregisteredDate" -> { // for de-registered parties

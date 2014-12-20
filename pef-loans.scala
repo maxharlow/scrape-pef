@@ -23,8 +23,8 @@ object Loans extends PEF {
     "lenderCountry",
     "lenderPhoneNumber",
     "lenderEmailAddress",
-    "recipientName",
     "recipientID",
+    "recipientName",
     "recipientType",
     "recipientRegulatedType",
     "recipientDeregisteredDate",
@@ -127,11 +127,11 @@ object Loans extends PEF {
         val lenderEmailAddress = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtEmail"))
         lenderEmailAddress.map(_.getValueAttribute()).getOrElse("")
       },
+      "recipientID" -> record("Entity ID"),
       "recipientName" -> {
         val recipientName = stripTitles(record("Entity name")).replaceAll(""" \[De-registered .*\]""", "")
         recipientName.replaceAll("Conservative and Unionist Party", "Conservative Party")
       },
-      "recipientID" -> record("Entity ID"),
       "recipientType" -> record("Entity type"),
       "recipientRegulatedType" -> {
         val recipientRegulatedType = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$ddlRegulatedDoneeStatus"))
