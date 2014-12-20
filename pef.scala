@@ -51,7 +51,7 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val page = retry(10) {
+    val page = retry(5) {
       blocking {
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
         val client = new WebClient()

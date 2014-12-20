@@ -10,6 +10,7 @@ object Loans extends PEF {
     "ecLastNotifiedDate",
     "ecPublishedDate",
     "ecReleaseTitle",
+    "lenderID",
     "lenderType",
     "lenderTitle",
     "lenderFirstName",
@@ -27,7 +28,7 @@ object Loans extends PEF {
     "recipientType",
     "recipientRegulatedType",
     "recipientDeregisteredDate",
-    "accountingUnit",
+    "accountingUnitName",
     "accountingUnitID",
     "value",
     "valueRepaid",
@@ -46,6 +47,7 @@ object Loans extends PEF {
     "notes",
     "additionalInformation",
     "isReportedDueToAggregation",
+    "areReportingUnitsTreatedAsCentralParty",
     "hasSecurityBeenGiven"
   )
 
@@ -63,6 +65,10 @@ object Loans extends PEF {
         publishedDate.map(_.getTextContent()).map(asDate(_, "dd/MM/yyyy")).getOrElse("")
       },
       "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_LoanTransactionControl1_lblTransactionTitle", true).getTextContent(),
+      "lenderID" -> {
+        val lenderID = page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$ddlOrganisation")
+        lenderID.getSelectedOptions().head.getValueAttribute()
+      },
       "lenderType" -> record("Lender type"),
       "lenderTitle" -> { // individuals only
         val lenderTitle = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$ddlTitle"))
@@ -136,9 +142,9 @@ object Loans extends PEF {
         if (recipientName contains "De-registered") asDate(recipientName.replaceAll(".*De-registered ", ""), "dd/MM/yy]")
         else ""
       },
-      "accountingUnit" -> { // aka 'organisation entering into the transaction'
-        val accountingUnit = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$ddlOrganisation"))
-        accountingUnit.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+      "accountingUnitName" -> { // aka 'organisation entering into the transaction'
+        val accountingUnitName = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$ddlOrganisation"))
+        accountingUnitName.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
       },
       "accountingUnitID" -> record("Accounting unit ID"),
       "value" -> record("Total amount"),
@@ -175,6 +181,10 @@ object Loans extends PEF {
       "isReportedDueToAggregation" -> {
         val isReportedDueToAggregation = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$chkReportedBecauseOfAggregation"))
         isReportedDueToAggregation.map(_.isChecked().toString()).getOrElse("")
+      },
+      "areReportingUnitsTreatedAsCentralParty" -> {
+        val areReportingUnitsTreatedAsCentralParty = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$chkAccountingUnitsTreatedAsCentralParty"))
+        areReportingUnitsTreatedAsCentralParty.map(_.isChecked().toString()).getOrElse("")
       },
       "hasSecurityBeenGiven" -> {
         val hasSecurityBeenGiven = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$chkHasSecurityBeenGiven"))

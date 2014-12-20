@@ -10,6 +10,7 @@ object Donations extends PEF {
     "ecReportedDate",
     "ecPublishedDate",
     "ecReleaseTitle",
+    "donorID",
     "donorType",
     "donorTitle",
     "donorFirstName",
@@ -26,7 +27,7 @@ object Donations extends PEF {
     "recipientID",
     "recipientType",
     "recipientRegulatedType",
-    "accountingUnit",
+    "accountingUnitName",
     "accountingUnitID",
     "recipientDeregisteredDate",
     "value",
@@ -56,9 +57,13 @@ object Donations extends PEF {
         val publishedDate = Try(page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblPublishedDateValue", true))        
         publishedDate.map(_.getTextContent()).map(asDate(_, "dd/MM/yyyy")).getOrElse("")
       },
-      "ecReleaseTitle" -> { // TODO -- last exception said this doesn't exist? TEMP making this optional -- can't think why it should be though
-        val ecReleaseTitle = Try(page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true))
-        ecReleaseTitle.map(_.getTextContent()).getOrElse("")
+      "ecReleaseTitle" -> {
+        val ecReleaseTitle = page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true)
+        ecReleaseTitle.getTextContent()
+      },
+      "donorID" -> {
+        val donorID = page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlParticipant")
+        donorID.getSelectedOptions().head.getValueAttribute()
       },
       "donorType" -> record("Donor type"),
       "donorTitle" -> { // individuals only
@@ -128,9 +133,9 @@ object Donations extends PEF {
         if (recipientName contains "De-registered") asDate(recipientName.replaceAll(".*De-registered ", ""), "dd/MM/yy]")
         else ""
       },
-      "accountingUnit" -> { // aka 'recorded by' or 'received by'
-        val accountingUnit = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$ddlReceivedBy"))
-        accountingUnit.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+      "accountingUnitName" -> { // aka 'recorded by' or 'received by'
+        val accountingUnitName = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$ddlReceivedBy"))
+        accountingUnitName.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
       },
       "accountingUnitID" -> record("Accounting unit ID"),
       "value" -> record("Value"),
