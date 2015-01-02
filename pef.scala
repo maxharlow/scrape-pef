@@ -86,7 +86,7 @@ trait PEF extends App {
     Try(block) match {
       case Success(x) => x
       case Failure(e) if n > 1 => {
-        val period = (5 - n) * 100000
+        val period = (6 - n) * 100000
         println(s"Failed: ${e.getMessage}. Waiting ${period}ms before retrying...")
         Thread.sleep(period)
         retry(n - 1)(block)
