@@ -51,7 +51,7 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val page = retry {
+    val page = retry(10) {
       blocking {
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
         val client = new WebClient()
@@ -82,14 +82,14 @@ trait PEF extends App {
   }
 
   @annotation.tailrec
-  final def retry[T](block: => T)(n: Int = 10): T = {
+  final def retry[T](n: Int = 10)(block: => T): T = {
     Try(block) match {
       case Success(x) => x
       case Failure(e) if n > 1 => {
         val period = (11 - n) * 100000
         println(s"Failed: ${e.getMessage}. Waiting ${period / 1000}s before retrying...")
         Thread.sleep(period)
-        retry(block)(n - 1)
+        retry(n - 1)(block)
       }
       case Failure(e) => throw e
     }
