@@ -62,7 +62,8 @@ trait PEF extends App {
         search.getElementByName[HtmlTextInput]("ctl00$ContentPlaceHolder1$searchControl1$txtECRefNo").`type`(reference)
         val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
         client.waitForBackgroundJavaScriptStartingBefore(500)
-        result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+        val detail = result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+        if (detail.getWebResponse().getContentAsString() contains "System busy") throw new Exception("System busy") else detail
       }
     }
     select(record, page)
