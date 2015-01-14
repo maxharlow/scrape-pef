@@ -66,7 +66,7 @@ object Loans extends PEF {
       },
       "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_LoanTransactionControl1_lblTransactionTitle", true).getTextContent(),
       "lenderID" -> {
-        val lenderID = page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$ddlOrganisation")
+        val lenderID = page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$ddlParticipant")
         lenderID.getSelectedOptions().head.getValueAttribute()
       },
       "lenderType" -> record("Lender type"),
