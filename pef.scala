@@ -31,6 +31,7 @@ trait PEF extends App {
     val process = lookup _ andThen write
     Await.result(Future.traverse(origin)(r => Future(process(r))), Duration.Inf)
 
+    println("Done!")
     csv.close()
   }
 
