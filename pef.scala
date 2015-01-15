@@ -1,6 +1,6 @@
 import java.io.{File, StringReader}
 import java.util.logging.{Logger, Level}
-import java.util.concurrent.Executors
+import java.util.concurrent.ForkJoinPool
 import scala.concurrent.{Future, Await, blocking}
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
@@ -19,7 +19,7 @@ trait PEF extends App {
   val controlSearch: String
   val controlResult: String
 
-  implicit val context = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(10))
+  implicit val context = ExecutionContext.fromExecutor(new ForkJoinPool(10))
 
   def run(filename: String) {
     val csv = CSVWriter.open(filename)
@@ -31,7 +31,6 @@ trait PEF extends App {
     val process = lookup _ andThen write
     Await.result(Future.traverse(origin)(r => Future(process(r))), Duration.Inf)
 
-    println("Done!")
     csv.close()
   }
 
