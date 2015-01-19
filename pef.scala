@@ -22,16 +22,15 @@ trait PEF extends App {
   implicit val context = ExecutionContext.fromExecutor(new ForkJoinPool(10))
 
   def run(filename: String) {
-    val csv = CSVWriter.open(filename)
+    val existing = CSVReader.open(filename).all.map(_.head)
+    val csv = CSVWriter.open(filename, append = true)
     csv.writeRow(headers)
 
     def write(record: Map[String, String]): Unit = csv.writeRow(record.values.toSeq)
 
-    val origin = CSVReader.open(new StringReader(source)).allWithHeaders.view
+    val origin = CSVReader.open(new StringReader(source)).allWithHeaders.filterNot(existing contains _("EC reference")).view
     val process = lookup _ andThen write
     Await.result(Future.traverse(origin)(r => Future(process(r))), Duration.Inf)
-
-    csv.close()
   }
 
   def source: String = {
@@ -63,7 +62,7 @@ trait PEF extends App {
         val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
         client.waitForBackgroundJavaScriptStartingBefore(500)
         val detail = result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
-        if (detail.getWebResponse().getContentAsString() contains "System busy") throw new Exception("System busy") else detail
+        if (detail.getWebResponse().getContentAsString() contains reference) detail else throw new Exception("Unexpected page")
       }
     }
     select(record, page)
