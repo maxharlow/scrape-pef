@@ -24,7 +24,7 @@ trait PEF extends App {
   def run(filename: String) {
     val existing = CSVReader.open(filename).all.map(_.head)
 
-    val append = Option(args(0)).map(_.toBoolean).getOrElse(false)
+    val append = Option(args(0) == "resume").getOrElse(false)
     val csv = CSVWriter.open(filename, append)
     if (!append) csv.writeRow(headers)
 
