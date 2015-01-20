@@ -26,7 +26,7 @@ trait PEF extends App {
 
     val append = Option(args(0)).map(_.toBoolean).getOrElse(false)
     val csv = CSVWriter.open(filename, append)
-    csv.writeRow(headers)
+    if (!append) csv.writeRow(headers)
 
     def write(record: Map[String, String]): Unit = csv.writeRow(record.values.toSeq)
 
