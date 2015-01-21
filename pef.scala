@@ -89,7 +89,7 @@ trait PEF extends App {
   final def retry[T](sleep: Int)(block: => T): T = {
     Try(block) match {
       case Success(x) => x
-      case Failure(e) if sleep > 3600 => {
+      case Failure(e) if sleep < 3600 => {
         println(s"Failed: ${e.getMessage}. Waiting ${sleep}s before retrying...")
         Thread.sleep(sleep * 1000) // seconds to milliseconds
         retry(sleep * 2)(block)
