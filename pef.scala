@@ -52,7 +52,7 @@ trait PEF extends App {
   def lookup(record: Map[String, String]): Map[String, String] = {
     val reference = record("EC reference")
     println(s"Looking up $reference")
-    val page = retry(10) {
+    val page = retry(60) {
       blocking {
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF)
         val client = new WebClient()
@@ -67,7 +67,9 @@ trait PEF extends App {
         if (detail.getWebResponse().getContentAsString() contains reference) detail else throw new Exception("Unexpected page")
       }
     }
-    select(record, page)
+    retry(60) {
+      select(record, page)
+    }
   }
 
   def select(record: Map[String, String], response: HtmlPage): Map[String, String]
@@ -84,18 +86,13 @@ trait PEF extends App {
   }
 
   @annotation.tailrec
-  final def retry[T](n: Int = 10)(block: => T): T = {
+  final def retry[T](sleep: Int)(block: => T): T = {
     Try(block) match {
       case Success(x) => x
-      case Failure(e) if e.getMessage contains "403 Forbidden" => {
-        println("Banned!")
-        sys.exit()
-      }
-      case Failure(e) if n > 1 => {
-        val period = (11 - n) * 100000
-        println(s"Failed: ${e.getMessage}. Waiting ${period / 1000}s before retrying...")
-        Thread.sleep(period)
-        retry(n - 1)(block)
+      case Failure(e) if sleep > 3600 => {
+        println(s"Failed: ${e.getMessage}. Waiting ${sleep}s before retrying...")
+        Thread.sleep(sleep * 1000) // seconds to milliseconds
+        retry(sleep * 2)(block)
       }
       case Failure(e) => throw e
     }

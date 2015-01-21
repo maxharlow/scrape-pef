@@ -57,10 +57,7 @@ object Donations extends PEF {
         val publishedDate = Try(page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblPublishedDateValue", true))        
         publishedDate.map(_.getTextContent()).map(asDate(_, "dd/MM/yyyy")).getOrElse("")
       },
-      "ecReleaseTitle" -> {
-        val ecReleaseTitle = page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true)
-        ecReleaseTitle.getTextContent()
-      },
+      "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true).getTextContent(),
       "donorID" -> {
         val donorID = page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlParticipant")
         donorID.getSelectedOptions().head.getValueAttribute()
