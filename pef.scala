@@ -67,7 +67,9 @@ trait PEF extends App {
         if (detail.getWebResponse().getContentAsString() contains reference) detail else throw new Exception("Unexpected page")
       }
     }
-    select(record, page)
+    retry(60) {
+      select(record, page)
+    }
   }
 
   def select(record: Map[String, String], response: HtmlPage): Map[String, String]
