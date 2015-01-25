@@ -23,6 +23,8 @@ object Donations extends PEF {
     "donorCountry",
     "donorPhoneNumber",
     "donorEmailAddress",
+    "donorTrustCreator",
+    "donorTrustCreatedDate",
     "recipientID",
     "recipientName",
     "recipientType",
@@ -59,8 +61,8 @@ object Donations extends PEF {
       },
       "ecReleaseTitle" -> page.getElementById[HtmlSpan]("ctl00_ContentPlaceHolder1_DonationControl1_lblDonationTitle", true).getTextContent(),
       "donorID" -> {
-        val donorID = page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlParticipant")
-        donorID.getSelectedOptions().head.getValueAttribute()
+        val donorID = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlParticipant"))
+        donorID.map(_.getSelectedOptions().head.getValueAttribute()).getOrElse("") // only from trusts created before 27th July 1999
       },
       "donorType" -> record("Donor type"),
       "donorTitle" -> { // individuals only
@@ -85,7 +87,8 @@ object Donations extends PEF {
       },
       "donorName" -> { // non-individuals only
         val donorName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtParticupantName"))
-        donorName.map(_.getValueAttribute()).getOrElse("")
+        val donorTrustName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtTrustName"))
+        (if (donorName.isSuccess) donorName else donorTrustName).map(_.getValueAttribute()).getOrElse("")
       },
       "donorCompanyNumber" -> { // companies only
         val donorCompanyNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtCompanyRegistrationNumber"))
@@ -100,15 +103,25 @@ object Donations extends PEF {
           Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtTown")).map(_.getValueAttribute()).map(_.replace("no town", "")),
           Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCounty")).map(_.getSelectedOptions().head.getTextContent())
         )
-        donorAddress.map(_.getOrElse("")).filterNot(_.isEmpty).mkString(", ")
+        val donorTrustAddress = List(
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtAddressLine1")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtAddressLine2")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtAddressLine3")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtAddressLine4")).map(_.getValueAttribute()),
+          Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtTown")).map(_.getValueAttribute()).map(_.replace("no town", "")),
+          Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$ddlCounty")).map(_.getSelectedOptions().head.getTextContent())
+        )
+        (if (donorAddress(0).isSuccess) donorAddress else donorTrustAddress).map(_.getOrElse("")).filterNot(_.isEmpty).mkString(", ")
       },
       "donorPostcode" -> {
         val donorPostcode = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPostcode"))
-        donorPostcode.map(_.getValueAttribute()).map(stripFakePostcodes).getOrElse("")
+        val donorTrustPostcode = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtPostcode"))
+        (if (donorPostcode.isSuccess) donorPostcode else donorTrustPostcode).map(_.getValueAttribute()).map(stripFakePostcodes).getOrElse("")
       },
       "donorCountry" -> {
         val donorCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCountry"))
-        donorCountry.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+        val donorTrustCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$ddlCountry"))
+        (if (donorCountry.isSuccess) donorCountry else donorTrustCountry).map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
       },
       "donorPhoneNumber" -> {
         val donorPhoneNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPhoneNumber"))
@@ -117,6 +130,17 @@ object Donations extends PEF {
       "donorEmailAddress" -> {
         val donorEmailAddress = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtEmail"))
         donorEmailAddress.map(_.getValueAttribute()).getOrElse("")
+      },
+      "donorTrustCreator" -> { // name of the person or organisation that created the trust
+        val donorTrustCreator = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtPersonTrust"))
+        donorTrustCreator.map(_.getValueAttribute()).getOrElse("")
+      },
+      "donorTrustCreatedDate" -> {
+        val year = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlYear")).map(_.getTextContent()).getOrElse("")
+        val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlMonth")).map(_.getTextContent()).getOrElse("")
+        val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlDay")).map(_.getTextContent()).getOrElse("")
+        val date = s"$year-$month-$day"
+        if (date == "--") "" else date
       },
       "recipientID" -> record("Entity ID"),
       "recipientName" -> {
@@ -158,7 +182,11 @@ object Donations extends PEF {
         isReportedDueToAggregation.map(_.isChecked().toString()).getOrElse("")
       },
       "isReportedUnder6212" -> asBoolean(record("Reported under 62:12")),
-      "isSponsorship" -> asBoolean(record("Is sponsorship"))
+      "isSponsorship" -> asBoolean(record("Is sponsorship")),
+      "isReceivedFromATrustee" -> {
+        val isReceivedFromATrustee = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$DonationControl1$chkTrustee"))
+        isReceivedFromATrustee.map(_.isChecked().toString()).getOrElse("")
+      }
     )
   }
 
