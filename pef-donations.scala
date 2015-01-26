@@ -121,7 +121,8 @@ object Donations extends PEF {
       "donorCountry" -> {
         val donorCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$ddlCountry"))
         val donorTrustCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$ddlCountry"))
-        (if (donorCountry.isSuccess) donorCountry else donorTrustCountry).map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+        val donorCountryText = (if (donorCountry.isSuccess) donorCountry else donorTrustCountry).map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
+        if (donorCountryText == "-- Please Select --") "" else donorCountryText
       },
       "donorPhoneNumber" -> {
         val donorPhoneNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPhoneNumber"))
