@@ -64,12 +64,11 @@ trait PEF extends App {
         val result = search.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$searchControl1$btnGo").click[HtmlPage]()
         client.waitForBackgroundJavaScriptStartingBefore(500)
         val detail = result.getElementById[HtmlAnchor](controlResult, false).click[HtmlPage]()
+        client.waitForBackgroundJavaScriptStartingBefore(500)
         if (detail.getWebResponse().getContentAsString() contains reference) detail else throw new Exception("Unexpected page")
       }
     }
-    retry(60) {
-      select(record, page)
-    }
+    select(record, page)
   }
 
   def select(record: Map[String, String], response: HtmlPage): Map[String, String]
