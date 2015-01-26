@@ -169,7 +169,7 @@ object Donations extends PEF {
         val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlMonth")).map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
         val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlDay")).map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
         val date = s"$year-$month-$day"
-        if (date == "--") "" else date
+        if (date contains "--") "" else date
       },
       "nature" -> record("Nature / Provision"),
       "purpose" -> record("Purpose"),
