@@ -136,9 +136,9 @@ object Donations extends PEF {
         donorTrustCreator.map(_.getValueAttribute()).getOrElse("")
       },
       "donorTrustCreatedDate" -> {
-        val year = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlYear")).map(_.getTextContent()).getOrElse("")
-        val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlMonth")).map(_.getTextContent()).getOrElse("")
-        val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlDay")).map(_.getTextContent()).getOrElse("")
+        val year = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlYear")).map(_.getSelectedOptions()).map(_.head).getOrElse("")
+        val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlMonth")).map(_.getSelectedOptions()).map(_.head).getOrElse("")
+        val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$dsDateTrustCreated$ddlDay")).map(_.getSelectedOptions()).map(_.head).getOrElse("")
         val date = s"$year-$month-$day"
         if (date == "--") "" else date
       },
@@ -164,9 +164,9 @@ object Donations extends PEF {
       "receivedDate" -> asDate(record("Received date"), "dd/MM/yyyy"),
       "acceptedDate" -> asDate(record("Accepted date"), "dd/MM/yyyy"),
       "returnedDate" -> { // for impermissable donations
-        val year = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlYear")).map(_.getTextContent()).getOrElse("")
-        val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlMonth")).map(_.getTextContent()).getOrElse("")
-        val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlDay")).map(_.getTextContent()).getOrElse("")
+        val year = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlYear")).map(_.getSelectedOptions()).map(_.head).getOrElse("")
+        val month = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlMonth")).map(_.getSelectedOptions()).map(_.head).getOrElse("")
+        val day = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$DonationControl1$dsdateReturned$ddlDay")).map(_.getSelectedOptions()).map(_.head).getOrElse("")
         val date = s"$year-$month-$day"
         if (date == "--") "" else date
       },
