@@ -43,7 +43,8 @@ object Donations extends PEF {
     "howDealtWith",
     "isReportedDueToAggregation",
     "isReportedUnder6212",
-    "isSponsorship"
+    "isSponsorship",
+    "isReceivedFromATrustee"
   )
 
   override val controlSearch = "ctl00$ctl05$ctl01"
