@@ -21,8 +21,6 @@ object Loans extends PEF {
     "lenderAddress",
     "lenderPostcode",
     "lenderCountry",
-    "lenderPhoneNumber",
-    "lenderEmailAddress",
     "recipientID",
     "recipientName",
     "recipientType",
@@ -118,14 +116,6 @@ object Loans extends PEF {
         val lenderCountry = Try(page.getElementByName[HtmlSelect]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$ddlCountry"))
         val lenderCountryText = lenderCountry.map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
         if (lenderCountryText contains "Please Select") "" else lenderCountryText
-      },
-      "lenderPhoneNumber" -> {
-        val lenderPhoneNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtPhoneNumber"))
-        lenderPhoneNumber.map(_.getValueAttribute()).getOrElse("")
-      },
-      "lenderEmailAddress" -> {
-        val lenderEmailAddress = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$LoanTransactionControl1$loanTransactionControl1$participant1$txtEmail"))
-        lenderEmailAddress.map(_.getValueAttribute()).getOrElse("")
       },
       "recipientID" -> record("Entity ID"),
       "recipientName" -> {

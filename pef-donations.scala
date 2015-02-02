@@ -21,8 +21,6 @@ object Donations extends PEF {
     "donorAddress",
     "donorPostcode",
     "donorCountry",
-    "donorPhoneNumber",
-    "donorEmailAddress",
     "donorTrustCreator",
     "donorTrustCreatedDate",
     "recipientID",
@@ -125,14 +123,6 @@ object Donations extends PEF {
         val donorCountryText = (if (donorCountry.isSuccess) donorCountry else donorTrustCountry).map(_.getSelectedOptions().head.getTextContent()).getOrElse("")
         if (donorCountryText == "-- Please Select --") "" else donorCountryText
       },
-      "donorPhoneNumber" -> {
-        val donorPhoneNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtPhoneNumber"))
-        donorPhoneNumber.map(_.getValueAttribute()).getOrElse("")
-      },
-      "donorEmailAddress" -> {
-        val donorEmailAddress = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtEmail"))
-        donorEmailAddress.map(_.getValueAttribute()).getOrElse("")
-      },
       "donorTrustCreator" -> { // name of the person or organisation that created the trust
         val donorTrustCreator = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtPersonTrust"))
         donorTrustCreator.map(_.getValueAttribute()).getOrElse("")
@@ -179,7 +169,7 @@ object Donations extends PEF {
         notes.map(_.getTextContent()).getOrElse("")
       },
       "howDealtWith" -> record("How dealt with"),
-      "isReportedDueToAggregation" -> {
+      "isReportedDueToAggregation" -> { // appears to be blank when false
         val isReportedDueToAggregation = Try(page.getElementByName[HtmlCheckBoxInput]("ctl00$ContentPlaceHolder1$DonationControl1$chkAggregation"))
         isReportedDueToAggregation.map(_.isChecked().toString()).getOrElse("")
       },
