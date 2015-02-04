@@ -87,7 +87,7 @@ object Donations extends PEF {
       "donorName" -> { // non-individuals only
         val donorName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtParticupantName"))
         val donorTrustName = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$trustInfo$txtTrustName"))
-        (if (donorName.isSuccess) donorName else donorTrustName).map(_.getValueAttribute()).getOrElse("")
+        (if (donorName.isSuccess) donorName else donorTrustName).map(_.getValueAttribute()).replaceAll(" (Sponsorship)", "").getOrElse("")
       },
       "donorCompanyNumber" -> { // companies only
         val donorCompanyNumber = Try(page.getElementByName[HtmlInput]("ctl00$ContentPlaceHolder1$DonationControl1$participant1$txtCompanyRegistrationNumber"))
